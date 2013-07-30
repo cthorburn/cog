@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Cog</title>
+<link rel="stylesheet" href="css/main.css" />
+<script>
+function centerDiv(Xwidth,Yheight,divid) {
+ // First, determine how much the visitor has scrolled
+
+ var scrolledX, scrolledY;
+ if( self.pageYOffset ) {
+ scrolledX = self.pageXOffset;
+ scrolledY = self.pageYOffset;
+ } else if( document.documentElement && document.documentElement.scrollTop ) {
+ scrolledX = document.documentElement.scrollLeft;
+ scrolledY = document.documentElement.scrollTop;
+ } else if( document.body ) {
+ scrolledX = document.body.scrollLeft;
+ scrolledY = document.body.scrollTop;
+ }
+
+ // Next, determine the coordinates of the center of browser's window
+
+ var centerX, centerY;
+ if( self.innerHeight ) {
+ centerX = self.innerWidth;
+ centerY = self.innerHeight;
+ } else if( document.documentElement && document.documentElement.clientHeight ) {
+ centerX = document.documentElement.clientWidth;
+ centerY = document.documentElement.clientHeight;
+ } else if( document.body ) {
+ centerX = document.body.clientWidth;
+ centerY = document.body.clientHeight;
+ }
+
+ // Xwidth is the width of the div, Yheight is the height of the
+ // div passed as arguments to the function:
+ var leftOffset = scrolledX + (centerX - Xwidth) / 2;
+ var topOffset = scrolledY + (centerY - Yheight) / 2;
+ // The initial width and height of the div can be set in the
+ // style sheet with display:none; divid is passed as an argument to // the function
+ var o=document.getElementById(divid);
+ var r=o.style;
+ r.position='absolute';
+ r.top = topOffset + 'px';
+ r.left = leftOffset + 'px';
+ r.display = "block";
+ }
+
+</script>
+<style>
+#loginform {
+color: #fff;
+border: 3px solid #999;
+padding: 1em;
+-moz-border-radius: 8px;
+-webkit-border-radius :8px;
+-opera-border-radius: 8px;
+-khtml-border-radius: 8px;
+border-radius: 8px; 
+box-shadow: rgba(0,0,0,0.5) 0px 0px 24px;
+background-color:#000;
+background-image:-webkit-gradient(linear, 0% 1%, 0% 95%, from(rgba(255,255,255,0.9)), to(rgba(64,64,64,0.9)), color-stop(.8,rgba(64,64,64,0.25)),color-stop(.25,rgba(32,32,32,0.5)));
+background-image:-moz-linear-gradient(0% 0% 270deg,#000000, #787814)
+}
+
+td {width: 100px;}
+</style>
+</head>
+<body onload="centerDiv(500, 200, 'loginform')" onresize="centerDiv(500, 200, 'loginform');">	
+	<div id="loginform" style="height: 200px; width: 500px;">
+		<div style="float: left;">
+		<form action="j_security_check" method="POST">
+			<table class="loginform">
+				<tr>
+					<td style="padding-bottom: 15px;" colspan="2"><span style="font-size: 7em;">Cog</td>
+				</tr>
+				<tr>
+					<td>Username</td>
+					<td><input type="text" name="j_username" value="admin"></td>
+				</tr>
+				<tr>
+					<td>Password</td>
+					<td><input type="password" name="j_password" value="admin"></td>
+				</tr>
+			</table>
+			<input type="submit" value="Login">
+		</form>
+		</div>
+		<div id="cog" style="padding: 50; "><img style="width: 120px; height: 120px; background: none;  vertical-align: middle; float: right; "src="img/1gear.gif"/><div>
+	</div>	
+</body>
+</html>

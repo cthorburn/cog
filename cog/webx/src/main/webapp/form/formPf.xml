@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<items>
+	<item type="settings" position="label-left" labelAlign="right"
+		labelWidth="150" inputWidth="120" />
+	<item type="fieldset" name="data" label="My Form" inputWidth="auto">
+		<item type="input" name="inp1" label="My Input" value="hohoho" />
+		<item type="combo" name="inp2" label="My Select" inpuWidth="120">
+			<option text=" The A text" value="a" />
+			<option selected="true" text=" The B text" value="b" />
+			<option text=" The C text" value="c" />
+		</item>
+		<item type="password" name="inp3" label="My Password" value="hohoho" />
+		<item type="radio" name="inp4" label="My Radio 1" value="hohoho" />
+		<item type="radio" name="inp4" label="My Radio 2" value="hohoho" />
+		<item type="radio" name="inp4" label="My Radio 3" value="hohoho" />
+		<item type="button" name="_cog_start" label="Start Process" />
+	</item>
+</items>

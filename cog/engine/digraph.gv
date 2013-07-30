@@ -1,0 +1,29 @@
+digraph G {
+END_PROCESS [id=END_PROCESS;fontname=Arial;fontsize=10.0;style=filled;fillcolor=darkslateblue];
+Instance [id=0;fontname=Arial;fontsize=10.0;];
+reproduce [id=0;shape=box;fontname=Arial;fontsize=10.0;];
+environment [id=0;shape=box;fontname=Arial;fontsize=10.0;];
+escalate [id=0;shape=box;fontname=Arial;fontsize=10.0;];
+fix [id=0;shape=box;fontname=Arial;fontsize=10.0;];
+investigate [id=4652;shape=box;fontname=Arial;fontsize=10.0;];
+
+Instance -> investigate;
+investigate -> environment;
+edge [color=red];
+environment -> investigate;
+edge [color=black];
+investigate -> reproduce;
+reproduce -> fix;
+fix -> escalate;
+fix -> END_PROCESS;
+edge [color=red];
+fix -> reproduce;
+edge [color=black];
+reproduce -> escalate;
+reproduce -> END_PROCESS;
+edge [color=red];
+reproduce -> environment;
+edge [color=black];
+investigate -> escalate;
+investigate -> END_PROCESS;
+}

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Trabajo!</title>
+
+<link rel="stylesheet" type="text/css" href="css/main.css"/>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxLayout/codebase/dhtmlxlayout.css">
+<link rel="stylesheet" type="text/css" href="js/dhtmlxLayout/codebase/skins/dhtmlxlayout_dhx_black.css">
+<script src="js/dhtmlxMenu/codebase/dhtmlxcommon.js"></script>
+<script src="js/dhtmlxLayout/codebase/dhtmlxlayout.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxMenu/codebase/skins/dhtmlxmenu_dhx_black.css"/>
+<script src="js/dhtmlxMenu/codebase/dhtmlxmenu.js"></script>
+<script src="js/dhtmlxLayout/codebase/dhtmlxcontainer.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxAccordion/codebase/skins/dhtmlxaccordion_dhx_black.css">
+<script src="js/dhtmlxAccordion/codebase/dhtmlxaccordion.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxGrid/codebase/dhtmlxgrid.css"/>
+<link rel="stylesheet" type="text/css" href="js/dhtmlxGrid/codebase/dhtmlxgrid_skins.css"/>
+<link rel="stylesheet" type="text/css" href="js/dhtmlxGrid/codebase/skins/dhtmlxgrid_dhx_black.css"/>
+<script src="js/dhtmlxGrid/codebase/dhtmlxgrid.js"></script>
+<script src="js/dhtmlxGrid/codebase/dhtmlxgridcell.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxForm/codebase/skins/dhtmlxform_dhx_skyblue.css">
+<script src="js/dhtmlxForm/codebase/dhtmlxform.js"></script>
+<script src="js/dhtmlxForm/codebase/ext/dhtmlxform_item_container.js"></script>
+<script src="js/dhtmlxForm/codebase/ext/dhtmlxform_item_upload.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxCombo/codebase/dhtmlxcombo.css">
+<script src="js/dhtmlxCombo/codebase/dhtmlxcombo.js"></script>
+    
+<link rel="stylesheet" type="text/css" href="js/dhtmlxTabbar/codebase/dhtmlxtabbar.css">
+<script  src="js/dhtmlxTabbar/codebase/dhtmlxtabbar.js"></script>    
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxTree/codebase/dhtmlxtree.css">
+<script src="js/dhtmlxTree/codebase/dhtmlxtree.js"></script>
+   
+<<<<<<< HEAD
+=======
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
+>>>>>>> be6e5a2b38666c17ec306afec472c771958263ca
+<script src="js/jquery-min-1.9.1.js"></script>
+<script src="js/trabajo/trabajo.js"></script>
+<script src="js/trabajo/dhxprocess.js"></script>
+<style>
+.sb { background:url(js/start.jpg) no-repeat; }
+</style>
+<script>
+var layout;	
+var grid;
+var acc={};
+var trees={};
+var forms={};
+
+$(document).ready(
+	function() {
+	    documentLoaded();
+		layout=buildLayout();
+	}
+);
+
+function buildLayout() {		
+	
+	layout=new TrabajoLayout("Procs", "3U", 
+			["Process Components "+processHeader(),"pt", 
+			 "Edit","ed", 
+			 "Status", "status"]);
+	
+	
+	buildCellStatus(layout.cell("status"));
+	buildCellTrees(layout.cell("pt"));
+	buildCellEd();
+	
+	layout.cell("pt").setText(new CellToolbar("Process Components", { refresh: 'javascript:refresh();'}).toString());	
+	trees["process"].loadXML('xml?feed=AdPrPt');
+	trees["process"].openAllItems('ignore');
+	acc.acc.cells("service_acc").hide();
+	acc.acc.cells("class_acc").hide();
+	acc.acc.cells("process_acc").show();
+	acc.acc.cells("process_acc").open();
+	layout.dhxLayout.cells("a").showHeader("pt");
+}
+
+function refresh() {
+	tbjEvents.fireEvent({name: 'refresh_tree'});
+}
+
+
+function processHeader() {
+	return ""; //"<a href=\"javascript:alert('he hey!')\"><img style=\"width: 20px; height:20px; \" src=\"js/dhtmlxForm/codebase/imgs/dhxform_dhx_skyblue/dhxform_upload_uploading.gif\"/></a>"
+}
+
+function buildCellTrees(treeCell) {
+    treeCell.setWidth("500");
+	var tabbar=treeCell.attachTabbar();
+    tabbar.setImagePath("js/dhtmlxTabbar/codebase/imgs/");
+    tabbar.addTab("process", "Processes", 100);    
+    tabbar.addTab("class", "Classpaths", 100);
+    tabbar.addTab("service", "Services", 100);
+    tabbar.attachEvent("onSelect", function(layout, acc){ return function(tab, lastTab) {
+    	if(!trees[tab].isLoaded) { 
+        	trees[tab].loadXML(trees[tab].feed);
+    		trees[tab].openAllItems();
+    		trees[tab].isLoaded=true;
+    	}
+    	
+    	switch(tab) {
+		case "process":
+			acc.acc.cells("service_acc").hide()
+			acc.acc.cells("class_acc").hide()
+			acc.acc.cells("process_acc").open()
+			acc.acc.cells("process_acc").show()
+			break;    			
+		case "class":
+			acc.acc.cells("service_acc").hide()
+			acc.acc.cells("process_acc").hide()
+			acc.acc.cells("class_acc").open()
+			acc.acc.cells("class_acc").show()
+			break;    			
+		case "service":
+			acc.acc.cells("process_acc").hide()
+			acc.acc.cells("class_acc").hide()
+			acc.acc.cells("service_acc").open()
+			acc.acc.cells("service_acc").show()
+		}
+    	
+    	tbjEvents.fireEvent({name: 'tree_switch_'+tab, data: {from: tab}});
+    	
+		return true;
+    }}(layout, acc));
+    
+    tabbar.setTabActive("process", false);
+    buildProcessTree(tabbar.cells("process"));
+    buildClassTree(tabbar.cells("class"));
+    buildServiceTree(tabbar.cells("service"));
+    
+    tbjEvents.addListener({ name: 'refresh_tree', context: {tabbar: tabbar, trees: trees}, func: function() {
+        var tree=this.trees[this.tabbar.getActiveTab()];
+		tree.deleteChildItems('0');
+    	tree.loadXML(tree.feed);
+		tree.openAllItems();
+    }});
+    
+    
+    
+}
+
+function buildProcessTree(tc) {
+	var tree = tc.attachTree();
+	tree.setImagePath("js/dhtmlxTree/codebase/imgs/");
+	
+	trees["process"]=tree;
+	tree.feed='xml?feed=AdPrPt';
+	
+	tree.attachEvent('onClick', function(id) {
+		if(this.hasChildren(id)==0) {
+			tbjEvents.fireEvent( { name: 'process_select', data: id } ); 
+		}
+	});
+	
+	tree.attachEvent('onXLE', function(nid) {
+		this.isLoaded=true;
+		this.openAllItems('ignore');
+	});
+	
+	tbjEvents.addListener( { name: 'process_registered', context: tree, func: 
+		function(){
+			this.deleteChildItems('0');
+			this.loadXML(this.feed);
+		}
+	} );
+}
+
+function buildClassTree(tabbarCell) {
+	var tree = tabbarCell.attachTree();
+	tree.setImagePath("js/dhtmlxTree/codebase/imgs/");
+	trees["class"]=tree;
+	tree.feed='xml?feed=AdPrCt';
+	
+	tree.attachEvent('onClick', function(nid) {
+		tbjEvents.fireEvent( { name: 'classloader_select', data: nid } ); 
+	});
+	tree.attachEvent('onXLE', function(nid) {
+		this.isLoaded=true;
+		this.openAllItems('ignore');
+	});
+	
+	
+	tbjEvents.addListener( { name: 'tree_switch_class', context: tree, func: function(){
+		if(!this.isLoaded) {
+			this.loadXML(this.feed);
+		}
+	}});
+	
+	tbjEvents.addListener( { name: 'cl_defined', context: tree, func: 
+		function(){
+			this.deleteChildItems('0');
+			this.loadXML(this.feed);
+		}
+	} );
+}
+
+function buildServiceTree(tabbarCell) {
+	var tree = tabbarCell.attachTree();
+	tree.setImagePath("js/dhtmlxTree/codebase/imgs/");
+	trees["service"]=tree;
+	tree.feed='xml?feed=AdPrSt';
+	
+	tree.attachEvent('onClick', function(nid) {
+		
+		tbjEvents.fireEvent( { name: 'service_select', data: nid } );
+	});
+	tree.attachEvent('onXLE', function(nid) {
+		this.isLoaded=true;
+		this.openAllItems('ignore');
+	});
+	tbjEvents.addListener( { name: 'tree_switch_service', context: tree, func: 
+		function(){
+		if(!this.isLoaded) {
+			this.loadXML(this.feed);
+			this.openAllItems('ignore');
+		}
+	}});
+	
+	tbjEvents.addListener( { name: 'service_registered', context: tree, func: 
+		function(){
+			this.deleteChildItems('0');
+			this.loadXML(this.feed);
+		}
+	} );
+}
+
+function buildCellEd() {
+	var cell=layout.cell("ed");
+	
+	acc.acc=cell.attachAccordion();
+    acc.acc.addItem("process_acc", "Process");
+    acc.acc.addItem("class_acc", "ClassLoader");
+    acc.acc.addItem("service_acc", "Service");
+	buildProcessAccordian(acc.acc.cells("process_acc").attachAccordion());
+	buildClassAccordian(acc.acc.cells("class_acc").attachAccordion());
+	buildServiceAccordian(acc.acc.cells("service_acc").attachAccordion());
+}
+
+function buildCellStatus(cell) {
+    cell.setHeight("250");
+	initLogger(cell);
+	logger.log("Loaded OK");
+}
+
+function buildClassAccordian(dhxAccord) {
+	dhxAccord.addItem("new", "New ClassLoader");
+    dhxAccord.addItem("delete", "Delete");
+    dhxAccord.addItem("search", "Search");
+    dhxAccord.addItem("details", "Details");
+
+    var nwTabs=dhxAccord.cells("new").attachTabbar();
+    nwTabs.setImagePath("js/dhtmlxTabbar/codebase/imgs/");
+    
+    nwTabs.addTab("name", "Naming");
+    nwTabs.addTab("jars", "Jar Files");
+    nwTabs.addTab("order", "Jar Order");
+    nwTabs.addTab("finish", "Finish");
+    
+    forms['AdPrEdClNwNm']=new FormAdPrEdClNwNm(nwTabs.cells("name").attachForm(), nwTabs);
+    forms['AdPrEdClNwJf']=new FormAdPrEdClNwJf(nwTabs.cells("jars").attachForm(), nwTabs);
+    forms['AdPrEdClNwJo']=new FormAdPrEdClNwJo(nwTabs.cells("order").attachForm(), nwTabs);
+    forms['AdPrEdClNwFn']=new FormAdPrEdClNwFn(nwTabs.cells("finish").attachForm(), nwTabs);
+
+
+    tbjEvents.addListener( { name: 'tree_switch_class', context: nwTabs, func: function(evt) {
+        this.setTabActive("name", false);
+    }});
+    
+    tbjEvents.addListener( { name: 'classloader_select', context: dhxAccord, func: function(evt) {
+    	this.cells("details").open();
+    }});
+
+    nwTabs.setTabActive("name", false);
+    dhxAccord.openItem("new");
+}
+
+function buildServiceAccordian(dhxAccord) {
+	dhxAccord.addItem("new", "New Service");
+    dhxAccord.addItem("details", "Details");
+    
+    var nwTabs=dhxAccord.cells("new").attachTabbar();
+    nwTabs.setImagePath("js/dhtmlxTabbar/codebase/imgs/");
+    
+    nwTabs.addTab("name", "Naming");
+    nwTabs.addTab("jars", "Jar Files");
+    nwTabs.addTab("order", "Jar Order");
+    nwTabs.addTab("finish", "Finish");
+    
+    forms['AdPrEdSvNwNm']=newByName("FormAdPrEdSvNwNm", window, nwTabs.cells("name").attachForm(), nwTabs);
+    forms['AdPrEdSvNwJf']=newByName("FormAdPrEdSvNwJf", window, nwTabs.cells("jars").attachForm(), nwTabs);
+    forms['AdPrEdSvNwJo']=newByName("FormAdPrEdSvNwJo", window, nwTabs.cells("order").attachForm(), nwTabs);
+    forms['AdPrEdSvNwFn']=newByName("FormAdPrEdSvNwFn", window, nwTabs.cells("finish").attachForm(), nwTabs);
+    forms['AdPrEdSvDt']=newByName("FormAdPrEdSvDt", window, dhxAccord.cells("details").attachForm());
+
+    tbjEvents.addListener( { name: 'tree_switch_service', context: nwTabs, func: function(evt) {
+        this.setTabActive("name", false);
+    }});
+    
+    tbjEvents.addListener( { name: 'service_select', context: dhxAccord, func: function(evt) {
+    	this.cells("details").open();
+    }});
+
+    nwTabs.setTabActive("name", false);
+    dhxAccord.openItem("new");
+}
+
+function buildProcessAccordian(dhxAccord) {
+	
+	dhxAccord.addItem("new", "New");
+    dhxAccord.addItem("edit", "Edit");
+    dhxAccord.addItem("run", "Run");
+    forms['AdPrEdPrNw'] =newByName("FormAdPrEdPrNw", window, dhxAccord.cells("new").attachForm(), dhxAccord);
+    forms['AdPrEdPrEd'] =newByName("FormAdPrEdPrEd", window, dhxAccord.cells("edit").attachForm(), dhxAccord, trees['process']);
+	//NB run is an attached div
+	
+    dhxAccord.openItem("new");
+}
+</script>
+<style>
+fieldset {margin: 25px;}
+</style>
+	 
+</head>
+<body>
+<div id="cog_header" style="height: 50px;"></div>
+<div id="layout" style="position: relative; top: 20px; left: 20px; width: 600px; height: 800px; aborder: #B5CDE4 1px solid;"></div>
+<div id="sf" style="padding-left: 20px">
+	<div id="button_container">
+		<div>
+			<div style="float: left; padding-top: 40px;"><h3>Process Start Form</h3></div>
+			<div>
+			<button onclick="tbjEvents.fireEvent({ name: 'start_it', data: {}})" type="submit" id="_cog_start" name="_cog_start" style="margin-left: 60px; margin-top: 20px; border: 0; background: transparent">
+			    <img src="img/start.jpg" width="85" heght="85" alt="start" />
+			</button>
+			</div>
+		</div>
+	</div>
+	<div id="form_container"></div><br clear="all"/>
+</div>
+</body>
+</html>

@@ -1,0 +1,131 @@
+
+
+
+process bugfix
+
+proc_start raise bug
+	ask provide bug details
+	
+	provide 1 title
+			2 description
+			2a application
+			3 impact
+			4 how to reproduce
+			
+	inferred	5 created by
+				6 creation time
+				6a new bug number
+	actions (START)
+		service call - save bug
+		create task investigate for role supportLevel1 (all)
+		
+task investigate
+	ask is bug a duplicate?
+	
+	show 1,2,2a,3,4,5,6 from raise bug, bug search view
+	
+	actions - once existing bug list searched 
+		if previously reported 
+			dispose duplicate
+			provide	7 previously reported bug number
+			link to 7
+			end task
+				
+		if not previously reported
+			dispose new bug
+			create task create test environment for role environments (2a,2b, 6a)
+			create task reproduce for role supportLevel2 (all)
+			end task
+	
+	deadline taskstart + 1 day task escalate for role manager(taskid/this, taskid/raise bug)
+
+task create test environment
+	ask create application test environment
+	
+	show 2a, 2b
+	
+	provide 8 env name
+	
+	actions - once created
+		dispose ready
+		end task(env name)
+	
+	deadline taskstart + 1 day task escalate for role manager(taskid/this, taskid/raise bug)
+	
+task reproduce depends=create test environment
+	ask fix bug
+	
+	show 1,2,2a,3,4,5,6 from raise bug		
+	
+	provide
+		update text or resolution text
+				
+	actions 
+		dispose update - once new info available
+		service call - add note
+		
+		dispose resolved - once bug fixed
+		service call - resolve
+		create task release test environment for role environments (env name)
+		end task/process	
+
+		dispose not fixed - if unable to fix
+		create task fix for developers(env name, taskid/raise bug)
+		
+	
+	deadline taskstart + 1 day task escalate for role manager(taskid/this, taskid/raise bug)
+
+task fix depends=create test environment
+	ask fix bug
+	
+	show 1,2,2a,3,4,5,6 from raise bug		
+	
+	provide
+		update text or resolution text
+				
+	actions 
+		dispose update - once new info available
+		service call - add note
+		
+		dispose resolved - once bug fixed
+		service call - resolve
+		create task release test environment for role environments (env name)
+		end task/process	
+
+		
+	
+	deadline taskstart + 1 day task escalate for role manager(taskid/this, taskid/raise bug)
+	
+	
+task escalate 
+	ask see what's going on()
+
+	show 1,2,2a,3,4,5,6 from raise bug
+
+	provide 
+		9 new deadline
+		
+	actions 
+		dispose acknowledge
+		set deadline (task(late), new deadline)
+		end task
+	
+	
+
+
+
+
+
+
+
+
+	
+
+
+		
+		
+		
+		
+		
+
+		

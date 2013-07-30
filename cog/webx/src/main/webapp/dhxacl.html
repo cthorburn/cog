@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Trabajo!</title>
+
+<link rel="stylesheet" type="text/css" href="css/main.css"/>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxLayout/codebase/dhtmlxlayout.css">
+<link rel="stylesheet" type="text/css" href="js/dhtmlxLayout/codebase/skins/dhtmlxlayout_dhx_black.css">
+<script src="js/dhtmlxMenu/codebase/dhtmlxcommon.js"></script>
+<script src="js/dhtmlxLayout/codebase/dhtmlxlayout.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxMenu/codebase/skins/dhtmlxmenu_dhx_black.css"/>
+<script src="js/dhtmlxMenu/codebase/dhtmlxmenu.js"></script>
+<script src="js/dhtmlxLayout/codebase/dhtmlxcontainer.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxAccordion/codebase/skins/dhtmlxaccordion_dhx_black.css">
+<script src="js/dhtmlxAccordion/codebase/dhtmlxaccordion.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxGrid/codebase/dhtmlxgrid.css"/>
+<link rel="stylesheet" type="text/css" href="js/dhtmlxGrid/codebase/dhtmlxgrid_skins.css"/>
+<link rel="stylesheet" type="text/css" href="js/dhtmlxGrid/codebase/skins/dhtmlxgrid_dhx_black.css"/>
+<script src="js/dhtmlxGrid/codebase/dhtmlxgrid.js"></script>
+<script src="js/dhtmlxGrid/codebase/dhtmlxgridcell.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxForm/codebase/skins/dhtmlxform_dhx_skyblue.css">
+<script src="js/dhtmlxForm/codebase/dhtmlxform.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxTabbar/codebase/dhtmlxtabbar.css">
+<script  src="js/dhtmlxTabbar/codebase/dhtmlxtabbar.js"></script>    
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxTree/codebase/dhtmlxtree.css">
+<script src="js/dhtmlxTree/codebase/dhtmlxtree.js"></script>
+
+<<<<<<< HEAD
+<script src="js/jquery-min-1.9.1.js"></script>
+=======
+   
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
+<script src="js/jquery-min-1.9.1.js"></script>
+
+>>>>>>> be6e5a2b38666c17ec306afec472c771958263ca
+<script src="js/trabajo/trabajo.js"></script>
+<script src="js/trabajo/dhxacl.js"></script>
+
+<script>
+var layout;	
+var forms={};
+
+$(document).ready(
+	function() {
+	    debugger;
+	    documentLoaded();
+		layout=buildLayout();
+	}
+);
+	
+function buildLayout() {		
+	layout=new TrabajoLayout("ACL", "3U", 
+			["Access Control Entities","trees", 
+			 "Action","action", 
+			 "Status","status"]);
+	
+	buildCellStatus(layout.cell('status'));
+	buildCellAction();
+	buildCellTrees();
+}
+
+function buildCellStatus(cell) {
+	initLogger(cell);
+	logger.log("Loaded OK");
+}
+
+function buildCellTrees() {
+    layout.cell("trees").setWidth(400);
+    var tabbar=layout.cell("trees").attachTabbar();
+    tabbar.setImagePath("js/dhtmlxTabbar/codebase/imgs/");
+    tabbar.addTab("groups", "Groups", 100);    
+    tabbar.addTab("roles", "Roles", 100);
+    tabbar.addTab("permissions", "Permissions", 100);
+    tabbar.setTabActive("roles");
+    tabbar.tbjLayout=layout;
+    
+    tabbar.attachEvent("onSelect", function(id,last_id) {
+        
+        this.tbjLayout.cell("action").view(id).setActive()
+    	return true;
+    });
+    
+	var treeRoles = tabbar.cells("roles").attachTree();
+	treeRoles.setImagePath("js/dhtmlxTree/codebase/imgs/");
+    treeRoles.loadXML('xml?feed=AcRlTr');
+	
+    var treeGroups= tabbar.cells("groups").attachTree();
+    treeGroups.setImagePath("js/dhtmlxTree/codebase/imgs/");
+    treeGroups.attachEvent('onClick', function(id) {
+        
+		if(this.hasChildren(id)==0) {
+		    
+		    var split=id.split('.');
+		    
+		    split=split[split.length-1]
+		    
+		    
+			tbjEvents.fireEvent( { name: 'group_select', data: split } ); 
+		}
+	});
+    treeGroups.loadXML('xml?feed=AcGpTr');
+        
+    tbjEvents.addListener({name: 'role_created', context: treeRoles, func: function(evt) {
+		this.deleteChildItems('0');
+        this.loadXML('xml?feed=AcRlTr');
+    }});
+
+    tbjEvents.addListener({name: 'group_created', context: treeGroups, func: function(evt) {
+		this.deleteChildItems('0');
+        this.loadXML('xml?feed=AcGpTr');
+    }});
+}
+
+function buildCellAction() {
+    buildCellActionRoles();
+    buildCellActionGroups();
+    buildCellActionPerms();
+}
+function buildCellActionGroups(){
+    
+}
+function buildCellActionPerms() {
+    
+}
+function buildCellActionRoles() {
+	var acc;
+	
+	acc=layout.cell("action").view("roles").attachAccordion();
+	acc.addItem("new", "New Role");
+    acc.addItem("edit", "Edit Role");
+	forms['FormAcEdRlNw']=newByName("FormAcEdRlNw", window, acc.cells("new").attachForm(), acc);
+	forms['FormAcEdRlEd']=newByName("FormAcEdRlEd", window, acc.cells("edit").attachForm(), acc);
+	//acc.cells("new").open();
+
+	acc=layout.cell("action").view("groups").attachAccordion();
+	acc.addItem("new", "New Group");
+    acc.addItem("edit", "Edit Group");
+	forms['FormAcEdGpNw']=newByName("FormAcEdGpNw", window, acc.cells("new").attachForm(), acc);
+	forms['FormAcEdGpEd']=newByName("FormAcEdGpEd", window, acc);
+	//acc.cells("new").open();
+
+	layout.cell("action").view("roles").setActive()
+}
+
+</script>
+<style>
+fieldset {margin: 25px;}
+</style>
+
+</head>
+<body>
+<div id="cog_header" style="height: 50px;"></div>
+<div id="layout" style="position: relative; top: 20px; left: 20px; width: 600px; height: 800px; aborder: #B5CDE4 1px solid;"></div>
+</body>
+</html>

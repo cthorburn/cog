@@ -1,0 +1,1 @@
+Have to copy jcr api to tomcat lib dir to avoid noclassdeffounderror on startup

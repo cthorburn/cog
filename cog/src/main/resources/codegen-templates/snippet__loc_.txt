@@ -1,0 +1,31 @@
+
+
+TODO
+
+in form${loc}.jsp/xml:
+	finalize  controls
+	finalize naming
+	finalize validation
+-------------------------------------------------
+	
+in 	dhxzzzzz 
+
+function Form${loc}(dform) {
+	this.dform=dform;
+	
+	var dhx=this.dform.dhx;
+	dhx.attachEvent("onButtonClick", function(name) {
+		
+		dhx.validate();
+	});
+	this.dform.load();
+}
+
+function ValidateLocale(data) {
+	return data=="EN";
+}	
+-------------------------------------------------
+
+edit DHX(XML|JSON)Feed_(loc)
+-------------------------------------------------
+

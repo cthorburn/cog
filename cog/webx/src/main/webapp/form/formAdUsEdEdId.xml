@@ -1,0 +1,13 @@
+<items>
+	<item type="settings" position="label-left" labelWidth="100" inputWidth="120" />
+	<item type="fieldset" name="data" inputWidth="auto" label="Basic Details">
+		
+		<item type="input" name="fullname" value="" label="Full Name" />
+		<item type="input" name="emailaddr" value="" label="Email Address" />
+		<item type="password" name="password" value="123456" label="Password" />
+	
+		<item type="button" name="proceed" value="Proceed" />
+	</item>
+</items>
+
+

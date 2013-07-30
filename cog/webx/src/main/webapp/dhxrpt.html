@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Trabajo!</title>
+
+<link rel="stylesheet" type="text/css" href="css/main.css"/>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxLayout/codebase/dhtmlxlayout.css">
+<link rel="stylesheet" type="text/css" href="js/dhtmlxLayout/codebase/skins/dhtmlxlayout_dhx_black.css">
+<script src="js/dhtmlxMenu/codebase/dhtmlxcommon.js"></script>
+<script src="js/dhtmlxLayout/codebase/dhtmlxlayout.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxMenu/codebase/skins/dhtmlxmenu_dhx_black.css"/>
+<script src="js/dhtmlxMenu/codebase/dhtmlxmenu.js"></script>
+<script src="js/dhtmlxLayout/codebase/dhtmlxcontainer.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxAccordion/codebase/skins/dhtmlxaccordion_dhx_black.css">
+<script src="js/dhtmlxAccordion/codebase/dhtmlxaccordion.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxGrid/codebase/dhtmlxgrid.css"/>
+<link rel="stylesheet" type="text/css" href="js/dhtmlxGrid/codebase/dhtmlxgrid_skins.css"/>
+<link rel="stylesheet" type="text/css" href="js/dhtmlxGrid/codebase/skins/dhtmlxgrid_dhx_black.css"/>
+<script src="js/dhtmlxGrid/codebase/dhtmlxgrid.js"></script>
+<script src="js/dhtmlxGrid/codebase/dhtmlxgridcell.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxForm/codebase/skins/dhtmlxform_dhx_skyblue.css">
+<script src="js/dhtmlxForm/codebase/dhtmlxform.js"></script>
+<script src="js/dhtmlxForm/codebase/ext/dhtmlxform_item_container.js"></script>
+<script src="js/dhtmlxForm/codebase/ext/dhtmlxform_item_upload.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxCombo/codebase/dhtmlxcombo.css">
+<script src="js/dhtmlxCombo/codebase/dhtmlxcombo.js"></script>
+    
+<link rel="stylesheet" type="text/css" href="js/dhtmlxTabbar/codebase/dhtmlxtabbar.css">
+<script  src="js/dhtmlxTabbar/codebase/dhtmlxtabbar.js"></script>    
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxTree/codebase/dhtmlxtree.css">
+<script src="js/dhtmlxTree/codebase/dhtmlxtree.js"></script>
+   
+<<<<<<< HEAD
+=======
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
+>>>>>>> be6e5a2b38666c17ec306afec472c771958263ca
+<script src="js/jquery-min-1.9.1.js"></script>
+<script src="js/trabajo/trabajo.js"></script>
+<script src="js/trabajo/dhxrpt.js"></script>
+<style>
+.sb { background:url(js/start.jpg) no-repeat; }
+</style>
+<script>
+var layout;	
+var grid;
+var acc={};
+var trees={};
+var forms={};
+
+$(document).ready(
+	function() {
+	    documentLoaded();
+		layout=buildLayout();
+	}
+);
+
+function buildLayout() {		
+	
+	layout=new TrabajoLayout("Procs", "3U", 
+			["Reports","rpt", 
+			 "Edit","ed", 
+			 "Status", "status"]);
+	
+	
+	buildCellStatus(layout.cell("status"));
+	buildCellTree(layout.cell("rpt"));
+	buildCellEd(layout.cell("ed"));
+}
+
+function buildCellStatus(cell) {
+    cell.setHeight("250");
+	initLogger(cell);
+	logger.log("Loaded OK");
+}
+
+function buildCellTree(treeCell) {
+    treeCell.setWidth(400);
+    var tree=treeCell.attachTree();
+    trees["reports"]=tree;
+    
+	tree.setImagePath("js/dhtmlxTree/codebase/imgs/");
+
+	tbjEvents.addListener( { name: 'report_installed', context: tree, func: 
+		function(){
+			this.deleteChildItems('0');
+			this.loadXML('xml?feed=RpTr');
+		}
+	} );
+	
+	tree.attachEvent('onClick', function(id) {
+		if(this.hasChildren(id)==0) {
+			tbjEvents.fireEvent( { name: 'report_selected', data: id } ); 
+		}
+	});	
+
+	tree.attachEvent("onXLE", function() { this.openAllItems('ignore'); });
+	tree.loadXML('xml?feed=RpTr');
+}
+
+
+function buildCellEd(cell) {
+	var acc=cell.attachAccordion();
+    acc.addItem("install", "Install");
+    acc.addItem("run", "Run");
+    acc.addItem("report", "Report");
+    
+	buildInstall(acc.cells("install"));
+	buildRun(acc.cells("run"), acc);
+	acc.openItem("install");
+}
+
+function buildRun(cell, acc) {
+    forms['RpEdRn']=new FormRpEdRn(cell.attachForm(), acc);
+}
+
+function buildInstall(acc) {
+    var tabbar=acc.attachTabbar();
+    tabbar.setImagePath("js/dhtmlxTabbar/codebase/imgs/");
+    tabbar.addTab("name", "Name", 100);    
+    tabbar.addTab("upload", "Upload", 100);    
+    tabbar.setTabActive("name");
+    forms['RpEdInsNm']=new FormRpEdInsNm(tabbar.cells("name").attachForm(), tabbar);
+    forms['RpEdInsUl']=new FormRpEdInsUl(tabbar.cells("upload").attachForm(), tabbar);
+}
+
+</script>
+<style>
+fieldset {margin: 25px;}
+</style>
+	 
+</head>
+<body>
+<div id="cog_header" style="height: 50px;"></div>
+<div id="layout" style="position: relative; top: 20px; left: 20px; width: 600px; height: 800px; aborder: #B5CDE4 1px solid;"></div>
+<iframe id="dnld" src="" style="visibility:hidden">
+</body>
+</html>

@@ -1,0 +1,80 @@
+@CHARSET "ISO-8859-1";
+
+html { height:100%; }
+body { font-family:Arial,sans-serif; font-size: small;  height:100%;}
+
+.maindiv1200 { position:relative; width:1400px; height:96%; margin: 0 auto; }
+.contentdiv1200 { position:relative; padding:12px; margin-top:10px; width:98%;  height:77%; }
+.bannerLeft { position:relative; float:left; vertical-align:middle; }
+.bannerRight{ vertical-align:middle; }
+.Trabajo { color:rgb(80,220,224); font-size:5em; }
+.vernum {font-size:8pt;}
+
+.shadowRounded {
+  border-top:1px solid #888888; border-left:1px solid #888888; 
+/*  box-shadow: 10px 10px 5px #888888; 
+  border-radius: 10px; */
+  padding:4px;
+}
+
+.mainContent {
+  border-top:1px solid #888888; border-left:1px solid #888888; 
+ /* border-radius: 10px;
+  background: #5AC7A6;
+border: 1px solid 0xffffff;
+ 
+  */
+  padding:10px;
+}
+.mainContent input {
+ /* box-shadow: none;
+  border-radius: 8px; */
+  background: #eeeeee;
+}
+img #banner { width: 75%; height: 75% }
+
+div.buttonRow {
+	margin-top: 10px;
+}
+
+.loginform { margin: 0 auto; }
+
+.feedback { text-decoration: underline;}
+.feedbackBad { text-decoration: underline; color: red;}
+
+.coglogo {
+	font-family: Arial,sans-serif; 
+	font-size: 28px;	
+	/* font-weight: bold; */	
+	text-shadow: 1px 1px rgba(0, 0, 0, 0.5);	
+}
+
+.pop {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border-radius: 0.5em 0.5em 0.5em 0.5em;
+    box-shadow: 0 0 1.5em rgba(0, 0, 0, 0.6);
+    color: #000000;
+    display: none;
+    font-size: 1.2em;
+    left: 50%;
+    line-height: 1.4;
+    margin: -6em 0 0 -14em;
+    opacity: 0.95;
+    padding: 0.7em 1em;
+    position: fixed;
+    top: 50%;
+    width: 28em;
+    z-index: 100;
+}
+
+
+
+.pop a:first-of-type img {
+    padding-bottom: 0.15em;
+    position: absolute;
+    right: -0.5em;
+    top: -0.5em;
+    width: 32px;
+    height: 32px;
+}
+

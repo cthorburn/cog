@@ -1,0 +1,7 @@
+<items>
+	<item type="settings" position="label-left" labelWidth="200" inputWidth="320" />
+	<item type="fieldset" name="Uploader" inputWidth="auto" label="Uploader">
+	 	<item type="upload" name="uploader" mode="html4" offsetLeft="20"  offsetTop="20" titleText ="Drag-n-Drop your process JAR files here!" url="upload?type=pd"/> 
+		
+	</item>
+</items>

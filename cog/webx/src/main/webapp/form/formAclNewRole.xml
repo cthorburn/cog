@@ -1,0 +1,6 @@
+<items>
+	<item type="settings" position="label-left" labelWidth="100" inputWidth="120" />
+		<item type="input" value="" label="Name" />
+		<item type="input" value="" label="Description" />
+		<item type="button" value="Proceed" />
+</items>

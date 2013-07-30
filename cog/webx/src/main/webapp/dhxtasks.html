@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Trabajo!</title>
+
+<link rel="stylesheet" type="text/css" href="css/main.css"/>
+
+<script src="js/dhtmlxMenu/codebase/dhtmlxcommon.js"></script>
+<script src="js/dhtmlxWindows/codebase/dhtmlxcontainer.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxLayout/codebase/dhtmlxlayout.css">
+<link rel="stylesheet" type="text/css" href="js/dhtmlxLayout/codebase/skins/dhtmlxlayout_dhx_black.css">
+<script src="js/dhtmlxLayout/codebase/dhtmlxlayout.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxWindows/codebase/dhtmlxwindows.css"/>
+<link rel="stylesheet" type="text/css" href="js/dhtmlxWindows/codebase/skins/dhtmlxwindows_dhx_black.css"/>
+<script src="js/dhtmlxWindows/codebase/dhtmlxwindows.js"></script>
+
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxMenu/codebase/skins/dhtmlxmenu_dhx_black.css"/>
+<script src="js/dhtmlxMenu/codebase/dhtmlxmenu.js"></script>
+<script src="js/dhtmlxLayout/codebase/dhtmlxcontainer.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxAccordion/codebase/skins/dhtmlxaccordion_dhx_black.css">
+<script src="js/dhtmlxAccordion/codebase/dhtmlxaccordion.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxGrid/codebase/dhtmlxgrid.css"/>
+<link rel="stylesheet" type="text/css" href="js/dhtmlxGrid/codebase/dhtmlxgrid_skins.css"/>
+<link rel="stylesheet" type="text/css" href="js/dhtmlxGrid/codebase/skins/dhtmlxgrid_dhx_black.css"/>
+<script src="js/dhtmlxGrid/codebase/dhtmlxgrid.js"></script>
+<script src="js/dhtmlxGrid/codebase/dhtmlxgridcell.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxForm/codebase/skins/dhtmlxform_dhx_skyblue.css">
+<script src="js/dhtmlxForm/codebase/dhtmlxform.js"></script>
+<script src="js/dhtmlxForm/codebase/ext/dhtmlxform_item_container.js"></script>
+<script src="js/dhtmlxForm/codebase/ext/dhtmlxform_item_upload.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxCombo/codebase/dhtmlxcombo.css">
+<script src="js/dhtmlxCombo/codebase/dhtmlxcombo.js"></script>
+    
+<link rel="stylesheet" type="text/css" href="js/dhtmlxTabbar/codebase/dhtmlxtabbar.css">
+<script  src="js/dhtmlxTabbar/codebase/dhtmlxtabbar.js"></script>    
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxTree/codebase/dhtmlxtree.css">
+<script src="js/dhtmlxTree/codebase/dhtmlxtree.js"></script>
+   
+<<<<<<< HEAD
+=======
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
+>>>>>>> be6e5a2b38666c17ec306afec472c771958263ca
+<script src="js/jquery-min-1.9.1.js"></script>
+<script src="js/trabajo/trabajo.js"></script>
+<script src="js/trabajo/dhxtasks.js"></script>
+
+<script>
+var layout;	
+var grids={};
+var trees={};
+var forms={};
+var base;
+var graphs;
+
+$(document).ready(
+    function() {
+        documentLoaded();
+    	layout=buildLayout();	 
+	    graphs=new Graphs(layout.dhxLayout);
+	}
+);
+
+function buildLayout() {
+	layout=new TrabajoLayout("Tasks", "2E", ["Upper", "upper", "Status", "status"]);
+	base=layout.cell("upper").attachLayout("3J");
+	buildCellStatus(layout.cell("status"));
+	
+	buildCellTasksAllocated(base.cells("a"));
+	buildCellTasksAvailable(base.cells("c"));
+	buildCellTaskAction(base.cells("b"));
+	layout.cell("upper").hideHeader();
+	
+	return layout;
+}
+
+function buildCellTasksAvailable(layoutCell) {
+	layoutCell.setText("Tasks Available");
+	grids['av'] = layoutCell.attachGrid();
+	grids['av'].setImagePath("js/dhtmlxGrid/codebase/imgs/");
+	grids['av'].setHeader("TaskName,Process,Started By,Importance,Created,Due,Note");
+	grids['av'].setInitWidths("250,200,200,100,100,100,500");
+	grids['av'].setColAlign("left,left,left,left,left,left,left");
+	grids['av'].setColTypes("ro,ro,ro,ro,ro,ro,ro");
+	grids['av'].setColSorting("na,str,str,na,na,na,na");
+	grids['av'].init();
+	grids['av'].attachEvent("onRowSelect", function(rid, cid) {
+		server.asyncServlet({ servlet : 'process', action : 'select_task', data : { tid: rid }, context : { 
+			select_task_OK : function(response) {
+				tbjEvents.fireEvent({name: 'av_task_selected', data: response})
+			}
+		}});
+	});
+	
+	grids['av'].setSkin("dhx_black");
+	grids['av'].loadXML("xml?feed=TkAvGd");
+	
+	grids['av'].tbjRefresh = function() {
+		this.clearAll();
+		this.loadXML("xml?feed=TkAvGd");
+	}
+}
+
+function buildCellTasksAllocated(layoutCell) {
+	layoutCell.setText("Tasks Allocated");
+	grids['al'] = layoutCell.attachGrid();
+	grids['al'].setImagePath("js/dhtmlxGrid/codebase/imgs/");
+	grids['al'].setHeader("TaskName,Process,Started By,Importance,Created,Due,Note");
+	grids['al'].setInitWidths("250,200,200,100,100,100,500");
+	grids['al'].setColAlign("left,left,left,left,left,left,left");
+	grids['al'].setColTypes("ro,ro,ro,ro,ro,ro,ro");
+	grids['al'].setColSorting("na,str,str,na,na,na,na");
+	grids['al'].init();
+	grids['al'].attachEvent("onRowSelect", function(rid, cid) {
+		server.asyncServlet({ servlet : 'process', action : 'select_task', data : { tid: rid }, context : { 
+			select_task_OK : function(response) {
+				tbjEvents.fireEvent({name: 'al_task_selected', data: response})
+			}
+		}});
+	});
+
+	grids['al'].setSkin("dhx_black");
+	grids['al'].loadXML("xml?feed=TkAlGd");
+	
+	grids['al'].tbjRefresh = function() {
+		this.clearAll();
+		this.loadXML("xml?feed=TkAlGd");
+	}
+	
+	tbjEvents.addListener({ name: 'task_claimed', context: this, func: function(evt) {
+	    grids['al'].tbjRefresh(); 
+	    grids['av'].tbjRefresh(); 
+	}});
+	
+}
+
+function buildCellTaskAction(layoutCell) {
+	layoutCell.setText("Task Actions");
+	
+	var acc=layoutCell.attachAccordion();
+    acc.addItem("allocated", "Allocated");
+    acc.addItem("available", "Available");
+    acc.addItem("status", "Status");
+    acc.cells("available").hide();
+    acc.cells("allocated").hide();
+    acc.cells("status").hide();
+   
+    
+    forms['TkAcAl'] = new FormTkAcAl(acc.cells("allocated").attachForm(), acc, grids);
+    forms['TkAcAv'] = new FormTkAcAv(acc.cells("available").attachForm(), acc, grids);
+    forms['TkAcSt'] = new FormTkAcSt(acc);
+}
+function buildCellStatus(cell) {
+	initLogger(cell);
+	logger.log("Loaded OK");
+}
+
+
+</script>
+<style>
+fieldset {margin: 25px;}
+</style>
+	 
+</head>
+<body>
+<div id="cog_header" style="height: 50px;"></div>
+<div id="layout" style="position: relative; top: 20px; left: 20px; width: 600px; height: 800px; aborder: #B5CDE4 1px solid;"></div>
+</body>
+</html>

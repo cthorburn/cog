@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCODJGNJx_SroyRYTPLlmc-GXz7CVagJmI&sensor=true"></script>
+
+$magic.dhxSupport()
+
+<script>
+var layout;	
+
+
+$(document).ready(
+	function() {
+		server=new Server();
+		layout=buildLayout();
+	}
+);
+
+function buildLayout() {
+	layout=new dhtmlXLayoutObject(document.body, "1C");
+	layout.cont.obj._offsetTop = 50; // top margin
+	layout.cont.obj._offsetLeft = 2; // left margin
+	layout.cont.obj._offsetHeight = -4; // bottom margin
+	layout.cont.obj._offsetWidth = -4; // right margin	buildCellRight(layout.cell("right"))
+
+	buildCell(layout.cells('a'));
+	layout.cells('a').hideHeader();
+}
+
+function buildCell(layoutCell) {
+    var form=layoutCell.attachForm("explain_task");
+	form.setSkin('dhx_skyblue');
+	var spec=[
+	   	    {type: "settings", position: "label-left", inputWidth: 300, labelWidth: 200},
+	   		
+	   		{type: "fieldset",  label: "Task Actions", width: 750, list:[
+	           {type: "input", name: "explain_task", disabled: true, rows: 5, label: "Task description"},
+	   		   {type: "input", name: "title", disabled: true, label: "Title"},
+	   		   {type: "input", name: "application", disabled: true, label: "Application"},
+	   		   {type: "input", name: "description", disabled: true, rows: 5, label: "Description"},
+	   		   {type: "input", name: "reproduce", disabled: true, rows: 5, label: "How to reproduce"},
+	   		   {type: "input", name: "impact", disabled: true, label: "Impact"},
+	   		   {type: "checkbox", name: "internal", disabled: true, label: "Raised internally"},
+	   		   
+	   		   {type: "input", name: "env", label: "Investigation environment name"},
+	   		   {type: "button", name: "confirm", value: "Confirm environment ready"}
+	   		]}
+	       ];
+	   	
+	
+	
+	
+	form.loadStruct(spec, "json", function() {});
+	form.attachEvent("onButtonClick", function(name) {
+	    switch(name) {
+	        case "confirm": disposeTask('ready', { env: this.getItemValue("env") }); break;
+	    }    
+	});
+
+    form.setItemValue("explain_task", "Create an environment for investigation of this bug");
+    
+    getTaskJSON('formData', {}, function(form) { return function(json) {
+        
+        for(item in json) {
+            form.setItemValue(item, json[item]);
+        }
+        form.updateValues();
+    };}(form));
+}
+
+
+</script>
+	 
+</head>
+<body>
+<div id="taskLayout" style="position: relative; top: 20px; left: 20px; width: 600px; height: 800px; aborder: #B5CDE4 1px solid;"></div>
+</body>
+</html>

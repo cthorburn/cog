@@ -1,0 +1,21 @@
+<menu>
+	<item id="admin" text="Admin"> 
+		<item id="admin:users" text="Users" /> 
+		<item id="admin:process" text="Processes" /> 
+		<item id="admin:dependency" text="Dependencies" /> 
+		<item id="admin:service" text="Services" /> 
+		<item id="admin:acl" text="Accces Control" /> 
+	</item> 
+	<item id="processes" text="Processes"> 
+		<item id="processes:task_list" text="Task List"/> 
+		<item id="processes:messages" text="Messages"/> 
+		<item id="processes:history" text="History"/> 
+		<item id="processes:browse" text="Browse"/> 
+	</item> 
+	<item id="account" text="Account"> 
+		<item id="account:settings" text="Settings"/> 
+	</item> 
+	<item id="system" text="System"> 
+		<item id="system:configure" text="Configure"/> 
+	</item> 
+</menu>

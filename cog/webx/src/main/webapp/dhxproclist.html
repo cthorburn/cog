@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Trabajo!</title>
+
+<link rel="stylesheet" type="text/css" href="css/main.css"/>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxLayout/codebase/dhtmlxlayout.css">
+<link rel="stylesheet" type="text/css" href="js/dhtmlxLayout/codebase/skins/dhtmlxlayout_dhx_black.css">
+<script src="js/dhtmlxMenu/codebase/dhtmlxcommon.js"></script>
+<script src="js/dhtmlxLayout/codebase/dhtmlxlayout.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxMenu/codebase/skins/dhtmlxmenu_dhx_black.css"/>
+<script src="js/dhtmlxMenu/codebase/dhtmlxmenu.js"></script>
+<script src="js/dhtmlxLayout/codebase/dhtmlxcontainer.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxAccordion/codebase/skins/dhtmlxaccordion_dhx_black.css">
+<script src="js/dhtmlxAccordion/codebase/dhtmlxaccordion.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxGrid/codebase/dhtmlxgrid.css"/>
+<link rel="stylesheet" type="text/css" href="js/dhtmlxGrid/codebase/dhtmlxgrid_skins.css"/>
+<link rel="stylesheet" type="text/css" href="js/dhtmlxGrid/codebase/skins/dhtmlxgrid_dhx_black.css"/>
+<script src="js/dhtmlxGrid/codebase/dhtmlxgrid.js"></script>
+<script src="js/dhtmlxGrid/codebase/dhtmlxgridcell.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxForm/codebase/skins/dhtmlxform_dhx_skyblue.css">
+<script src="js/dhtmlxForm/codebase/dhtmlxform.js"></script>
+<script src="js/dhtmlxForm/codebase/ext/dhtmlxform_item_container.js"></script>
+<script src="js/dhtmlxForm/codebase/ext/dhtmlxform_item_upload.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxCombo/codebase/dhtmlxcombo.css">
+<script src="js/dhtmlxCombo/codebase/dhtmlxcombo.js"></script>
+    
+<link rel="stylesheet" type="text/css" href="js/dhtmlxTabbar/codebase/dhtmlxtabbar.css">
+<script  src="js/dhtmlxTabbar/codebase/dhtmlxtabbar.js"></script>    
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxTree/codebase/dhtmlxtree.css">
+<script src="js/dhtmlxTree/codebase/dhtmlxtree.js"></script>
+   
+<<<<<<< HEAD
+=======
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
+>>>>>>> be6e5a2b38666c17ec306afec472c771958263ca
+<script src="js/jquery-min-1.9.1.js"></script>
+<script src="js/trabajo/trabajo.js"></script>
+<script src="js/trabajo/dhxproclist.js"></script>
+
+<script>
+var layout;	
+var grid;
+var acc={};
+var trees={};
+var forms={};
+
+$(document).ready(
+	function() {
+	    documentLoaded();
+		layout=buildLayout();
+	}
+);
+
+function buildLayout() {		
+	
+	layout=new TrabajoLayout("Procs", "3U", 
+			["Process Components "+processHeader(),"pt", 
+			 "Edit","ed", 
+			 "Status", "status"]);
+	
+	
+	buildCellStatus(layout.cell("status"));
+	buildCellTrees(layout.cell("pt"));
+	buildCellEd();
+	
+	trees["process"].loadXML('xml?feed=AdPrPt');
+	trees["process"].openAllItems('ignore');
+
+	layout.dhxLayout.cells("a").showHeader("pt");
+}
+
+function processHeader() {
+	return ""; //"<a href=\"javascript:alert('he hey!')\"><img style=\"width: 20px; height:20px; \" src=\"js/dhtmlxForm/codebase/imgs/dhxform_dhx_skyblue/dhxform_upload_uploading.gif\"/></a>"
+}
+
+function buildCellTrees(treeCell) {
+	var tabbar=treeCell.attachTabbar();
+    tabbar.setImagePath("js/dhtmlxTabbar/codebase/imgs/");
+    tabbar.addTab("process", "Processes", 100);    
+    tabbar.attachEvent("onSelect", function(layout, acc){ return function(tab, lastTab) {
+
+    	var feed;
+    	
+    	switch(tab) {
+			case "process":
+				feed='AdPrPt';
+				break;    			
+    	}
+
+    	tbjEvents.fireEvent({name: 'tree_switch_'+tab, data: {from: tab}});
+    	
+		return true;
+		
+		
+    }}(layout, acc));
+    
+    tabbar.setTabActive("process", false);
+    buildProcessTree(tabbar.cells("process"));
+}
+
+function buildProcessTree(tc) {
+	var tree = tc.attachTree();
+	
+	tree.setImagePath("js/dhtmlxTree/codebase/imgs/");
+	
+	trees["process"]=tree;
+	
+	tree.attachEvent('onClick', function(nid) {
+		
+		if(nid.indexOf(".")== -1)
+			return; 
+		
+		var split=nid.split('.');
+		split=split[split.length-1];
+		//TODO get regex working
+		//if(new RegExp("\d+.*").test(split))
+		if(true) {
+			tbjEvents.fireEvent( { name: 'process_select', data: nid } ); 
+		}
+		
+	});
+}
+
+function buildCellEd() {
+    
+	var dhxAccord=layout.cell("ed").attachAccordion();
+    var infoCell=dhxAccord.addItem("info", "Process Info");
+   	var runCell=dhxAccord.addItem("run", "Run");
+    
+   	runCell.attachObject("sf");
+
+    tbjEvents.addListener({ name : 'process_started', context : dhxAccord, func : function(evt) {
+        dhxAccord.openItem("info");
+    }
+    });
+    
+    tbjEvents.addListener({ name : 'process_select', context : dhxAccord, func : function(evt) {
+        var runCell = dhxAccord.cells("run");
+        var selectedTreeId=evt.data;
+        if (runCell.startupForm) {
+            runCell.startupForm.unload();
+        }
+        
+        runCell.startupForm=new dhtmlXForm("form_container");
+        runCell.startupForm.setSkin('dhx_skyblue');
+        
+        runCell.startupForm.loadStruct("process?a=starter_form&dv=" + evt.data);
+        runCell.open();
+    }
+    });
+    
+    forms['PlEdIn'] = new FormPlEdIn(dhxAccord.cells("info").attachForm(), dhxAccord);
+
+
+}
+
+function buildCellStatus(cell) {
+	initLogger(cell);
+	logger.log("Loaded OK");
+}
+
+function buildProcessAccordian(dhxAccord) {
+	
+    dhxAccord.addItem("info", "Process Info");
+    dhxAccord.addItem("run", "Run");
+    
+    //forms['PrPrIn'] =new FormAdPrEdPrNw(dhxAccord.cells("new").attachForm(), dhxAccord);
+    
+    dhxAccord.openItem("new");
+}
+</script>
+<style>
+fieldset {margin: 25px;}
+</style>
+	 
+</head>
+<body>
+<div id="cog_header" style="height: 50px;"></div>
+<div id="layout" style="position: relative; top: 20px; left: 20px; width: 600px; height: 800px; aborder: #B5CDE4 1px solid;"></div>
+<div id="sf" style="padding-left: 20px">
+	<div id="button_container">
+		<div>
+			<div style="float: left; padding-top: 40px;"><h3>Process Start Form</h3></div>
+			<div>
+			<button onclick="tbjEvents.fireEvent({ name: 'start_it', data: {}})" type="submit" id="_cog_start" name="_cog_start" style="margin-left: 60px; margin-top: 20px; border: 0; background: transparent">
+			    <img src="img/start.jpg" width="85" heght="85" alt="start" />
+			</button>
+			</div>
+		</div>
+	</div>
+	<div id="form_container"></div><br clear="all"/>
+</div>
+</body>
+</html>

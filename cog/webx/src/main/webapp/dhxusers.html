@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Trabajo!</title>
+
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCODJGNJx_SroyRYTPLlmc-GXz7CVagJmI&sensor=true"></script>
+
+<script src="js/dhtmlxMenu/codebase/dhtmlxcommon.js"></script>
+<script src="js/dhtmlxWindows/codebase/dhtmlxcontainer.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxWindows/codebase/dhtmlxwindows.css">
+<link rel="stylesheet" type="text/css" href="js/dhtmlxWindows/codebase/skins/dhtmlxwindows_dhx_black.css">
+<script src="js/dhtmlxWindows/codebase/dhtmlxwindows.js"></script>
+    
+<link rel="stylesheet" type="text/css" href="js/dhtmlxLayout/codebase/dhtmlxlayout.css">
+<link rel="stylesheet" type="text/css" href="js/dhtmlxLayout/codebase/skins/dhtmlxlayout_dhx_black.css">
+<script src="js/dhtmlxLayout/codebase/dhtmlxlayout.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxMenu/codebase/skins/dhtmlxmenu_dhx_black.css"/>
+<script src="js/dhtmlxMenu/codebase/dhtmlxmenu.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxAccordion/codebase/skins/dhtmlxaccordion_dhx_black.css">
+<script src="js/dhtmlxAccordion/codebase/dhtmlxaccordion.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxGrid/codebase/dhtmlxgrid.css"/>
+<link rel="stylesheet" type="text/css" href="js/dhtmlxGrid/codebase/dhtmlxgrid_skins.css"/>
+<link rel="stylesheet" type="text/css" href="js/dhtmlxGrid/codebase/skins/dhtmlxgrid_dhx_black.css"/>
+<script src="js/dhtmlxGrid/codebase/dhtmlxgrid.js"></script>
+<script src="js/dhtmlxGrid/codebase/dhtmlxgridcell.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxForm/codebase/skins/dhtmlxform_dhx_skyblue.css">
+<script src="js/dhtmlxForm/codebase/dhtmlxform.js"></script>
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxTabbar/codebase/dhtmlxtabbar.css">
+<script  src="js/dhtmlxTabbar/codebase/dhtmlxtabbar.js"></script>    
+
+<link rel="stylesheet" type="text/css" href="js/dhtmlxTree/codebase/dhtmlxtree.css">
+<script src="js/dhtmlxTree/codebase/dhtmlxtree.js"></script>
+
+<<<<<<< HEAD
+<script src="js/jquery-min-1.9.1.js"></script>
+=======
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
+<script src="js/jquery-min-1.9.1.js"></script>
+
+>>>>>>> be6e5a2b38666c17ec306afec472c771958263ca
+<script src="js/trabajo/trabajo.js"></script>
+<script src="js/trabajo/dhxusers.js"></script>
+
+<link rel="stylesheet" type="text/css" href="css/main.css"/>
+
+<script>
+var layout;	
+var forms={};
+var grid;
+var acl;
+var mapManager;
+var dhxWins;
+
+$(document).ready(
+	function() {
+	    documentLoaded();
+	    dhxWins=new dhtmlXWindows();
+	    dhxWins.setImagePath("js/dhtmlxWindows/codebase/imgs/");
+		layout=buildLayout();
+	}
+);
+
+function buildLayout() {		
+	layout=new TrabajoLayout("Users", "4I", 
+				["System Users","su", 
+				 "Edit","ed", 
+				 "Access Control", "acl",
+				 "Status", "status"]);
+	
+	buildCellStatus(layout.cell('status'));
+	buildCellSu();
+	acl=new buildCellAcl();
+	buildCellEd();
+}
+
+function buildCellStatus(cell) {
+	initLogger(cell);
+	logger.log("Loaded OK");
+}
+
+function buildCellSu() {
+	layout.cell("su").setHeight(150);		
+	grid=buildGrid(layout.cell("su").attachGrid());
+}
+
+
+function buildCellEd() {
+	var acc=layout.cell("ed").attachAccordion();
+	
+	acc.addItem("new", "New");
+    acc.addItem("edit", "Edit");
+    acc.addItem("delete", "Delete");
+    acc.openItem("new");
+	
+    tbjEvents.addListener( { name: 'usermodel_changed', func:
+        function(clos) { 
+        	return  function(evt) { 
+               clos.setText("System User - <span style=\"color:green;\">"+ evt.data.fullName+"</span>");	
+        	};
+        }(layout.cell("su")) }
+    );
+    
+    tbjEvents.addListener( { name: 'usermodel_changed', context: acc, func: function(evt){ this.openItem("edit") } } );	    
+
+	setupAccCellNew(acc.cells("new"), acc);
+	setupAccCellEdit(acc.cells("edit"), acc);
+	setupAccCellDelete(acc.cells("delete"), acc);
+}
+
+function setupAccCellNew(accCell, acc) {
+    var tabbar=accCell.attachTabbar();
+    tabbar.setImagePath("js/dhtmlxTabbar/codebase/imgs/");
+    tabbar.addTab("identity", "Indentity", 100);    
+    tabbar.addTab("detail", "Details", 100);
+    tabbar.setTabActive("identity", false);
+
+	forms['FormAdUsEdNwId']=newByName("FormAdUsEdNwId", window, tabbar.cells("identity").attachForm(), tabbar, acc);
+	forms['FormAdUsEdNwDt']=newByName("FormAdUsEdNwDt", tabbar.cells("detail").attachForm(), tabbar, acc);
+}
+
+function setupAccCellEdit(accCell, acc) {
+    var tabbar=accCell.attachTabbar();
+    tabbar.setImagePath("js/dhtmlxTabbar/codebase/imgs/");
+    tabbar.addTab("identity", "Indentity", 100);    
+    tabbar.addTab("locale", "Locale", 100);
+    tabbar.addTab("detail", "Details", 100);
+    tabbar.setTabActive("identity", false);
+	
+    forms['FormAdUsEdEdId']=newByName("FormAdUsEdEdId", window, tabbar.cells("identity").attachForm(), tabbar, acc);
+	forms['FormAdUsEdEdDt']=newByName("FormAdUsEdEdDt", tabbar.cells("detail").attachForm(), tabbar, acc);
+    
+	mapManager = new MapManager(tabbar.cells("locale"));
+	
+	mapManager.loadUserMap=function(evt) {
+        this.userpk=evt.data.id;
+        server.asyncServlet({servlet: 'map', action: 'user', context: this, data: {user: this.userpk } });
+    };
+    
+    tbjEvents.addListener( { name: 'usermodel_changed', context: mapManager , func: mapManager.loadUserLocationMap() } );
+}
+
+function setupAccCellDelete(accCell, acc) {
+	forms['FormAdUsEdDel']=newByName("FormAdUsEdDel", window, accCell.attachForm(), acc);
+}
+function setupAccCellSearch(accCell, acc) {
+	forms['FormAdUsEdSch']=newByName("FormAdUsEdSch", window, accCell.attachForm(), acc);
+}
+
+function buildCellAcl() {
+	var aclTabbar=layout.cell("acl").attachTabbar();
+	
+	aclTabbar.setImagePath("js/dhtmlxTabbar/codebase/imgs/");
+	aclTabbar.addTab("roles", "Roles", 100);    
+	aclTabbar.addTab("groups", "Groups", 100);   
+	aclTabbar.addTab("permissions", "Permissions", 100);
+	
+	this.roleGrid=aclTabbar.cells("roles").attachGrid();
+	this.roleGrid.setImagePath("js/dhtmlxGrid/codebase/imgs/");
+	this.roleGrid.setHeader("Name, Description,Assigned");
+	this.roleGrid.setInitWidths("150,500,80");
+	this.roleGrid.setColAlign("left,left,left");
+	this.roleGrid.setColTypes("ro,ro,ch");
+	this.roleGrid.setColSorting("str,str,str");
+	this.roleGrid.init();
+	this.roleGrid.preventIECaching(true);
+	this.roleGrid.attachEvent('onCheck', function(rId,cInd,state) {
+		server.asyncServlet({servlet: 'user', action: 'modify_role', data: {set: state, userid: this.tbj.userid, roleid: rId }});
+	});
+	this.roleGrid.tbj=this;
+	
+	this.groupGrid=aclTabbar.cells("groups").attachGrid();
+	this.groupGrid.setImagePath("js/dhtmlxGrid/codebase/imgs/");
+	this.groupGrid.setHeader("Name, Description,Assigned");
+	this.groupGrid.setInitWidths("150,500,80");
+	this.groupGrid.setColAlign("left,left,left");
+	this.groupGrid.setColTypes("ro,ro,ch");
+	this.groupGrid.setColSorting("str,str,str");
+	this.groupGrid.init();
+	this.groupGrid.preventIECaching(true);
+	this.groupGrid.attachEvent('onCheck', function(rId,cInd,state) {
+			server.asyncServlet({servlet: 'user', action: 'modify_group', data: {set: state, userid: this.tbj.userid, groupid: rId }});		
+	});
+	this.groupGrid.tbj=this;
+	
+	tbjEvents.addListener(
+			{
+			    name: 'grid_dblclick', 
+			    context: this, 
+			    func: function(evt) {
+			        
+			        this.roleGrid.tbj.userid=evt.data.userid;
+			        this.groupGrid.tbj.userid=evt.data.userid;
+					this.roleGrid.clearAll();
+					this.groupGrid.clearAll();
+					this.roleGrid.loadXML("xml?feed=AdUsAcRlGd_user_roles&userid="+evt.data.userid);
+					this.groupGrid.loadXML("xml?feed=AdUsAcGpGd_user_groups&userid="+evt.data.userid);
+			    }
+			}
+	);
+	
+	aclTabbar.setTabActive("roles", false);
+	layout.cell("acl").showHeader();
+}
+
+function buildGrid(g) {
+		g.setImagePath("js/dhtmlxGrid/codebase/imgs/");
+		g.setHeader("Full Name, Username, Primary Email");
+		g.setInitWidths("150,80,500");
+		g.setColAlign("left,left,left");
+		g.setColTypes("ro,ro,ro");
+		g.setColSorting("str,str,str");
+		g.init();
+		g.preventIECaching(true);
+		g.attachEvent('onRowDblClicked', function(rid, cid) {
+			tbjEvents.fireEvent(
+					{name: 'grid_dblclick', data: { userid: rid, col: cid }}
+			);
+		});
+		g.loadXML("xml?feed=AdUsSu");
+		return g;
+}
+</script>
+<style>
+fieldset {margin: 25px;}
+</style>
+</head>
+<body>
+<div id="cog_header" style="height: 50px;"></div>
+<div id="layout" style="position: relative; top: 20px; left: 20px; width: 600px; height: 800px; aborder: #B5CDE4 1px solid;"></div>
+<div id="roledesc" ></div>
+</body>
+</html>

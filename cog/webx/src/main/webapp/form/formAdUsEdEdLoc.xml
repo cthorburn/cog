@@ -1,0 +1,9 @@
+<items>
+	<item type="settings" position="label-left" labelWidth="100" inputWidth="120" />
+	<item type="fieldset" name="data" inputWidth="auto" label="Locale Details">
+		<item type="input" name="locale" value="" label="Locale" validate="NotEmpty,ValidateLocale"/>
+		<item type="button" name="create" value="Create" />
+	</item>
+</items>
+
+
