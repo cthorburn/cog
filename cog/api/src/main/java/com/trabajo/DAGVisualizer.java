@@ -2,8 +2,6 @@ package com.trabajo;
 
 import java.io.Serializable;
 
-import javax.persistence.EntityManager;
-
 
 public class DAGVisualizer implements IVisualizer, Serializable {
 

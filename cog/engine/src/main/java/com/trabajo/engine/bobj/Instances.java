@@ -9,7 +9,6 @@ import javax.persistence.TypedQuery;
 
 import com.trabajo.DefinitionVersion;
 import com.trabajo.jpa.InstanceJPA;
-import com.trabajo.jpa.NodeJPA;
 import com.trabajo.process.IInstance;
 
 public class Instances {

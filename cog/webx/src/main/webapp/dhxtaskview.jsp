@@ -47,10 +47,6 @@ response.setDateHeader ("Expires", -1);
 <link rel="stylesheet" type="text/css" href="js/dhtmlxTree/codebase/dhtmlxtree.css">
 <script src="js/dhtmlxTree/codebase/dhtmlxtree.js"></script>
    
-<<<<<<< HEAD
-=======
-<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> -->
->>>>>>> be6e5a2b38666c17ec306afec472c771958263ca
 <script src="js/jquery-min-1.9.1.js"></script>
 <script src="js/trabajo/trabajo.js"></script>
 <script src="js/trabajo/dhxtaskview.js"></script>

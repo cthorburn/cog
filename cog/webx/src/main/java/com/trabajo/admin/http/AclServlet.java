@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.trabajo.ejb.EngineBean;
 import com.trabajo.engine.TSession;
-import com.trabajo.engine.UserPrefs;
 
 /**
  * Servlet implementation class DHTMLXXML

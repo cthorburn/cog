@@ -1,7 +1,6 @@
 package com.trabajo.admin.http;
 
 import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 
 import javax.ejb.EJB;
@@ -34,6 +33,7 @@ public class FileDownload extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
+	@SuppressWarnings("unused")
 	private Logger logger = LoggerFactory.getLogger(EngineImpl.class);
 
 

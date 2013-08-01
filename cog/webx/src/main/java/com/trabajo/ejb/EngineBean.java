@@ -41,7 +41,6 @@ import com.trabajo.engine.View;
 import com.trabajo.engine.bobj.Groups;
 import com.trabajo.engine.bobj.Maps;
 import com.trabajo.engine.bobj.Roles;
-import com.trabajo.engine.bobj.UserLocationMaps;
 import com.trabajo.engine.bobj.Users;
 import com.trabajo.process.IGroup;
 import com.trabajo.process.IMap;

@@ -38,6 +38,7 @@ public class ProcessServlet extends HttpServlet {
 	@EJB
 	private EngineBean engine;
 	
+	@SuppressWarnings("unused")
 	private final static Logger logger=LoggerFactory.getLogger(ProcessServlet.class);
 
 

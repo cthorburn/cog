@@ -55,7 +55,6 @@ public class ClassLoaderChains<T extends CLMKey<T>> implements Observer {
 		return extCl;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void update(Observable o, Object arg) {
 	}
@@ -96,6 +95,7 @@ public class ClassLoaderChains<T extends CLMKey<T>> implements Observer {
 //		}
 //	}
 
+	@SuppressWarnings("unused")
 	private void logListJars(ChainUpdate<T> chu) {
 		File[] jars = chu.getFiles();
 

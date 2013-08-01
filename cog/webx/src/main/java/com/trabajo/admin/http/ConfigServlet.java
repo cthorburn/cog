@@ -29,6 +29,7 @@ public class ConfigServlet extends HttpServlet {
 	@EJB
 	private EngineBean engine;
 	
+	@SuppressWarnings("unused")
 	private final static Logger logger=LoggerFactory.getLogger(ConfigServlet.class);
 
 	@Override

@@ -18,8 +18,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.FileUploadException;
@@ -72,7 +70,6 @@ public class DevServlet extends HttpServlet {
 		Path target = null;
 		String originalName = "none";
 		long size = 0;
-		String resp = null;
 		Map<String, String> parms = null;
 
 		if (action==null) {
@@ -137,7 +134,7 @@ public class DevServlet extends HttpServlet {
 
 		switch (action) {
 		case "deploy_process": {
-			resp = doProcessUpload(ts, request, target, originalName, size);
+			doProcessUpload(ts, request, target, originalName, size);
 			break;
 		}
 		case "wipeQuartzTables": {
@@ -158,6 +155,7 @@ public class DevServlet extends HttpServlet {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private DefinitionVersion parseTreeProcessComponent(String parameter) {
 		Version v = Version.parse(Strings.afterLast(parameter, '.'), "-");
 		String sn = Strings.beforeLast(parameter, '.');

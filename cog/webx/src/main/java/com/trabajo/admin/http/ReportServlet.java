@@ -3,12 +3,8 @@ package com.trabajo.admin.http;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.ejb.EJB;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -36,6 +32,7 @@ public class ReportServlet extends HttpServlet {
 	@EJB
 	private EngineBean engine;
 	
+	@SuppressWarnings("unused")
 	private final static Logger logger=LoggerFactory.getLogger(ReportServlet.class);
 
 
@@ -47,7 +44,6 @@ public class ReportServlet extends HttpServlet {
 		ts.newRequest();
 		
 		EngineStatus status = ts.getStatus();
-		ServletContext sc = request.getSession().getServletContext();
 		
 		switch (action) {
 		case "deser": {

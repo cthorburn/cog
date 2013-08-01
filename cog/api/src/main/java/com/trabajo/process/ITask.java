@@ -7,7 +7,6 @@ import com.trabajo.DeadlineTimescale;
 import com.trabajo.StateContainer;
 import com.trabajo.TaskCompletion;
 import com.trabajo.TaskStatus;
-import com.trabajo.annotation.Visualizer;
 
 
 public interface ITask  extends IEntity {

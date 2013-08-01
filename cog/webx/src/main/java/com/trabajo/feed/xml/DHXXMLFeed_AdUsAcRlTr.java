@@ -11,7 +11,6 @@ import com.trabajo.admin.http.Feed;
 import com.trabajo.admin.http.FeedParms;
 import com.trabajo.engine.Engine;
 import com.trabajo.engine.TSession;
-import com.trabajo.jpa.ClassLoaderDefJPA;
 import com.trabajo.jpa.RoleJPA;
 
 public class DHXXMLFeed_AdUsAcRlTr implements Feed {

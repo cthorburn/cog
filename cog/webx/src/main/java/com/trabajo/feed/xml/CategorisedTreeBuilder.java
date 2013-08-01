@@ -39,6 +39,7 @@ public class CategorisedTreeBuilder<T extends JPACategorised<T>> {
 		}
 
 		for (T j : results) {
+			@SuppressWarnings("unused")
 			INode<T> n = map.get(j.getCategory());
 			// TODO enrich
 		}

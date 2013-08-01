@@ -1,6 +1,5 @@
 package com.trabajo.ejb;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 
 import javax.annotation.Resource;
@@ -43,6 +42,7 @@ public class DevBean {
 
 	}
 	
+	@SuppressWarnings("unused")
 	private Engine getEngine() {
 		return EngineInstance.instance;
 	}

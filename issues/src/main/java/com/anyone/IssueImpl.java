@@ -47,6 +47,7 @@ public class IssueImpl implements Issue {
 	private String reproduce;
 	private Impact impact;
 	private boolean internal;
+	@SuppressWarnings("unused")
 	private Integer existingId;
 
 	@Expose(serialize=false, deserialize=false)

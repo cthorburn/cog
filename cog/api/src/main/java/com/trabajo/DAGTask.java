@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-
 import com.trabajo.process.ITask;
 
 public class DAGTask implements IVizTask, Serializable {

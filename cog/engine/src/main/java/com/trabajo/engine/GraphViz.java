@@ -14,6 +14,7 @@ import javax.xml.transform.stream.StreamSource;
 
 public class GraphViz {
 
+	@SuppressWarnings("unused")
 	private static Templates templates;
 	
 //	static {

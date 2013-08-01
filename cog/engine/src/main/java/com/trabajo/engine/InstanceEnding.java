@@ -7,9 +7,13 @@ import com.trabajo.process.IInstance;
 public class InstanceEnding {
 
 	private IInstance instance;
+	@SuppressWarnings("unused")
 	private TSession ts;
+	@SuppressWarnings("unused")
 	private ProcessClassMetadata pcm;
+	@SuppressWarnings("unused")
 	private WholeJarMetadataV1 wjm;
+	@SuppressWarnings("unused")
 	private ClassLoader cl;
 	
 	public InstanceEnding(IInstance instance, TSession ts, ProcessClassMetadata pcm, WholeJarMetadataV1 wjm, ClassLoader cl) {

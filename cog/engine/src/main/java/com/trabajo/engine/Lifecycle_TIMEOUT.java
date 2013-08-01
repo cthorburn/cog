@@ -11,6 +11,7 @@ import com.trabajo.process.ITask;
 
 public class Lifecycle_TIMEOUT extends AbstractLifecycle {
 	
+	@SuppressWarnings("unused")
 	private final static Logger logger = LoggerFactory.getLogger(Lifecycle_TIMEOUT.class);
 
 	private Object taskObject;

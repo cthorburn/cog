@@ -5,7 +5,8 @@ import com.trabajo.process.ServiceInfo;
 
 
 public class ServiceConfigManagerImpl implements ServiceConfigManager {
-    private ProcessRegistry pr;
+    @SuppressWarnings("unused")
+	private ProcessRegistry pr;
     
     public ServiceConfigManagerImpl(ProcessRegistry pr) {
         super();

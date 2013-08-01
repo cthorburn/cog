@@ -23,6 +23,7 @@ import com.trabajo.utils.Visitation;
 
 public class Lifecycle_TASK_CREATE extends AbstractLifecycle {
 
+	@SuppressWarnings("unused")
 	private final static Logger logger = LoggerFactory.getLogger(Lifecycle_TASK_CREATE.class);
 
 	private Object taskObject;

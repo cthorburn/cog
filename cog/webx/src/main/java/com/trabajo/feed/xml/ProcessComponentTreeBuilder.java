@@ -47,6 +47,7 @@ public class ProcessComponentTreeBuilder<T extends JPAProcessComponent<T>> {
 		}
 
 		for (T j : results) {
+			@SuppressWarnings("unused")
 			INode<T> n = map.get(j.getCategory());
 			// TODO enrich
 		}

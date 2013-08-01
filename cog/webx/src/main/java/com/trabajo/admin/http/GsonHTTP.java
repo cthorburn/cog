@@ -24,7 +24,6 @@ public class GsonHTTP {
 			exclude.add(s);
 		}
 
-		Gson gson = new Gson();
 
 		for (String k : request.getParameterMap().keySet()) {
 			String v = request.getParameterMap().get(k)[0];

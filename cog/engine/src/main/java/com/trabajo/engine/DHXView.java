@@ -15,6 +15,7 @@ public class DHXView implements View {
 
 	private String xml;
 	private List<String> javascript;
+	@SuppressWarnings("unused")
 	private List<String> javascriptInclude;
 	
 	private int taskId;

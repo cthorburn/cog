@@ -44,7 +44,7 @@ import com.trabajo.process.ITask;
 //Give it some initial categorisation so that we can place see it in the process tree view.
 //Give it a bit of description so that we know roughly what it does.
 //We can't change the name or version once deployed, but we can modify the category and description later if desired
-@Process(	name = "bugfix", version = "1.0.45", category = "software.development", description = "Manage a software issue")
+@Process(	name = "bugfix", version = "1.0.46", category = "software.development", description = "Manage a software issue")
 
 //(NOT MANDATORY) Do we really want to keep all the database records 
 //concerning delivery of tea and biscuits to meeting rooms? I think not.  

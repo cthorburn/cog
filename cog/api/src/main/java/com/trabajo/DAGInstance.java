@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.EntityManager;
-
 public class DAGInstance implements IVizInstance, Serializable {
 
 	private static final long serialVersionUID = 1L;
