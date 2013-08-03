@@ -1,18 +1,52 @@
 
 function FormAdPrEdPrEd(dhxForm, dhxAccord, tree) {
-    debugger;
+    
     FormAdPrEdPrEd.obj=this;
     this.dhx = dhxForm;
     this.acdn = dhxAccord;
     this.tree=tree;
     this.dhx.setSkin("dhx_skyblue");
     
-    this.spec = [ { type : "settings", position : "label-left", labelWidth : 100, inputWidth : 800},
-                  { type : "fieldset", label : "Service Propeties", width : 1000, list : [ 
-                  { type : "container", name : "grid", label : "Properties By Service", inputHeight: 300}
+    this.spec = [ { type : "settings",  position : "label-left", labelWidth : 100, inputWidth : 800},
+                  { type : "fieldset",  label : "Service Propeties", width : 1000, list : [ 
+                  { type : "container", name : "grid", label : "Properties By Service", inputHeight: 300},
+                  { type : "checkbox",  name : "deprecated", label : "Deprecated"},
+                  { type : "checkbox",  disabled: true, name : "suspended", label : "Suspended"},
+                  { type : "button",    name : "purge", value: "Delete This Process Version Plus All Complete and Running Instances", label : "Delete Process Version"}
     ]
     } ];
-   
+    
+    this.dhx.attachEvent("onButtonClick", function(name) {
+    	switch(name) {
+	    	case 	"purge": {
+	    		server.asyncServlet({servlet: 'process', action: 'purge', context: this, data: { dv: FormAdPrEdPrEd.obj.dv }});
+				break;
+			}
+    	}
+    });
+
+    this.dhx.attachEvent("onChange", function(name) {
+    	switch(name) {
+    	case 	"deprecated": {
+    		server.asyncServlet({servlet: 'process', action: 'deprecate', context: this, data: { dv: FormAdPrEdPrEd.obj.dv, deprecate: this.getItemValue('deprecated')===1 ? true:false }});
+			break;
+		}
+    	case 	"suspended": {
+    		server.asyncServlet({servlet: 'process', action: 'suspend', context: this, data: { dv: FormAdPrEdPrEd.obj.dv, deprecate: this.getItemValue('suspendeded')===1 ? true:false }});
+			break;
+		}
+    	}
+    });
+
+    
+    
+    this.purge_OK=function(response) {
+        this.dhx.clear();
+        this.tree.reload();
+    };
+    this.purge_all_OK=this.purge_OK;
+    
+    
     this.dhx.loadStruct(this.spec, "json", function() { });
     
     this.grid = new dhtmlXGridObject(this.dhx.getContainer("grid"));
@@ -47,18 +81,29 @@ function FormAdPrEdPrEd(dhxForm, dhxAccord, tree) {
         }
         return true;
     });
+
+    this.loadForm=function(id) {
+	    this.dv=FormAdPrEdPrEd.obj.dvFromTreePath(id);
+	    this.grid.clearAll();
+	    this.grid.loadXML('xml?feed=AdPrEdPrEd&dv='+FormAdPrEdPrEd.obj.dv);
+	    server.asyncServlet({servlet: 'json', feed: 'AdPrEdPrEdFm', data: {dv: this.dv}, context: this});	    
+    };
+    
+    
+    this.AdPrEdPrEdFm_OK=function(procDef) {
+    	this.dhx.setItemValue('deprecated', procDef.deprecated);
+    	this.dhx.setItemValue('suspended', procDef.suspended);
+    };
+    
     
     this.save = function(sdv, k, v) {
-        debugger;
         server.asyncServlet({ servlet: 'process', action: 'setProcessServiceProperty', data: { processDv: this.dv, serviceDv: sdv, key: k, value: v}});
     };
     
     this.tree.attachEvent("onClick", function(id) {
-        if(this.hasChildren(id)==0) {
-            debugger;
-            FormAdPrEdPrEd.obj.dv=FormAdPrEdPrEd.obj.dvFromTreePath(id);
-            FormAdPrEdPrEd.obj.grid.clearAll();
-            FormAdPrEdPrEd.obj.grid.loadXML('xml?feed=AdPrEdPrEd&dv='+FormAdPrEdPrEd.obj.dv);        
+    	debugger;
+        if(this.hasChildren(id)==0 && id!='ignoretoo') {
+        	FormAdPrEdPrEd.obj.loadForm(id);
         }
     });
     

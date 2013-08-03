@@ -1,39 +1,23 @@
 package com.trabajo.vcl;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 
 public class ChainUpdate<T extends CLMKey<T>> {
 
-	public static enum TYPE {REDEFINE, DELETE};
+	public static enum TYPE {DELETE, CHAIN_OUT_OF_SERVICE, CACHE_FILES_DELETED};
 	
-	private CLMKey<T> dv;
-	private File[] files;
+	private T dv;
 	private TYPE type;
 
-	public ChainUpdate(TYPE type, CLMKey<T> dv, File[] files) {
+	public ChainUpdate(TYPE type, T dv) {
 		super();
 		this.type=type;
 		this.dv = dv;
-		this.files = files;
 	}
 	
-	public CLMKey<T> getClassLoaderVersion() {
+	public T getClassLoaderVersion() {
 		return dv;
 	}
-	
-	public void deleteFiles() throws IOException {
-		for(File file: files) {
-			Files.delete(file.toPath());
-		}
-	}
-	
 	public TYPE type() {
 		return type;
-	}
-
-	public File[] getFiles() {
-		return files;
 	}
 }

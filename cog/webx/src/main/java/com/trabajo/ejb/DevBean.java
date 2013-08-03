@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.trabajo.engine.Engine;
-import com.trabajo.engine.EngineInstance;
+import com.trabajo.engine.EngineFactory;
 import com.trabajo.engine.TSession;
 import com.trabajo.engine.dev.DevHelper;
 
@@ -44,7 +44,7 @@ public class DevBean {
 	
 	@SuppressWarnings("unused")
 	private Engine getEngine() {
-		return EngineInstance.instance;
+		return EngineFactory.getEngine();
 	}
 
 	public void wipeQuartzTables(TSession ts) {

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+$magic.dhxSupport()
+
+<script>
+var layout;	
+
+
+$(document).ready(
+	function() {
+		server=new Server();
+		layout=buildLayout();
+	}
+);
+
+function buildLayout() {
+	layout=new dhtmlXLayoutObject(document.body, "2U");
+	layout.cont.obj._offsetTop = 50; // top margin
+	layout.cont.obj._offsetLeft = 2; // left margin
+	layout.cont.obj._offsetHeight = -4; // bottom margin
+	layout.cont.obj._offsetWidth = -4; // right margin	buildCellRight(layout.cell("right"))
+
+	buildCellLeft(layout.cells('a'));
+	buildCellRight(layout.cells('b'));
+	layout.cells('a').hideHeader();
+	layout.cells('b').hideHeader();
+}
+
+function buildCellLeft(layoutCell) {
+    var form=layoutCell.attachForm("explain_task");
+	form.setSkin('dhx_skyblue');
+	var spec=[
+	   	    {type: "settings", position: "label-left", inputWidth: 300, labelWidth: 200},
+	   		
+	   		{type: "fieldset",  label: "Task Actions", width: 750, list:[
+	           {type: "input", rows: 5,  name: "explainTask", disabled: true, label: "Task description"},
+	   		   {type: "input", name: "title", disabled: true, label: "Title"},
+	   		   {type: "input", name: "application", disabled: true, label: "Application"},
+	   		   {type: "input", name: "description", disabled: true, rows: 5, label: "Description"},
+	   		   {type: "input", name: "reproduce", disabled: true, rows: 5, label: "How to reproduce"},
+	   		   {type: "input", name: "impact", disabled: true, label: "Impact"},
+	   		   {type: "checkbox", name: "internal", disabled: true, label: "Raised internally"},
+	   		   {type: "input", name: "env", disabled: true, label: "Test Environment"},
+	   		   
+	   		   {type: "button", name: "fixed", value: "Confirm bug fixed"},
+	   		   
+	   		   {type: "input", name: "note", rows: 5, label: "Note"},
+	   		   {type: "button", name: "addNote", value: "Add note"}
+	   		]}
+	       ];
+	
+	form.loadStruct(spec, "json", function() {});
+	form.attachEvent("onButtonClick", function(name) {
+	    
+	    if(name=="addNote") {
+		    disposeTask(name, { note: this.getItemValue("note") });
+	    }
+	    else {
+	        //fixed
+	        //prompt for resolution
+		    disposeTask(name);
+	    }
+	});
+	
+    getTaskJSON('formData', {}, function(form) { return function(json) {
+        for(item in json) {
+            form.setItemValue(item, json[item]);
+        }
+        form.updateValues();
+    };}(form));
+}
+
+function buildCellRight(layoutCell) {
+	var grid = layoutCell.attachGrid();
+	grid.setImagePath("js/dhtmlxGrid/codebase/imgs/");
+	grid.setHeader("Time,Entered By,Note");
+	grid.setInitWidths("100,300,600");
+	grid.setColAlign("left,left,left");
+	grid.setColTypes("ro,ro,ro");
+	grid.setColSorting("str,str,str");
+	grid.init();
+	grid.setSkin("dhx_black");
+	grid.loadXML("$magic.data('noteData')");
+}
+
+
+</script>
+	 
+</head>
+<body>
+<div id="taskLayout" style="position: relative; top: 20px; left: 20px; width: 600px; height: 800px; aborder: #B5CDE4 1px solid;"></div>
+</html>

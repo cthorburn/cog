@@ -32,4 +32,5 @@ public interface ITask  extends IEntity {
 	GregorianCalendar getDueDate();
 	IUser getOwner();
 	void linkWithVisualizer();
+	void purge();
 }

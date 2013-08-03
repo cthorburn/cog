@@ -2,13 +2,15 @@ package com.trabajo.vcl;
 
 import java.io.File;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import javax.jcr.RepositoryException;
 
 import com.trabajo.tomcat.DirContextFileFinder;
 import com.trabajo.tomcat.TomcatCLMProxy;
 
-public final class ClassLoaderManager<T extends CLMKey<T>, F extends KeyFactory<T>> implements DirContextFileFinder {
+public final class ClassLoaderManager<T extends CLMKey<T>, F extends KeyFactory<T>> extends Observable implements Observer, DirContextFileFinder {
 
 	private final ThreadLocal<VCLThreadContext<T>> threadContext;
 	private ClassLoaderChains<T> chains;
@@ -28,6 +30,8 @@ public final class ClassLoaderManager<T extends CLMKey<T>, F extends KeyFactory<
 		} catch (Exception e) {
 
 		}
+		
+		pr.addObserver(this);
 	}
 
 	public ClassLoaderChainProvider<T> getChainProvider() {
@@ -114,10 +118,6 @@ public final class ClassLoaderManager<T extends CLMKey<T>, F extends KeyFactory<
 		return threadContext.get();
 	}
 
-	public void finalized(T key) {
-		// TODO fire event
-	}
-
 	List<String> fixUpListFor(ExtURLClassloader<T> extURLCl) throws RepositoryException {
 		return pr.fixupListFor(extURLCl.key());
 	}
@@ -130,7 +130,30 @@ public final class ClassLoaderManager<T extends CLMKey<T>, F extends KeyFactory<
 		return pathMagic.getResourceMagician();
 	}
 	
-	public void obliterate(T key) {
-		chains.obliterate(key);		
+
+
+	@Override
+	public void update(Observable o, Object arg) {
+		try {
+			@SuppressWarnings("unchecked") 
+			ChainUpdate<T> chu = (ChainUpdate<T>) arg;
+
+			T key= chu.getClassLoaderVersion();
+
+			if (chu.type() == ChainUpdate.TYPE.DELETE) {
+				chains.putOutOfService(key);
+			}
+			
+			setChanged();
+			notifyObservers(new ChainUpdate<T>(ChainUpdate.TYPE.CHAIN_OUT_OF_SERVICE, key));
+
+		} catch (ClassCastException e) {
+			return;
+		}
+	}
+
+	public void clFinalized() {
+		// TODO Auto-generated method stub
+		
 	}
 }

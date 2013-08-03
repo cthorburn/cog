@@ -6,6 +6,10 @@
 
 <link rel="stylesheet" type="text/css" href="css/main.css"/>
 
+<link rel="stylesheet" type="text/css" href="js/dhtmlxMenu/codebase/skins/dhtmlxmenu_dhx_black.css">
+<script src="js/dhtmlxMenu/codebase/dhtmlxmenu.js"></script>
+<script src="js/dhtmlxMenu/codebase/ext/dhtmlxmenu_ext.js"></script>
+
 <link rel="stylesheet" type="text/css" href="js/dhtmlxLayout/codebase/dhtmlxlayout.css">
 <link rel="stylesheet" type="text/css" href="js/dhtmlxLayout/codebase/skins/dhtmlxlayout_dhx_black.css">
 <script src="js/dhtmlxMenu/codebase/dhtmlxcommon.js"></script>
@@ -144,12 +148,29 @@ function buildCellTrees(treeCell) {
     
 }
 
+
+function showContextMenu(nodeId) {
+	var nodeUserData=this.getUserData(nodeId, "info");
+	if(nodeUserData==null) {
+		return;
+	}
+	
+	
+	
+} 
+
 function buildProcessTree(tc) {
 	var tree = tc.attachTree();
 	tree.setImagePath("js/dhtmlxTree/codebase/imgs/");
 	
 	trees["process"]=tree;
 	tree.feed='xml?feed=AdPrPt';
+	tree.showContextMenu=showContextMenu;
+	
+	tree.reload=function() {
+		this.deleteChildItems('0');
+		this.loadXML(this.feed);
+	}
 	
 	tree.attachEvent('onClick', function(id) {
 		if(this.hasChildren(id)==0) {
@@ -162,13 +183,19 @@ function buildProcessTree(tc) {
 		this.openAllItems('ignore');
 	});
 	
+	tree.attachEvent('onRightClick', function(nid, obj) {
+		
+		this.showContextMenu(nid, obj);
+	});
+	
 	tbjEvents.addListener( { name: 'process_registered', context: tree, func: 
 		function(){
-			this.deleteChildItems('0');
-			this.loadXML(this.feed);
+			this.reload();
 		}
 	} );
 }
+
+
 
 function buildClassTree(tabbarCell) {
 	var tree = tabbarCell.attachTree();

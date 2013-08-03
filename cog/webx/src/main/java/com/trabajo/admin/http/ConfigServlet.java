@@ -44,7 +44,7 @@ public class ConfigServlet extends HttpServlet {
 		case "fetch": {
 			response.setContentType("application/json");
 			try {
-				engine.getConfig(ts);
+				engine.getConfig();
 				response.getWriter().print(ts.getStatus().toJSONAddOK());
 			} catch (Exception e) {
 				status.deferMessages((DeferredMessages) request.getSession().getAttribute("deferredMessages"));
@@ -53,12 +53,12 @@ public class ConfigServlet extends HttpServlet {
 		}
 		case "update": {
 			response.setContentType("application/json");
-			SysConfig sc=engine.getConfig(ts);
+			SysConfig sc=engine.getConfig();
 			sc.setGraphVizDir(request.getParameter("GraphVizDir"));
 			sc.setFileCacheDir(request.getParameter("FileCacheDir"));
 			sc.setRdbms(request.getParameter("rdbms"));
 			sc.setDevelopment("1".equals(request.getParameter("development")));
-			engine.updateConfig(ts, sc);
+			engine.updateConfig(sc);
 			response.getWriter().print(ts.getStatus().toJSONAddOK());
 			status.info("Config updated");
 			status.deferMessages((DeferredMessages) request.getSession().getAttribute("deferredMessages"));
@@ -67,12 +67,12 @@ public class ConfigServlet extends HttpServlet {
 		case "obliterate": {
 			response.setContentType("application/json");
 			try {
-				SysConfig sc=engine.getConfig(ts);
+				SysConfig sc=engine.getConfig();
 				sc.setGraphVizDir(request.getParameter("GraphVizDir"));
 				sc.setFileCacheDir(request.getParameter("FileCacheDir"));
 				sc.setRdbms(request.getParameter("rdbms"));
 				sc.setObliterateOnRestart(Boolean.parseBoolean(request.getParameter("onoff")));
-				engine.updateConfig(ts, sc);
+				engine.updateConfig(sc);
 				response.getWriter().print(ts.getStatus().toJSONAddOK());
 			} catch (Exception e) {
 				status.deferMessages((DeferredMessages) request.getSession().getAttribute("deferredMessages"));

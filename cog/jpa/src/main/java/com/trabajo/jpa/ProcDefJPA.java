@@ -105,7 +105,18 @@ public class ProcDefJPA implements JPAProcessComponent<ProcDefJPA> {
 	}
 	
 	
+	private boolean suspended;
+	@Column(name = "SUSPENDED", columnDefinition="tinyint default 0")
+	public boolean isSuspended() {
+		return suspended;
+	}
+
+	public void setSuspended(boolean suspended) {
+		this.suspended = suspended;
+	}
+	
 	private boolean deprecatePreviousVersions;
+
 	@Column(name = "DEPRECATE_ON_ACTIVATION", columnDefinition="tinyint default 0")
 	public boolean isDeprecatePreviousVersions() {
 		return deprecatePreviousVersions;

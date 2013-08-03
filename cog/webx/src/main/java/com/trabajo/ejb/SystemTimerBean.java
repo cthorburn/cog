@@ -10,7 +10,7 @@ import javax.persistence.PersistenceContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.trabajo.engine.EngineInstance;
+import com.trabajo.engine.EngineFactory;
 
 @Stateless
 public class SystemTimerBean { 
@@ -29,8 +29,8 @@ public class SystemTimerBean {
 	public void sys() {
 		
 		try {
-			if(EngineInstance.instance!=null) {
-				EngineInstance.instance.systemTimeout(em);
+			if(EngineFactory.getEngine()!=null) {
+				EngineFactory.getEngine().systemTimeout(em);
 			}
 		} catch (Exception e) {
 			logger.error("error running timer", e);

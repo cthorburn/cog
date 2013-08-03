@@ -7,17 +7,15 @@ import java.util.Map;
 import java.util.Observer;
 
 import javax.jcr.RepositoryException;
-import javax.persistence.EntityManager;
 
 import com.trabajo.DefinitionVersion;
 
-public interface FileCache {
+public interface FileCache extends Observer {
 
     /**
      * Turn repository classloader URLS into classloader useful ones
      */
     URL[] resolve(String[] repositoryClassLoaderURLS);
-
     URL[] resolve(URL[] repositoryClassLoaderURLS);
     
     void load(DefinitionVersion dv) throws RepositoryException;
@@ -29,22 +27,10 @@ public interface FileCache {
     File[] classLoaderURLsToFiles(String[] classLoaderURLS);
     File[] cacheURLsToFiles(URL[] cacheURLs);
     
-    //TODO development only !!!
-    void destroyCreate();
-
-    void addObserver(Observer o);
-
-		File findFile(URL[] urls, String muggledPath);
-
-		List<String> unzipDirNames(DefinitionVersion dv);
-		Map<String, String> unzipDirPaths(DefinitionVersion dv);
-
-		File baseDir(DefinitionVersion dv);
-
-		File getFile(DefinitionVersion dv, String path);
-
-		void obliterate(EntityManager em, SysConfig sc);
-
-		void obliterate(EntityManager em, DefinitionVersion dv, SysConfig sc);
-
+	File findFile(URL[] urls, String muggledPath);
+	List<String> unzipDirNames(DefinitionVersion dv);
+	Map<String, String> unzipDirPaths(DefinitionVersion dv);
+	File baseDir(DefinitionVersion dv);
+	File getFile(DefinitionVersion dv, String path);
+	void addObserver(Observer o);
 }

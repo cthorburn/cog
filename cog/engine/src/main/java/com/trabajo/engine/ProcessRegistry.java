@@ -17,16 +17,20 @@ import com.trabajo.IProcessServiceProperties;
 import com.trabajo.ValidationException;
 import com.trabajo.engine.ClassLoaderUploadManager.ClassLoaderUpload;
 import com.trabajo.engine.clazz.oops.Analyzer2;
+import com.trabajo.vcl.ChainUpdate;
 import com.trabajo.vcl.ClassLoaderChainProvider;
 
-public class ProcessRegistry extends Observable implements ClassLoaderChainProvider<DefinitionVersion> {
+public class ProcessRegistry extends Observable implements ClassLoaderChainProvider<DefinitionVersion>, Observer {
 
 	private JackRabbitProcessStore store;
-	public static FileCache fileCache;
+	public  FileCache fileCache;
 	
 	public ProcessRegistry(JackRabbitProcessStore store, FileCache fc)  {
+		super();
 		this.store=store;
-		fileCache=fc;
+		this.fileCache=fc;
+		store.addObserver(fileCache);
+		fileCache.addObserver(this);
 	}
 
 	public void deployProcess(ProcessJar pj, String ojn) throws ValidationException {
@@ -97,23 +101,8 @@ public class ProcessRegistry extends Observable implements ClassLoaderChainProvi
 			return store.getServiceProperties(dv);
 		}
 
-		public void addObserver(Observer o) {
-			store.addObserver(o);
-			fileCache.addObserver(o);
-		}
-
 		public FileCache getCache() {
 			return fileCache;
-		}
-
-		public void obliterate(EntityManager em, SysConfig sc) {
-			store.obliterate(em, sc);			
-			fileCache.obliterate(em, sc);			
-		}
-		
-		public void obliterate(EntityManager em, DefinitionVersion dv, SysConfig sc) throws RepositoryException {
-			store.obliterate(em, dv, sc);			
-			fileCache.obliterate(em, dv, sc);			
 		}
 
 		public boolean processExists(DefinitionVersion dv) throws RepositoryException {
@@ -130,5 +119,15 @@ public class ProcessRegistry extends Observable implements ClassLoaderChainProvi
 
 		public void setProcessServiceProperty(DefinitionVersion processDv, DefinitionVersion serviceDv, String key, String value) throws RepositoryException {
 			store.setProcessServiceProperty(processDv, serviceDv, key, value);
+		}
+
+		public synchronized void purgeProcess(EntityManager em, DefinitionVersion dv)  throws RepositoryException {
+			setChanged();
+			notifyObservers(new ChainUpdate<DefinitionVersion>(ChainUpdate.TYPE.DELETE, dv));
+		}
+
+		@Override
+		public void update(Observable o, Object arg) {
+			// nothing to do yet
 		}
 }

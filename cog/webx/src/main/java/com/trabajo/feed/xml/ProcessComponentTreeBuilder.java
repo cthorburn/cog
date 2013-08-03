@@ -161,9 +161,7 @@ public class ProcessComponentTreeBuilder<T extends JPAProcessComponent<T>> {
 
 		@Override
 		public void serialize(StringBuilder sb) {
-			sb.append("<item text=\"" + this.comp + "\" id=\"" + this.name
-					+ "\"" + getImage() + getChild()
-					+ ">"+userData());
+			sb.append("<item text=\"" + this.comp + "\" id=\"" + this.name	+ "\"" + getImage() + getChild() + ">"+userData());
 			if (kids() != null) {
 				for (INode<U> n : kids()) {
 					n.serialize(sb);

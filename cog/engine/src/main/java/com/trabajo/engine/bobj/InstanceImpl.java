@@ -10,6 +10,7 @@ import com.trabajo.StateContainer;
 import com.trabajo.jpa.InstanceJPA;
 import com.trabajo.process.IInstance;
 import com.trabajo.process.IProcDef;
+import com.trabajo.process.ITask;
 
 public class InstanceImpl  extends CogEntity<InstanceJPA> implements IInstance {
 
@@ -54,5 +55,13 @@ public class InstanceImpl  extends CogEntity<InstanceJPA> implements IInstance {
 	public void setVisualizer(IVisualizer visualizer) {
 		entity().setVisualizer((DAGVisualizer)visualizer);
 		
+	}
+
+	@Override
+	public void purge() {
+		for(ITask node: Tasks.findByInstance(em, this)) {
+			node.purge();
+		}
+		em.remove(entity());
 	}
 }

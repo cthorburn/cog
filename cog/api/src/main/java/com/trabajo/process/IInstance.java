@@ -14,4 +14,5 @@ public interface IInstance extends IEntity {
 	DefinitionVersion  version();
 	IVisualizer getVisualizer();
 	void setVisualizer(IVisualizer visualizer);
+	void purge();
 }

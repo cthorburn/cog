@@ -1,5 +1,7 @@
 package com.trabajo.process;
 
+import javax.persistence.EntityManager;
+
 import com.trabajo.DefinitionVersion;
 
 public interface IProcDef extends IEntity {
@@ -14,4 +16,10 @@ public interface IProcDef extends IEntity {
 
 
 	void obliterate();
+
+	void deprecate(boolean deprecate);
+
+	void suspend(boolean suspend);
+
+	void purge(EntityManager em);
 }

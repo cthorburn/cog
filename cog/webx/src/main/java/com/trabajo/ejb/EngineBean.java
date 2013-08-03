@@ -30,7 +30,7 @@ import com.trabajo.admin.http.Feed;
 import com.trabajo.admin.http.FeedParms;
 import com.trabajo.engine.ClassLoaderUploadManager.ClassLoaderUpload;
 import com.trabajo.engine.Engine;
-import com.trabajo.engine.EngineInstance;
+import com.trabajo.engine.EngineFactory;
 import com.trabajo.engine.ReportManager;
 import com.trabajo.engine.SysConfig;
 import com.trabajo.engine.TSession;
@@ -57,10 +57,11 @@ import com.trabajo.values.CreateUserSpec;
  */
 @Stateless
 @LocalBean
-public class EngineBean { 
+public class EngineBean {
 
-	private final static Logger logger = LoggerFactory.getLogger(EngineBean.class);
-	
+	private final static Logger logger = LoggerFactory
+			.getLogger(EngineBean.class);
+
 	@Resource
 	private TimerService timerService;
 
@@ -68,20 +69,20 @@ public class EngineBean {
 	private EntityManager em;
 
 	public EngineBean() {
-
 	}
 
-	private void setTimer(TaskDueDate tdd) {	
+	private void setTimer(TaskDueDate tdd) {
 		ScheduleExpression calendarSchedule = tdd.getSchedule();
 		TimerConfig timerConfig = new TimerConfig();
 		tdd.persist(em);
 		timerConfig.setPersistent(true);
 		timerConfig.setInfo(tdd.toMap());
-		Timer timer = this.timerService.createCalendarTimer(calendarSchedule, timerConfig);
-		System.out.println("timeout at: "+timer.getNextTimeout());
+		Timer timer = this.timerService.createCalendarTimer(calendarSchedule,
+				timerConfig);
+		System.out.println("timeout at: " + timer.getNextTimeout());
 		tdd.persist(em, timer.getHandle());
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	@Timeout
 	private void onTimeout(Timer timer) {
@@ -89,13 +90,12 @@ public class EngineBean {
 			Serializable ser = timer.getInfo();
 			timer.cancel();
 
-			try{
-				TaskDueDate tdd=new TaskDueDate();
-				tdd.fromMap((Map)ser);
+			try {
+				TaskDueDate tdd = new TaskDueDate();
+				tdd.fromMap((Map) ser);
 				getEngine().taskTimeout(em, tdd);
-			}
-			catch(IllegalArgumentException e) {
-				//ignore
+			} catch (IllegalArgumentException e) {
+				// ignore
 			}
 		} catch (Exception e) {
 			logger.error("error running timer", e);
@@ -121,9 +121,13 @@ public class EngineBean {
 
 		try {
 			ts.setEntityManager(em);
-			Feed f = (Feed) Class.forName("com.trabajo.feed.xml.DHXXMLFeed_" + feed).newInstance();			return f.construct(ts, getEngine(), em, fp);
-		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-			throw new IllegalArgumentException("<error>unrecognised feed: " + feed + "</error>");
+			Feed f = (Feed) Class.forName(
+					"com.trabajo.feed.xml.DHXXMLFeed_" + feed).newInstance();
+			return f.construct(ts, getEngine(), em, fp);
+		} catch (InstantiationException | IllegalAccessException
+				| ClassNotFoundException e) {
+			throw new IllegalArgumentException("<error>unrecognised feed: "
+					+ feed + "</error>");
 		} finally {
 			ts.setEntityManager(null);
 		}
@@ -133,17 +137,20 @@ public class EngineBean {
 
 		try {
 			ts.setEntityManager(em);
-			Feed f = (Feed) Class.forName("com.trabajo.feed.json.DHXJSONFeed_" + feed).newInstance();
+			Feed f = (Feed) Class.forName(
+					"com.trabajo.feed.json.DHXJSONFeed_" + feed).newInstance();
 			return f.construct(ts, getEngine(), em, fp);
-		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-			throw new IllegalArgumentException("<error>unrecognised feed: " + feed + "</error>");
+		} catch (InstantiationException | IllegalAccessException
+				| ClassNotFoundException e) {
+			throw new IllegalArgumentException("<error>unrecognised feed: "
+					+ feed + "</error>");
 		} finally {
 			ts.setEntityManager(null);
 		}
 	}
 
 	private Engine getEngine() {
-		return EngineInstance.instance;
+		return EngineFactory.getEngine();
 	}
 
 	public IUser findUser(long id) {
@@ -151,7 +158,8 @@ public class EngineBean {
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public IRole createRole(TSession ts, String name, String category, String desc) {
+	public IRole createRole(TSession ts, String name, String category,
+			String desc) {
 		try {
 			CreateRoleSpec spec = new CreateRoleSpec(category, name, desc);
 			IRole r = Roles.create(em, spec);
@@ -164,7 +172,8 @@ public class EngineBean {
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public IGroup createGroup(TSession ts, String name, String category, String desc) {
+	public IGroup createGroup(TSession ts, String name, String category,
+			String desc) {
 		try {
 			CreateGroupSpec spec = new CreateGroupSpec(category, name, desc);
 			IGroup g = Groups.create(em, spec);
@@ -177,7 +186,8 @@ public class EngineBean {
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public IGroup createGroup(String category, String name, String desc) throws ValidationException {
+	public IGroup createGroup(String category, String name, String desc)
+			throws ValidationException {
 		CreateGroupSpec spec = new CreateGroupSpec(category, name, desc);
 		return Groups.create(em, spec);
 	}
@@ -190,7 +200,7 @@ public class EngineBean {
 	public void deployProcess(TSession ts, File f, String originalJarame) {
 		try {
 			ts.setEntityManager(em);
-			getEngine().deployProcess(ts, f, originalJarame, em, new SysConfig(ts));
+			getEngine().deployProcess(ts, f, originalJarame, em, new SysConfig(em));
 		} finally {
 			ts.setEntityManager(null);
 		}
@@ -206,7 +216,8 @@ public class EngineBean {
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void startProcess(TSession ts, DefinitionVersion dv, Map<String, String> hParms, String note) {
+	public void startProcess(TSession ts, DefinitionVersion dv,
+			Map<String, String> hParms, String note) {
 
 		try {
 			ts.setEntityManager(em);
@@ -214,7 +225,7 @@ public class EngineBean {
 
 			for (TaskDueDate tdd : ts.getTaskScheduling()) {
 				setTimer(tdd);
-			}		
+			}
 
 		} finally {
 			ts.setEntityManager(null);
@@ -261,7 +272,8 @@ public class EngineBean {
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void disposeTask(TSession ts, long taskId, Map<String, String[]> parameterMap, String action) {
+	public void disposeTask(TSession ts, long taskId,
+			Map<String, String[]> parameterMap, String action) {
 
 		try {
 			ts.setEntityManager(em);
@@ -285,7 +297,8 @@ public class EngineBean {
 		}
 	}
 
-	public void viewTask2(TSession ts, View view, HttpServletRequest request, HttpServletResponse response) {
+	public void viewTask2(TSession ts, View view, HttpServletRequest request,
+			HttpServletResponse response) {
 		try {
 			ts.setEntityManager(em);
 			getEngine().viewTask2(ts, view, request, response);
@@ -295,7 +308,8 @@ public class EngineBean {
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void createUser(TSession ts, String fullName, String email, String username, String password) {
+	public void createUser(TSession ts, String fullName, String email,
+			String username, String password) {
 		try {
 			ts.setEntityManager(em);
 			getEngine().createUser(ts, fullName, email, username, password);
@@ -315,7 +329,8 @@ public class EngineBean {
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void modifyGroupRoles(TSession ts, boolean set, String groupName, int roleid) {
+	public void modifyGroupRoles(TSession ts, boolean set, String groupName,
+			int roleid) {
 		try {
 			ts.setEntityManager(em);
 			getEngine().modifyGroupRoles(ts, set, groupName, roleid);
@@ -325,7 +340,8 @@ public class EngineBean {
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void modifyGroupUsers(TSession ts, boolean set, String groupName, int userid) {
+	public void modifyGroupUsers(TSession ts, boolean set, String groupName,
+			int userid) {
 		try {
 			ts.setEntityManager(em);
 			getEngine().modifyGroupUsers(ts, set, groupName, userid);
@@ -344,7 +360,8 @@ public class EngineBean {
 		}
 	}
 
-	public void writeTaskData(TSession ts, int taskId, String name, String args, HttpServletResponse response) {
+	public void writeTaskData(TSession ts, int taskId, String name,
+			String args, HttpServletResponse response) {
 		try {
 			ts.setEntityManager(em);
 			getEngine().writeTaskData(ts, taskId, name, args, response);
@@ -353,20 +370,26 @@ public class EngineBean {
 		}
 	}
 
-	public ITaskUpload manageUpload(TSession ts, Path target, int taskId, String originalName, String docSet, String username, long size, boolean versioned) {
+	public ITaskUpload manageUpload(TSession ts, Path target, int taskId,
+			String originalName, String docSet, String username, long size,
+			boolean versioned) {
 		try {
 			ts.setEntityManager(em);
-			return TaskUploadManager.manage(ts, target, taskId, originalName, docSet, username, size, versioned);
+			return TaskUploadManager.manage(ts, target, taskId, originalName,
+					docSet, username, size, versioned);
 		} finally {
 			ts.setEntityManager(null);
 		}
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void installReport(TSession ts, Path target, DefinitionVersion dv, String category, String description, String remoteUser, String originalName) {
+	public void installReport(TSession ts, Path target, DefinitionVersion dv,
+			String category, String description, String remoteUser,
+			String originalName) {
 		try {
 			ts.setEntityManager(em);
-			ReportManager.install(ts, target, dv, category, description, remoteUser, originalName);
+			ReportManager.install(ts, target, dv, category, description,
+					remoteUser, originalName);
 		} finally {
 			ts.setEntityManager(null);
 		}
@@ -390,24 +413,15 @@ public class EngineBean {
 		}
 	}
 
-	public SysConfig getConfig(TSession ts) {
-		try {
-			ts.setEntityManager(em);
-			SysConfig sc = new SysConfig(ts);
-			ts.getStatus().setJsonResult(sc);
-			return sc;
-		} finally {
-			ts.setEntityManager(null);
-		}
+	public SysConfig getConfig() {
+		return new SysConfig(em);
 	}
 
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
-	public void updateConfig(TSession ts, SysConfig sc) {
+	public void updateConfig(SysConfig sc) {
 		try {
-			ts.setEntityManager(em);
-			sc.save(ts);
+			sc.save(em);
 		} finally {
-			ts.setEntityManager(null);
 		}
 	}
 
@@ -421,16 +435,9 @@ public class EngineBean {
 		}
 	}
 
-	public void obliterate(TSession ts) {
-		try {
-			ts.setEntityManager(em);
-			getEngine().obliterate(ts, new SysConfig(ts));
-		} finally {
-			ts.setEntityManager(null);
-		}
-	}
 
-	public void setProcessServiceProperty(TSession ts, DefinitionVersion pdv, DefinitionVersion sdv, String key, String value) {
+	public void setProcessServiceProperty(TSession ts, DefinitionVersion pdv,
+			DefinitionVersion sdv, String key, String value) {
 		try {
 			ts.setEntityManager(em);
 			getEngine().setProcessServiceProperty(ts, pdv, sdv, key, value);
@@ -440,12 +447,13 @@ public class EngineBean {
 	}
 
 	public void getProcessGraph(TSession ts, int taskId, HttpServletResponse response) {
-		SysConfig sc=getConfig(ts);
-		String gvLocation=sc.getGraphVizDir();
-		
+		SysConfig sc = getConfig();
+		String gvLocation = sc.getGraphVizDir();
+
 		try {
 			ts.setEntityManager(em);
-			getEngine().writeProcessGraph(ts, gvLocation, response.getWriter(), taskId);
+			getEngine().writeProcessGraph(ts, gvLocation, response.getWriter(),
+					taskId);
 		} catch (IOException e) {
 			ts.getStatus().error(e.getMessage(), logger, e);
 		} finally {
@@ -456,29 +464,66 @@ public class EngineBean {
 	public void getCurrentUserMap(TSession ts, String type) {
 		try {
 			ts.setEntityManager(em);
-			switch(type) {
+			switch (type) {
 			case "user_location":
-				IUser currentUser=Users.findByUsername(em, ts.getRemoteUser());
-				ts.getStatus().setJsonResult(Maps.findByUserAndType(em, currentUser, "user_location").toJson());
+				IUser currentUser = Users
+						.findByUsername(em, ts.getRemoteUser());
+				ts.getStatus()
+						.setJsonResult(
+								Maps.findByUserAndType(em, currentUser,
+										"user_location").toJson());
 				break;
 			}
 		} finally {
 			ts.setEntityManager(null);
 		}
-		
+
 	}
 
-	public void updateUserMapLocationMeta(TSession ts, String location, double lat, double lng, String name, String value) {
+	public void updateUserMapLocationMeta(TSession ts, String location,
+			double lat, double lng, String name, String value) {
 		try {
-				ts.setEntityManager(em);
-				IUser currentUser=Users.findByUsername(em, ts.getRemoteUser());
-				IMap map=Maps.findByUserAndType(em, currentUser, "user_location");
-				IMapLocation ml=map.getOrCreateLocation(location, lat, lng);
-				ml.setMetaData(name, value);
-				ts.getStatus().setJsonResult("{}");
+			ts.setEntityManager(em);
+			IUser currentUser = Users.findByUsername(em, ts.getRemoteUser());
+			IMap map = Maps.findByUserAndType(em, currentUser, "user_location");
+			IMapLocation ml = map.getOrCreateLocation(location, lat, lng);
+			ml.setMetaData(name, value);
+			ts.getStatus().setJsonResult("{}");
 		} finally {
 			ts.setEntityManager(null);
 		}
-		
+
+	}
+
+	public void purgeProcess(TSession ts, DefinitionVersion dv) {
+		try {
+			ts.setEntityManager(em);
+			Engine e=getEngine();
+			e.purgeProcess(ts, dv);
+		} finally {
+			ts.setEntityManager(null);
+		}
+	}
+
+	public void deprecateProcess(TSession ts, DefinitionVersion dv,
+			boolean deprecate) {
+		try {
+			ts.setEntityManager(em);
+			getEngine().deprecateProcess(ts, dv, deprecate);
+		} finally {
+			ts.setEntityManager(null);
+		}
+
+	}
+
+	public void suspendProcess(TSession ts, DefinitionVersion dv,
+			boolean suspend) {
+		try {
+			ts.setEntityManager(em);
+			getEngine().suspendProcess(ts, dv, suspend);
+		} finally {
+			ts.setEntityManager(null);
+		}
+
 	}
 }

@@ -7,8 +7,8 @@ import com.trabajo.utils.Files;
 public class FileSystem {
 	private File base;
 
-	public FileSystem() {
-		base = new File(new File(System.getProperty("user.home")), ".trabajo");
+	public FileSystem(SysConfig config) {
+		base = config.getFSLocation();
 		base.mkdirs();
 	}
 

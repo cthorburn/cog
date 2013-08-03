@@ -4,7 +4,7 @@ import java.util.Properties;
 
 public class ServiceInfo {
 	
-		public static final String PROP_IMPL_FACTORY_CLASS = "service-factory";
+	public static final String PROP_IMPL_FACTORY_CLASS = "service-factory";
 
     private Properties props;
     

@@ -1,5 +1,6 @@
 package com.trabajo.engine;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.List;
 
@@ -24,8 +25,7 @@ public class SysConfig implements Serializable {
 	private boolean obliterateOnRestart;
 	private boolean development;
 
-	public SysConfig(TSession ts) {
-		EntityManager em = ts.getEntityManager();
+	public SysConfig(EntityManager em) {
 		TypedQuery<ConfigJPA> q = em.createQuery("Select c from SysConfig c", ConfigJPA.class);
 
 		List<ConfigJPA> l = q.getResultList();
@@ -58,8 +58,7 @@ public class SysConfig implements Serializable {
 		return new Gson().toJson(this);
 	}
 
-	public void save(TSession ts) {
-		EntityManager em = ts.getEntityManager();
+	public void save(EntityManager em) {
 		TypedQuery<ConfigJPA> q = em.createQuery("Select c from SysConfig c where c.key=?1", ConfigJPA.class);
 		update(em, q, "GraphVizDir", GraphVizDir);
 		update(em, q, "FileCacheDir", FileCacheDir);
@@ -119,5 +118,15 @@ public class SysConfig implements Serializable {
 	}
 	public boolean isDevelopment() {
 		return development;
+	}
+
+	public String getJackRabbitURL() {
+		// TODO Auto-generated method stub
+		return "http://localhost:8200/rmi";
+	}
+
+	public File getFSLocation() {
+		// TODO Auto-generated method stub
+		return new File(new File(System.getProperty("user.home")), ".trabajo");
 	}
 }

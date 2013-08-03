@@ -43,5 +43,11 @@ public class Instances {
 	public static IInstance findById(EntityManager em, int id) {
 		return toImpl(em, em.find(InstanceJPA.class, id));
 	}
+
+	public static void purge(EntityManager em, DefinitionVersion dv) {
+		for(IInstance instance: findByVersion(em, dv)) {
+			instance.purge();
+		}
+	}
 	
 }

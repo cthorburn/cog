@@ -51,6 +51,24 @@ public class ProcessServlet extends HttpServlet {
 		EngineStatus status = ts.getStatus();
 
 		switch (action) {
+		case "purge": {
+			response.setContentType("application/json");
+			engine.purgeProcess(ts, DefinitionVersion.parse(request.getParameter("dv")));
+			response.getWriter().print(status.toJSONAddOK());
+			break;
+		}
+		case "deprecate": {
+			response.setContentType("application/json");
+			engine.deprecateProcess(ts, DefinitionVersion.parse(request.getParameter("dv")), Boolean.parseBoolean(request.getParameter("deprecate")));
+			response.getWriter().print(status.toJSONAddOK());
+			break;
+		}
+		case "suspend": {
+			response.setContentType("application/json");
+			engine.suspendProcess(ts, DefinitionVersion.parse(request.getParameter("dv")), Boolean.parseBoolean(request.getParameter("suspend")));
+			response.getWriter().print(status.toJSONAddOK());
+			break;
+		}
 		case "processGraph": {
 			response.setContentType("text/html");
 			engine.getProcessGraph(ts, Integer.parseInt(request.getParameter("taskId")), response);

@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
+import java.util.Observer;
 import java.util.Properties;
 import java.util.Set;
 
@@ -40,9 +41,10 @@ import com.trabajo.utils.IOUtils;
 import com.trabajo.utils.Strings;
 import com.trabajo.values.Category;
 import com.trabajo.values.Description;
+import com.trabajo.vcl.ChainUpdate;
 
-public class JackRabbitProcessStore extends Observable {
-	public String ROOT = "cog999";
+public class JackRabbitProcessStore extends Observable implements Observer {
+	public String ROOT = "cog1000";
 
 	private Repository repository;
 	private ThreadLocal<Session> session;
@@ -51,6 +53,7 @@ public class JackRabbitProcessStore extends Observable {
 	private FileSystem fs;
 
 	public JackRabbitProcessStore(String jcrUrl, FileSystem fs) {
+		super();
 		this.jcrUrl = jcrUrl;
 		session = new ThreadLocal<>();
 		root = new ThreadLocal<>();
@@ -79,18 +82,6 @@ public class JackRabbitProcessStore extends Observable {
 				}
 			}
 		} catch (MalformedURLException | RepositoryException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	public void obliterate(EntityManager em, SysConfig sc) {
-		try {
-			connect();
-			root.get().getNode("cog4").remove();
-			root.get().getNode(ROOT).remove();
-			createStandardPaths();
-			fs.obliterate();
-		} catch (RepositoryException e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -459,6 +450,37 @@ public class JackRabbitProcessStore extends Observable {
 		psp.setServiceProperty(serviceDv, key, value);
 		setProcessServiceProperties(psp);
 		session.get().save();
-		
+	}
+
+	private void purge(DefinitionVersion dv)  throws RepositoryException {
+		connect();
+		try{
+			getVersionNode(dv).remove();
+			session.get().save();
+		}catch(PathNotFoundException e) {
+			//ignore, removing it anyway;
+		}		
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		try {
+			@SuppressWarnings("unchecked")
+			ChainUpdate<DefinitionVersion> cu=(ChainUpdate<DefinitionVersion>)arg;
+			
+			switch(cu.type()) {
+			case DELETE:
+			{
+				purge(cu.getClassLoaderVersion());
+				break;
+			}
+			default:
+				break;
+			}	
+		} catch (ClassCastException e) {
+			//ignore
+		} catch (RepositoryException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

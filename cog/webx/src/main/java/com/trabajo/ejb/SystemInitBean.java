@@ -16,11 +16,9 @@ import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.trabajo.ValidationException;
-import com.trabajo.engine.Engine;
-import com.trabajo.engine.EngineInstance;
+import com.trabajo.engine.EngineFactory;
 import com.trabajo.engine.SysConfig;
 import com.trabajo.engine.TSession;
 import com.trabajo.engine.bobj.Groups;
@@ -45,10 +43,6 @@ public class SystemInitBean {
 	@Resource(mappedName = "java:/trabajo")	DataSource dataSource;
 	@PersistenceContext(name = "trabajo")	private EntityManager em;
 
-	static {
-		EngineInstance.instance = (Engine) new ClassPathXmlApplicationContext(new String[] { "trabajo-engine-spring.xml" }).getBean("engine");
-	}
-
 	private static final String obliterateSQL = "delete from task_roles;\r\n" + "delete from taskupload;\r\n" + "delete from taskbarrier;\r\n"
 			+ "delete from nodetimer;\r\n" + "delete from node;\r\n" + "\r\n" + "delete from qrtz_locks;\r\n" + "delete from qrtz_fired_triggers;\r\n"
 			+ "delete from qrtz_job_details;\r\n" + "delete from qrtz_calendars;\r\n" + "delete from qrtz_blob_triggers;\r\n" + "delete from qrtz_cron_triggers;\r\n"
@@ -65,6 +59,9 @@ public class SystemInitBean {
 	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public void init() throws ValidationException {
 
+		SysConfig sc=engine.getConfig();
+		EngineFactory.init(sc);
+		
 		IRole dflt = Roles.findByName(em, "default");
 
 		if (dflt == null) {
@@ -82,8 +79,8 @@ public class SystemInitBean {
 		IUser admin = Users.findByName(em, "admin");
 		if (admin == null) {
 			CreateUserSpec spec = new CreateUserSpec("", "Cog Administrator", "admin", "password", "admin@myorg.com", "EN", "EN");
-			IUser user = Users.createUser(em, spec);
-			user.addRole(adminRole);
+			admin = Users.createUser(em, spec);
+			admin.addRole(adminRole);
 		}
 
 		IGroup dfltGrp = Groups.findByName(em, "admin");
@@ -100,13 +97,11 @@ public class SystemInitBean {
 		}
 		TSession ts = new TSession("system");
 		ts.newRequest();
-		SysConfig sc = engine.getConfig(ts);
 
 		boolean purgeMySelf = sc.isObliterateOnRestart();
 		if (purgeMySelf) {
 			sc.setObliterateOnRestart(false);
-			engine.updateConfig(ts, sc);
-			engine.obliterate(ts);
+			engine.updateConfig(sc);
 			
 			try(Connection conn=dataSource.getConnection(); PreparedStatement ps=conn.prepareStatement(obliterateSQL)) {
 				ps.executeUpdate();

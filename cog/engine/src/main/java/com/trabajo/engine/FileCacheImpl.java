@@ -19,7 +19,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import javax.jcr.RepositoryException;
-import javax.persistence.EntityManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -128,37 +127,10 @@ public class FileCacheImpl extends Observable implements FileCache, Observer {
 	//TODO method too big!
 	public synchronized void load(DefinitionVersion dv) throws RepositoryException {
 
+		Files.deleteDirectory(baseDir(dv));
+		
 		String[] strURLs = store.classLoaderURLsForVersion(dv);
-
-		setChanged();
 		File[] targets = this.classLoaderURLsToFiles(strURLs);
-
-		// Make the ClassLoaderManager kick out this version
-		this.notifyObservers(new ChainUpdate<DefinitionVersion>(ChainUpdate.TYPE.REDEFINE, dv, targets));
-
-		File dir = new File(Strings.beforeLast(targets[0].getAbsolutePath(), File.separatorChar));
-		if (!dir.exists()) {
-			dir.mkdir();
-		}
-
-
-		for (File f : dir.listFiles()) {
-			// remove any files left if the cl jar list has shortened
-			try {
-				if(f.isDirectory() && f.getAbsolutePath().endsWith("_unzip")) {
-					File unzipDir = new File(f.getAbsolutePath() + "_unzip");
-					Files.deleteDirectory(unzipDir);
-				}
-				else {
-					java.nio.file.Files.delete(f.toPath());
-				}
-			} catch (IOException e) {
-				LOG.info("File cache: unable to delete file: " + f.getAbsolutePath());
-			}
-		}
-
-		// TODO there is still an unsynchronized period between unlinking the cl and
-		// the cache jars for the new version being available
 
 		int i = 0;
 		for (File f : targets) {
@@ -205,6 +177,7 @@ public class FileCacheImpl extends Observable implements FileCache, Observer {
 						IOUtils.copyStream(zipFile.getInputStream(entry), new BufferedOutputStream(new FileOutputStream(new File(unzipDir, entry.getName()))));
 					}
 				}
+				zipFile.close();
 				
 				LOG.info("File cache: redefined classloader jar file: " + f.getAbsolutePath());
 				
@@ -235,14 +208,7 @@ public class FileCacheImpl extends Observable implements FileCache, Observer {
 		return resolve(strURLs);
 	}
 
-	@Override
-	public void destroyCreate() {
-		Files.deleteDirectory(location);
-		initStructure();
-	}
-
 	private void initStructure() {
-		
 		classloaders = new File(location, "classloaders");
 		if (!classloaders.exists()) {
 			classloaders.mkdirs();
@@ -257,9 +223,31 @@ public class FileCacheImpl extends Observable implements FileCache, Observer {
 			cld = (ClassLoaderDescriptor) arg;
 			load(cld.getVersion());
 		} catch (ClassCastException e) {
-			return;
+			//ignore
 		} catch (RepositoryException e) {
 			throw new RuntimeException(e);
+		}
+		
+		try {
+			@SuppressWarnings("unchecked")
+			ChainUpdate<DefinitionVersion> cu=(ChainUpdate<DefinitionVersion>)arg;
+			
+			switch(cu.type()) {
+			case CHAIN_OUT_OF_SERVICE:
+			{
+				Files.deleteDirectory(baseDir(cu.getClassLoaderVersion()));
+				setChanged();
+				notifyObservers(new ChainUpdate<>(ChainUpdate.TYPE.CACHE_FILES_DELETED, cu.getClassLoaderVersion()));
+				break;
+			}
+			case DELETE:
+			default:
+				break;
+			 
+			
+			}
+		} catch (ClassCastException e) {
+			//ignore
 		}
 	}
 
@@ -325,16 +313,5 @@ public class FileCacheImpl extends Observable implements FileCache, Observer {
 			}
 		}
 		return null;
-	}
-
-	@Override
-	public void obliterate(EntityManager em, SysConfig sc) {
-		Files.deleteDirectory(this.location);
-		initStructure();
-	}
-
-	@Override
-	public void obliterate(EntityManager em, DefinitionVersion dv, SysConfig sc) {
-		Files.deleteDirectory(baseDir(dv));
 	}
 }

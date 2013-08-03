@@ -54,4 +54,25 @@ public class ProcDefImpl extends CogEntity<ProcDefJPA> implements IProcDef {
 	  em.remove(entity());
 	}
 
+
+	@Override
+	public void deprecate(boolean deprecate) {
+		entity().setDeprecated(deprecate);
+		save();
+	}
+
+
+	@Override
+	public void suspend(boolean suspend) {
+		entity().setSuspended(suspend);
+		save();
+	}
+
+
+	@Override
+	public void purge(EntityManager em) {
+		Instances.purge(em, getDefinitionVersion());
+		em.remove(entity());
+		em.flush();
+	}
 }

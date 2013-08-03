@@ -186,4 +186,10 @@ public class TaskImpl extends CogEntity<NodeJPA> implements ITask {
 		instance.save();
 		
 	}
+
+	@Override
+	public void purge() {
+		em.remove(entity());
+		em.flush();
+	}
 }

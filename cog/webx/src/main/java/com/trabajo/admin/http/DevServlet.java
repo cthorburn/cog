@@ -143,15 +143,6 @@ public class DevServlet extends HttpServlet {
 			response.getWriter().print((String) status.toJSONAddOK());
 			break;
 		}
-		case "obliterate": {
-			response.setContentType("application/json");
-			SysConfig sc = engine.getConfig(ts);
-			sc.setObliterateOnRestart(true);
-			engine.updateConfig(ts, sc);
-			status.info("Restart system to restore to factory settings");
-			response.getWriter().print((String) status.toJSONAddOK());
-			break;
-		}
 		}
 	}
 

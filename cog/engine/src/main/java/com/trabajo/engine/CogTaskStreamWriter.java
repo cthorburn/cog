@@ -34,7 +34,7 @@ public class CogTaskStreamWriter {
 		this.charSet = charSet;
 		this.binary = binary;
 		this._static=_static;
-		this.fc=ProcessRegistry.fileCache;
+		this.fc=EngineFactory.fileCache();
 		this.dv=dv;
 		if(contentType==null) {
 			this.contentType=getContentTypeHueristically(contentType, path);

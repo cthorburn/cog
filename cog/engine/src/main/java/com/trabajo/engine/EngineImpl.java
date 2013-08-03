@@ -44,11 +44,11 @@ import com.trabajo.values.CreateUserSpec;
 public class EngineImpl implements Engine, EngineImplMBean {
 
 	private ProcessRegistry pr;
-	private ContextFactory cf;
+	private SandBoxFactory cf;
 
 	private Logger logger = LoggerFactory.getLogger(EngineImpl.class);
 
-	public EngineImpl(ProcessRegistry pr, ContextFactory cf) {
+	public EngineImpl(ProcessRegistry pr, SandBoxFactory cf) {
 		this.pr = pr;
 		this.cf = cf;
 		registerURLHandler();
@@ -89,10 +89,7 @@ public class EngineImpl implements Engine, EngineImplMBean {
 			DefinitionVersion dv=pcm.getVersion();
 			if(pr.processExists(dv)) {
 				if(pcm.inDevelopment() && pcm.removePreviousVersions()) {
-					  cf.obliterate(dv);
-						IProcDef pdi = ProcDefs.findByVersion(em, pcm.getVersion());
-						pdi.obliterate();
-						pr.obliterate(em, dv, sc);
+					  purgeProcess(ts, dv);
 				}
 				else {
 					status.exception("DUPLICATE_PROCESS_ID", "A process with this name already exists and this process is not annotated @Development");
@@ -490,10 +487,6 @@ public class EngineImpl implements Engine, EngineImplMBean {
 		}
 	}
 
-	@Override
-	public void obliterate(TSession ts, SysConfig sc) {
-		pr.obliterate(ts.getEntityManager(), sc);
-	}
 
 	@Override
 	public void systemTimeout(EntityManager em) {
@@ -533,5 +526,37 @@ public class EngineImpl implements Engine, EngineImplMBean {
 			ts.getStatus().error(e.getMessage(), logger, e);
 		}
 		
+	}
+
+	@Override
+	public void deprecateProcess(TSession ts, DefinitionVersion dv, boolean deprecate) {
+		EntityManager em=ts.getEntityManager();
+		IProcDef pd=ProcDefs.findByVersion(em, dv);
+		pd.deprecate(deprecate);
+		
+	}
+
+	@Override
+	public void suspendProcess(TSession ts, DefinitionVersion dv, boolean suspend) {
+		EntityManager em=ts.getEntityManager();
+		IProcDef pd=ProcDefs.findByVersion(em, dv);
+		pd.suspend(suspend);
+	}
+	
+	@Override
+	public void purgeProcess(TSession ts, DefinitionVersion dv) {
+		EntityManager em=ts.getEntityManager();
+		
+		try {
+			pr.purgeProcess(ts.getEntityManager(), dv);
+		} catch (RepositoryException e) {
+			throw new RuntimeException(e);
+		}
+		
+		IProcDef pd=ProcDefs.findByVersion(em, dv);
+		if(pd!=null) {
+			pd.purge(em);
+		}
+	
 	}
 }
