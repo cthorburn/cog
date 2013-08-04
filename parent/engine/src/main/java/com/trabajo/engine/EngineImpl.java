@@ -24,18 +24,19 @@ import com.trabajo.engine.bobj.Groups;
 import com.trabajo.engine.bobj.ProcDefImpl;
 import com.trabajo.engine.bobj.ProcDefs;
 import com.trabajo.engine.bobj.Roles;
+import com.trabajo.engine.bobj.ServiceDefs;
 import com.trabajo.engine.bobj.Tasks;
 import com.trabajo.engine.bobj.Users;
-import com.trabajo.jpa.ClassLoaderDefJPA;
 import com.trabajo.jpa.ProcDefJPA;
-import com.trabajo.jpa.ServiceDefJPA;
 import com.trabajo.jpa.VersionJPA;
 import com.trabajo.jpa.WholeJarMetadataV1;
+import com.trabajo.process.IClassLoaderDef;
 import com.trabajo.process.IGroup;
 import com.trabajo.process.IInstance;
 import com.trabajo.process.INodeTimer;
 import com.trabajo.process.IProcDef;
 import com.trabajo.process.IRole;
+import com.trabajo.process.IServiceDef;
 import com.trabajo.process.ITask;
 import com.trabajo.process.IUser;
 import com.trabajo.values.CreateUserSpec;
@@ -139,16 +140,12 @@ public class EngineImpl implements Engine, EngineImplMBean {
 		try {
 			pr.deployClassLoader(clu);
 
-			ClassLoaderDefJPA pd = ClassLoaderDefs.findByVersion(em, clu.version);
+			IClassLoaderDef pd = ClassLoaderDefs.findByVersion(em, clu.version);
 
 			if (pd == null) {
-				pd = new ClassLoaderDefJPA();
-				pd.setDefinitionVersion(new VersionJPA(clu.version));
+				pd = ClassLoaderDefs.create(ts.getEntityManager(), clu.version, clu.category, clu.desc);
 			}
-
-			pd.setCategory(clu.category.getValue());
-			pd.setDescription(clu.desc.getValue());
-			em.persist(pd);
+			
 			try {
 				em.flush();
 			} catch (EntityExistsException e) {
@@ -167,14 +164,11 @@ public class EngineImpl implements Engine, EngineImplMBean {
 
 		try {
 			pr.deployClassLoader(clu);
-			ServiceDefJPA pd = ServiceDefs.findByVersion(em, clu.version);
+			IServiceDef pd = ServiceDefs.findByVersion(em, clu.version);
+			
 			if (pd == null) {
-				pd = new ServiceDefJPA();
-				pd.setDefinitionVersion(new VersionJPA(clu.version));
+				pd=ServiceDefs.create(em, clu.version, clu.category, clu.desc);
 			}
-			pd.setCategory(clu.category.getValue());
-			pd.setDescription(clu.desc.getValue());
-			em.persist(pd);
 
 			try {
 				em.flush();
@@ -339,8 +333,29 @@ public class EngineImpl implements Engine, EngineImplMBean {
 	}
 
 	@Override
-	public ClassLoaderDescriptor getClassLoaderDescriptor(DefinitionVersion version) {
-		return pr.getClassLoaderDescriptor(version);
+	public ClassLoaderDescriptor getClassLoaderDescriptor(TSession ts, DefinitionVersion dv) {
+		ClassLoaderDescriptor cld=pr.getClassLoaderDescriptor(dv);
+		EntityManager em=ts.getEntityManager();
+
+		//shit! 
+		//TODO need a JCR property to distinguish between artifact types
+		IProcDef pd=ProcDefs.findByVersion(em, dv);
+		if(pd!=null) {
+			cld.setDeprecated(pd.isDeprecated());
+		}
+		else {
+			IClassLoaderDef clDef=ClassLoaderDefs.findByVersion(em, dv);
+			if(clDef!=null) {
+				cld.setDeprecated(clDef.isDeprecated());
+			}
+			else {
+				IServiceDef svDef=ServiceDefs.findByVersion(em, dv);
+				if(svDef!=null) {
+					cld.setDeprecated(svDef.isDeprecated());
+				}
+			}
+		}
+		return cld;
 	}
 
 	@Override
@@ -537,6 +552,22 @@ public class EngineImpl implements Engine, EngineImplMBean {
 	}
 
 	@Override
+	public void deprecateService(TSession ts, DefinitionVersion dv, boolean deprecate) {
+		EntityManager em=ts.getEntityManager();
+		IServiceDef pd=ServiceDefs.findByVersion(em, dv);
+		pd.deprecate(deprecate);
+		
+	}
+
+	@Override
+	public void deprecateClassLoader(TSession ts, DefinitionVersion dv, boolean deprecate) {
+		EntityManager em=ts.getEntityManager();
+		IClassLoaderDef pd=ClassLoaderDefs.findByVersion(em, dv);
+		pd.deprecate(deprecate);
+		
+	}
+
+	@Override
 	public void suspendProcess(TSession ts, DefinitionVersion dv, boolean suspend) {
 		EntityManager em=ts.getEntityManager();
 		IProcDef pd=ProcDefs.findByVersion(em, dv);
@@ -556,6 +587,39 @@ public class EngineImpl implements Engine, EngineImplMBean {
 		IProcDef pd=ProcDefs.findByVersion(em, dv);
 		if(pd!=null) {
 			pd.purge(em);
+		}
+	
+	}
+	
+	@Override
+	public void purgeClassLoader(TSession ts, DefinitionVersion dv) {
+		EntityManager em=ts.getEntityManager();
+		
+		try {
+			pr.purgeClassLoader(ts.getEntityManager(), dv);
+		} catch (RepositoryException e) {
+			throw new RuntimeException(e);
+		}
+		
+		IClassLoaderDef cld=ClassLoaderDefs.findByVersion(em, dv);
+		if(cld!=null) {
+			cld.purge(em);
+		}
+	
+	}
+	@Override
+	public void purgeService(TSession ts, DefinitionVersion dv) {
+		EntityManager em=ts.getEntityManager();
+		
+		try {
+			pr.purgeService(ts.getEntityManager(), dv);
+		} catch (RepositoryException e) {
+			throw new RuntimeException(e);
+		}
+		
+		IServiceDef sd=ServiceDefs.findByVersion(em, dv);
+		if(sd!=null) {
+			sd.purge(em);
 		}
 	
 	}

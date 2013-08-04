@@ -18,8 +18,12 @@ public interface Engine {
 		void deployService(TSession tsession, ClassLoaderUploadManager.ClassLoaderUpload clu, EntityManager em);
 		void deployClassLoader(TSession tsession, ClassLoaderUploadManager.ClassLoaderUpload clu, EntityManager em);
 		void deprecateProcess(TSession ts, DefinitionVersion dv, boolean deprecate);
+		void deprecateService(TSession ts, DefinitionVersion dv, boolean deprecate);
+		void deprecateClassLoader(TSession ts, DefinitionVersion dv, boolean deprecate);
 		void suspendProcess(TSession ts, DefinitionVersion dv, boolean suspend);
 		void purgeProcess(TSession ts, DefinitionVersion dv);
+		void purgeClassLoader(TSession ts, DefinitionVersion dv);
+		void purgeService(TSession ts, DefinitionVersion dv);
     
 		//users
 		void createUser(TSession ts, String fullName, String email, String username, String password);
@@ -32,7 +36,7 @@ public interface Engine {
 		void disposeTask(TSession ts, long taskId, Map<String, String[]> parameterMap, String action);
 		void processGetStartupForm(TSession session, DefinitionVersion dv);
 		void startProcess(TSession session, DefinitionVersion dv, Map<String, String> hParms, String note) ;
-		ClassLoaderDescriptor getClassLoaderDescriptor(DefinitionVersion version);
+		ClassLoaderDescriptor getClassLoaderDescriptor(TSession session, DefinitionVersion version);
 		void modifyRole(TSession ts, boolean set, int userid, int name);
 		void modifyGroup(TSession ts, boolean set, int userid, int name);
 		FileCache getCache();

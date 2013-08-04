@@ -15,13 +15,12 @@ public class MapLocationImpl extends CogEntity<MapLocationJPA> implements IMapLo
 
 	@Override
 	public void setLatitude(double lat) {
-		entity().latitude=lat;
-		
+		entity().setLatitude(lat);
 	}
 
 	@Override
 	public void setLongitude(double lng) {
-		entity().longitude=lng;
+		entity().setLongitude(lng);
 		
 	}
 

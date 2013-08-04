@@ -27,7 +27,6 @@ import javax.jcr.ValueFormatException;
 import javax.jcr.lock.LockException;
 import javax.jcr.nodetype.ConstraintViolationException;
 import javax.jcr.version.VersionException;
-import javax.persistence.EntityManager;
 
 import org.apache.jackrabbit.rmi.repository.URLRemoteRepository;
 import org.apache.jackrabbit.value.BinaryValue;
@@ -129,6 +128,7 @@ public class JackRabbitProcessStore extends Observable implements Observer {
 	public void archive(ClassLoaderUpload clu) {
 		try {
 			connect();
+			
 
 			DefinitionVersion dv = clu.getVersion();
 			Category category = clu.getCatgeory();
@@ -413,15 +413,6 @@ public class JackRabbitProcessStore extends Observable implements Observer {
 		return exists;
 	}
 
-	public void obliterate(EntityManager em, DefinitionVersion dv, SysConfig sc) throws RepositoryException {
-		connect();
-		try {
-			getVersionNode(dv).remove();
-		} catch (PathNotFoundException e) {
-			// ignore
-		}
-	}
-
 	public IProcessServiceProperties getProcessServiceProperties(DefinitionVersion dv) throws RepositoryException {
 		connect();
 		IProcessServiceProperties result;
@@ -469,7 +460,8 @@ public class JackRabbitProcessStore extends Observable implements Observer {
 			ChainUpdate<DefinitionVersion> cu=(ChainUpdate<DefinitionVersion>)arg;
 			
 			switch(cu.type()) {
-			case DELETE:
+			case PURGE_CLASSLOADER:
+			case PURGE_PROCESS:
 			{
 				purge(cu.getClassLoaderVersion());
 				break;

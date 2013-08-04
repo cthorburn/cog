@@ -127,7 +127,9 @@ public class FileCacheImpl extends Observable implements FileCache, Observer {
 	//TODO method too big!
 	public synchronized void load(DefinitionVersion dv) throws RepositoryException {
 
-		Files.deleteDirectory(baseDir(dv));
+		File baseDir=baseDir(dv);
+		Files.deleteDirectory(baseDir);
+		baseDir.mkdirs();
 		
 		String[] strURLs = store.classLoaderURLsForVersion(dv);
 		File[] targets = this.classLoaderURLsToFiles(strURLs);
@@ -233,14 +235,14 @@ public class FileCacheImpl extends Observable implements FileCache, Observer {
 			ChainUpdate<DefinitionVersion> cu=(ChainUpdate<DefinitionVersion>)arg;
 			
 			switch(cu.type()) {
-			case CHAIN_OUT_OF_SERVICE:
+			case PURGE_CLASSLOADER:
+			case PURGE_PROCESS:
 			{
 				Files.deleteDirectory(baseDir(cu.getClassLoaderVersion()));
 				setChanged();
 				notifyObservers(new ChainUpdate<>(ChainUpdate.TYPE.CACHE_FILES_DELETED, cu.getClassLoaderVersion()));
 				break;
 			}
-			case DELETE:
 			default:
 				break;
 			 

@@ -3,7 +3,7 @@ package com.trabajo.vcl;
 
 public class ChainUpdate<T extends CLMKey<T>> {
 
-	public static enum TYPE {DELETE, CHAIN_OUT_OF_SERVICE, CACHE_FILES_DELETED};
+	public static enum TYPE {PURGE_PROCESS, PURGE_CLASSLOADER, PURGE_SERVICE, CHAIN_OUT_OF_SERVICE, CACHE_FILES_DELETED};
 	
 	private T dv;
 	private TYPE type;

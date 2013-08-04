@@ -22,17 +22,25 @@ public class UserPrefsJPA implements JPAEntity<UserPrefsJPA> {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public int id;
+	private int id;
 
 	@Column(name = "skin", nullable = true, length = 32)
 	@Unique
-	public String skin;
+	private String skin;
 
 	@OneToOne
-	public MapJPA userMap;
+	private MapJPA userMap;
 
 	public int getId() {
 		throw new UnsupportedOperationException();
+	}
+
+	public String getSkin() {
+		return skin;
+	}
+
+	public void setSkin(String skin) {
+		this.skin = skin;
 	}
 
 }

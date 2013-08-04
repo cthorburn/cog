@@ -140,12 +140,14 @@ public final class ClassLoaderManager<T extends CLMKey<T>, F extends KeyFactory<
 
 			T key= chu.getClassLoaderVersion();
 
-			if (chu.type() == ChainUpdate.TYPE.DELETE) {
+			if (chu.type() == ChainUpdate.TYPE.PURGE_PROCESS) {
 				chains.putOutOfService(key);
+				setChanged();
+				notifyObservers(new ChainUpdate<T>(ChainUpdate.TYPE.CHAIN_OUT_OF_SERVICE, key));
 			}
-			
-			setChanged();
-			notifyObservers(new ChainUpdate<T>(ChainUpdate.TYPE.CHAIN_OUT_OF_SERVICE, key));
+			else if(chu.type() == ChainUpdate.TYPE.PURGE_CLASSLOADER) {
+				chains.evict(key);
+			}
 
 		} catch (ClassCastException e) {
 			return;

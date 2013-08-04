@@ -292,6 +292,7 @@ function buildClassAccordian(dhxAccord) {
     forms['AdPrEdClNwJf']=new FormAdPrEdClNwJf(nwTabs.cells("jars").attachForm(), nwTabs);
     forms['AdPrEdClNwJo']=new FormAdPrEdClNwJo(nwTabs.cells("order").attachForm(), nwTabs);
     forms['AdPrEdClNwFn']=new FormAdPrEdClNwFn(nwTabs.cells("finish").attachForm(), nwTabs);
+    forms['AdPrEdClDt']=new FormAdPrEdClDt(dhxAccord.cells("details").attachForm());
 
 
     tbjEvents.addListener( { name: 'tree_switch_class', context: nwTabs, func: function(evt) {
@@ -322,7 +323,8 @@ function buildServiceAccordian(dhxAccord) {
     forms['AdPrEdSvNwJf']=newByName("FormAdPrEdSvNwJf", window, nwTabs.cells("jars").attachForm(), nwTabs);
     forms['AdPrEdSvNwJo']=newByName("FormAdPrEdSvNwJo", window, nwTabs.cells("order").attachForm(), nwTabs);
     forms['AdPrEdSvNwFn']=newByName("FormAdPrEdSvNwFn", window, nwTabs.cells("finish").attachForm(), nwTabs);
-    forms['AdPrEdSvDt']=newByName("FormAdPrEdSvDt", window, dhxAccord.cells("details").attachForm());
+    forms['AdPrEdSvDt']=new FormAdPrEdSvDt(dhxAccord.cells("details").attachForm());
+    
 
     tbjEvents.addListener( { name: 'tree_switch_service', context: nwTabs, func: function(evt) {
         this.setTabActive("name", false);

@@ -17,6 +17,7 @@ public class ClassLoaderDescriptor {
 	private Description description;
 	private Category category;
 	private Properties properties;
+	private boolean deprecated;
 	
 	
 	public String[] getOriginalJarNames() {
@@ -43,6 +44,14 @@ public class ClassLoaderDescriptor {
 	public List<String> getPerProcessClasses() {
 		return perProcessClasses;
 		
+	}
+
+	public boolean isDeprecated() {
+		return deprecated;
+	}
+
+	public void setDeprecated(boolean deprecated) {
+		this.deprecated = deprecated;
 	}
 
 	public void setDescription(Description description) {

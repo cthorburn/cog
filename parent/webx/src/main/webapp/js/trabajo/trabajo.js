@@ -15,7 +15,6 @@ function talert(msg) {
 }
 
 var logger;
-var server;
 
 function newByName(functionName, context /*, args */) {
   var args = Array.prototype.slice.call(arguments).splice(2);
@@ -401,14 +400,14 @@ function Server() {
 		});
 	};
 	
-}
+};
+
+var server=new Server();
 
 function initLogger(cell) {
     cell.setHeight(250);
 	logger=new Logger(cell);
-	server=new Server();
 	getDeferredMsgs();
-	
 }
 
 function getDeferredMsgs() {

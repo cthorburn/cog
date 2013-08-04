@@ -13,7 +13,7 @@ public class MapLocationMetadataImpl extends CogEntity<MapLocationMetadataJPA> i
 
 	@Override
 	public void setValue(String value) {
-		entity().value=value;
+		entity().setValue(value);
 		
 	}
 

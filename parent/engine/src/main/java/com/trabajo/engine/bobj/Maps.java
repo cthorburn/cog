@@ -7,6 +7,8 @@ import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
 import com.trabajo.jpa.MapJPA;
+import com.trabajo.jpa.MapLocationJPA;
+import com.trabajo.jpa.MapMetadataJPA;
 import com.trabajo.process.IMap;
 import com.trabajo.process.IUser;
 
@@ -22,9 +24,9 @@ public class Maps {
 	
 	public static IMap create(EntityManager em, IUser user, String type) {
 		MapJPA map=new MapJPA();
-		map.type=type;
-		map.metadata=new HashSet<>();
-		map.locations=new HashSet<>();
+		map.setType(type);
+		map.setMetadata(new HashSet<MapMetadataJPA>());
+		map.setLocations(new HashSet<MapLocationJPA>());
 		em.persist(map);
 		em.flush();
 		IMap impl=toImpl(em, map);

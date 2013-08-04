@@ -68,6 +68,18 @@ public class ServiceDefJPA implements JPAProcessComponent<ServiceDefJPA> {
 		this.definitionVersion = definitionVersion;
 	}
 
+	private boolean deprecated;
+	@Column(name = "DEPRECATED", columnDefinition="tinyint default 0")
+	public boolean isDeprecated() {
+		return deprecated;
+	}
+
+	public void setDeprecated(boolean deprecated) {
+		this.deprecated = deprecated;
+	}
+	
+	
+
 	private String category;
 
 	@Column(name = "CATEGORY", nullable = false)

@@ -16,10 +16,10 @@ public class MapMetadatas {
 	public static IMapMetadata create(EntityManager em, IMap map, String name, String value) {
 		MapMetadataJPA mm=new MapMetadataJPA();
 		MapJPA mapJpa=((MapJPA)map.entity());
-		mm.map=(MapJPA)map.entity();
-		mm.name=name;
-		mm.value=value;
-		mapJpa.metadata.add(mm);
+		mm.setMap((MapJPA)map.entity());
+		mm.setName(name);
+		mm.setValue(value);
+		mapJpa.getMetadata().add(mm);
 		em.persist(mm);
 		em.flush();
 		return toImpl(em, mm);
@@ -47,7 +47,7 @@ public class MapMetadatas {
 		q.setParameter(1, map.entity());
 		
 		for(MapMetadataJPA mm: q.getResultList()) {
-			result.put(mm.name, toImpl(em, mm));
+			result.put(mm.getName(), toImpl(em, mm));
 		}
 		
 		return result;

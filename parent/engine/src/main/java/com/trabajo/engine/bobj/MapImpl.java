@@ -30,45 +30,45 @@ public class MapImpl extends CogEntity<MapJPA> implements IMap {
 		StringBuilder sb=new StringBuilder();
 		
 		sb.append("{ \"id\": ");
-		sb.append(entity().id);
+		sb.append(entity().getId());
 		sb.append(", \"locations\": {");
 		
-		for(MapLocationJPA ml: entity().locations) {
+		for(MapLocationJPA ml: entity().getLocations()) {
 			sb.append('"');
-			sb.append(ml.name);
+			sb.append(ml.getName());
 			sb.append("\": {");
 			sb.append("\"latitude\": ");
-			sb.append(ml.latitude);
+			sb.append(ml.getLatitude());
 			sb.append(",");
 			sb.append("\"longitude\": ");
-			sb.append(ml.longitude);
+			sb.append(ml.getLongitude());
 			sb.append(", \"metadata\": {");
-			for(MapLocationMetadataJPA mlm: ml.metadata) {
+			for(MapLocationMetadataJPA mlm: ml.getMetadata()) {
 				sb.append('"');
-				sb.append(mlm.name);
+				sb.append(mlm.getName());
 				sb.append("\": \"");
-				sb.append(mlm.value);
+				sb.append(mlm.getValue());
 				sb.append("\", ");
 			}	
-			if(ml.metadata.size() > 0)
+			if(ml.getMetadata().size() > 0)
 				sb.setLength(sb.length()-2);
 			sb.append("}");
 			sb.append("}, ");
 		}
-		if(entity().locations.size() > 0)
+		if(entity().getLocations().size() > 0)
 			sb.setLength(sb.length()-2);
 		sb.append("}, ");
 		
 		sb.append("\"metadata\": {");
 		
-		for(MapMetadataJPA mm: entity().metadata) {
+		for(MapMetadataJPA mm: entity().getMetadata()) {
 			sb.append('"');
-			sb.append(mm.name);
+			sb.append(mm.getName());
 			sb.append("\": \"");
-			sb.append(mm.value);
+			sb.append(mm.getValue());
 			sb.append("\", ");
 		}	
-		if(entity().metadata.size() > 0)
+		if(entity().getMetadata().size() > 0)
 			sb.setLength(sb.length()-2);
 		
 		sb.append("}}");

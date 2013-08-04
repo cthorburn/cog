@@ -8,7 +8,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 
-@Entity(name="Permission")
+@Entity(name="RolePermission")
 @Table(name = "ROLE_PERMISSION")
 @IdClass(RolePermissionId.class)
 public class RolePermissionJPA  implements JPAEntity<RolePermissionJPA> {

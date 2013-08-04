@@ -504,16 +504,51 @@ public class EngineBean {
 			ts.setEntityManager(null);
 		}
 	}
+	public void purgeService(TSession ts, DefinitionVersion dv) {
+		try {
+			ts.setEntityManager(em);
+			Engine e=getEngine();
+			e.purgeService(ts, dv);
+		} finally {
+			ts.setEntityManager(null);
+		}
+	}
 
-	public void deprecateProcess(TSession ts, DefinitionVersion dv,
-			boolean deprecate) {
+	public void purgeClassLoader(TSession ts, DefinitionVersion dv) {
+		try {
+			ts.setEntityManager(em);
+			Engine e=getEngine();
+			e.purgeClassLoader(ts, dv);
+		} finally {
+			ts.setEntityManager(null);
+		}
+	}
+
+	public void deprecateProcess(TSession ts, DefinitionVersion dv, boolean deprecate) {
 		try {
 			ts.setEntityManager(em);
 			getEngine().deprecateProcess(ts, dv, deprecate);
 		} finally {
 			ts.setEntityManager(null);
 		}
+	}
 
+	public void deprecateService(TSession ts, DefinitionVersion dv, boolean deprecate) {
+		try {
+			ts.setEntityManager(em);
+			getEngine().deprecateService(ts, dv, deprecate);
+		} finally {
+			ts.setEntityManager(null);
+		}
+	}
+
+	public void deprecateClassLoader(TSession ts, DefinitionVersion dv, boolean deprecate) {
+		try {
+			ts.setEntityManager(em);
+			getEngine().deprecateClassLoader(ts, dv, deprecate);
+		} finally {
+			ts.setEntityManager(null);
+		}
 	}
 
 	public void suspendProcess(TSession ts, DefinitionVersion dv,

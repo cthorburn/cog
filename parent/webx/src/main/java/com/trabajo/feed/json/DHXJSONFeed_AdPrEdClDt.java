@@ -11,10 +11,10 @@ import com.trabajo.engine.ClassLoaderDescriptor;
 import com.trabajo.engine.Engine;
 import com.trabajo.engine.TSession;
 
-public class DHXJSONFeed_AdPrEdSvDt implements Feed {
+public class DHXJSONFeed_AdPrEdClDt implements Feed {
 
 	public String construct(TSession tsession, Engine eng, EntityManager em, FeedParms fp) {
-		FeedParms_AdPrEdSvDt parms = (FeedParms_AdPrEdSvDt) fp;
+		FeedParms_AdPrEdClDt parms = (FeedParms_AdPrEdClDt) fp;
 		ClassLoaderDescriptor cld = eng.getClassLoaderDescriptor(tsession, parms.version());
 		return toJSON(cld);
 	}

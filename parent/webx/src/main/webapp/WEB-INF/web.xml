@@ -36,6 +36,7 @@
       <url-pattern>*.html</url-pattern>
       <url-pattern>/xml</url-pattern>
       <url-pattern>/json</url-pattern>
+      <url-pattern>/config</url-pattern>
       <url-pattern>/form</url-pattern>
       <url-pattern>/process</url-pattern>
       <url-pattern>/user</url-pattern>

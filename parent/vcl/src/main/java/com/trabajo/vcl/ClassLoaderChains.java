@@ -27,21 +27,23 @@ public class ClassLoaderChains<T extends CLMKey<T>> {
 	}
 
 	public synchronized void putOutOfService(T key) {
+		System.out.print("put out of service: ");
 		ClassLoaderChain<T> chain = chains.remove(key);
 		if (chain != null) {
-			ExtURLClassloader<T> clFirst = null;
-			try {
-				clFirst = chain.getFirst();
-			} catch (RepositoryException e) {
-				throw new RuntimeException(e);
-			}
+			System.out.print("chain exists: "+key.toString());
+		}
+		evict(key);
+	}
 
-			if (clFirst != null) {
-				try {
-					clFirst.close();
-				} catch (Exception e) {
-					throw new RuntimeException(e);
-				}
+	public synchronized void evict(T key) {
+		ExtURLClassloader<T> cl=this.namedClassLoaders.remove(key);
+		
+		if (cl != null) {
+			try {
+				cl.close();
+				System.out.print(" closed OK ");
+			} catch (Exception e) {
+				throw new RuntimeException(e);
 			}
 		}
 	}

@@ -29,8 +29,8 @@ public class ProcessRegistry extends Observable implements ClassLoaderChainProvi
 		super();
 		this.store=store;
 		this.fileCache=fc;
-		store.addObserver(fileCache);
-		fileCache.addObserver(this);
+		addObserver(store);
+		addObserver(fileCache);
 	}
 
 	public void deployProcess(ProcessJar pj, String ojn) throws ValidationException {
@@ -123,11 +123,24 @@ public class ProcessRegistry extends Observable implements ClassLoaderChainProvi
 
 		public synchronized void purgeProcess(EntityManager em, DefinitionVersion dv)  throws RepositoryException {
 			setChanged();
-			notifyObservers(new ChainUpdate<DefinitionVersion>(ChainUpdate.TYPE.DELETE, dv));
+			notifyObservers(new ChainUpdate<DefinitionVersion>(ChainUpdate.TYPE.PURGE_PROCESS, dv));
 		}
 
 		@Override
 		public void update(Observable o, Object arg) {
 			// nothing to do yet
 		}
+
+		public void purgeClassLoader(EntityManager entityManager, DefinitionVersion dv)  throws RepositoryException {
+			setChanged();
+			notifyObservers(new ChainUpdate<DefinitionVersion>(ChainUpdate.TYPE.PURGE_CLASSLOADER, dv));
+    }
+		
+		public void purgeService(EntityManager entityManager, DefinitionVersion dv)  throws RepositoryException {
+			setChanged();
+			notifyObservers(new ChainUpdate<DefinitionVersion>(ChainUpdate.TYPE.PURGE_SERVICE, dv));
+			//after all service stuff is processed we'just left with a classloader
+			setChanged();
+			notifyObservers(new ChainUpdate<DefinitionVersion>(ChainUpdate.TYPE.PURGE_CLASSLOADER, dv));
+    }
 }

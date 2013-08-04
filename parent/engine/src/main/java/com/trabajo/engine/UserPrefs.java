@@ -18,7 +18,7 @@ public class UserPrefs {
 		UserPrefsJPA up;
 		
 		up=new UserPrefsJPA();
-		up.skin="DHXBLACK";
+		up.setSkin("DHXBLACK");
 		ts.getEntityManager().persist(up);
 	}
 

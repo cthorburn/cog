@@ -42,6 +42,16 @@ public class ClassLoaderDefJPA implements JPAProcessComponent<ClassLoaderDefJPA>
 	public void setDefinitionVersion(VersionJPA definitionVersion) {
 		this.definitionVersion = definitionVersion;
 	}
+	
+	private boolean deprecated;
+	@Column(name = "DEPRECATED", columnDefinition="tinyint default 0")
+	public boolean isDeprecated() {
+		return deprecated;
+	}
+
+	public void setDeprecated(boolean deprecated) {
+		this.deprecated = deprecated;
+	}
 
 	private String category;
 

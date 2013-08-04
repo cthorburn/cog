@@ -1,14 +1,14 @@
 function FormScRs(dhxForm, dhxTabbar) {
     this.dhx=dhxForm;
-    this.dhx.setSkin("dhx_skyblue");
     this.tabs=dhxTabbar;
-    this.dhx.FormScRs=this;
+    FormScRs.obj=this;
+
+    this.dhx.setSkin("dhx_skyblue");
     
     this.spec=[
             {type: "settings", position: "label-left", labelWidth: 250, inputWidth: 200 },
             {type: "fieldset",  label: "System Config", width: 700, list:[
             {type: "input", name: "GraphVizDir", label: "GraphViz installation  directory"},
-            {type: "input", name: "BIRTImageDir", label: "BIRT generated images directory"},
             {type: "input", name: "FileCacheDir", label: "File cache directory", },
             {type: "checkbox", name: "development", label: "Develoment System", },
             {type: "select", name: "rdbms", label: "RDBMS", options:[
@@ -23,19 +23,19 @@ function FormScRs(dhxForm, dhxTabbar) {
     
     this.dhx.attachEvent("onButtonClick", function(name) {
         if("update"==name) {
-            server.asyncServlet({servlet: 'config', action: 'update', data: this.getFormData(),   context: this.FormScRs });
+            server.asyncServlet({servlet: 'config', action: 'update', data: this.getFormData(),   context: FormScRs.obj });
         }
     });
     
     this.dhx.loadStruct(this.spec, "json", function() {});
 
-    server.asyncServlet({servlet: 'config', action: 'fetch', data: {},   context: { form: this.dhx,
-        fetch_OK: function(response) {
-            for(item in response.jsonResult) {
-                this.form.setItemValue(item, response.jsonResult[item]);
-            }
-            this.form.updateValues();
-        }
-    }  });
+    this.fetch_OK = function(response) {
+	    for(item in response.jsonResult) {
+	    	var val=response.jsonResult[item];
+	        this.dhx.setItemValue(item, val);
+	    }
+	    this.dhx.updateValues();
+    };
+    server.asyncServlet({servlet: 'config', action: 'fetch', context: FormScRs.obj});
     
 }

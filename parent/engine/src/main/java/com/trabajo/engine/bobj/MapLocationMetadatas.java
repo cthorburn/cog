@@ -23,7 +23,7 @@ public class MapLocationMetadatas {
 		q.setParameter(1, ml.entity());
 		
 		for(MapLocationMetadataJPA mlm: q.getResultList()) {
-			metaMap.put(mlm.name, mlm.value);
+			metaMap.put(mlm.getName(), mlm.getValue());
 		}
 		return Collections.unmodifiableMap(metaMap);
 	}
@@ -42,14 +42,14 @@ public class MapLocationMetadatas {
 	private static IMapLocationMetadata create(EntityManager em, IMapLocation ml, String name, String value) {
 		MapLocationMetadataJPA jpa=new MapLocationMetadataJPA();
 		MapLocationJPA mlJpa=(MapLocationJPA)ml.entity();
-		jpa.location=mlJpa;
-		jpa.name=name;
-		jpa.value=value;
+		jpa.setLocation(mlJpa);
+		jpa.setName(name);
+		jpa.setValue(value);
 		em.persist(jpa);
 		em.flush();
 		
 		
-		mlJpa.metadata.add(jpa);
+		mlJpa.getMetadata().add(jpa);
 		
 		return toImpl(em, jpa);		
 	}

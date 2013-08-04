@@ -9,6 +9,7 @@ import javax.persistence.TypedQuery;
 
 import com.trabajo.jpa.MapJPA;
 import com.trabajo.jpa.MapLocationJPA;
+import com.trabajo.jpa.MapLocationMetadataJPA;
 import com.trabajo.process.IMap;
 import com.trabajo.process.IMapLocation;
 
@@ -29,7 +30,7 @@ public class MapLocations {
 		q.setParameter(1, map.entity());
 		
 		for(MapLocationJPA ml: q.getResultList()) {
-			result.put(ml.name, MapLocations.toImpl(em, ml));
+			result.put(ml.getName(), MapLocations.toImpl(em, ml));
 		}
 		
 		return result;
@@ -38,12 +39,12 @@ public class MapLocations {
 	public static IMapLocation create(EntityManager em, IMap map, String location, double lat, double lng) {
 		MapJPA mapJpa=(MapJPA)map.entity();
 		MapLocationJPA jpa=new MapLocationJPA();
-		jpa.latitude=lat;
-		jpa.longitude=lng;
-		jpa.name=location;
-		jpa.metadata=new HashSet<>();
-		jpa.map=mapJpa;
-		mapJpa.locations.add(jpa);
+		jpa.setLatitude(lat);
+		jpa.setLongitude(lng);
+		jpa.setName(location);
+		jpa.setMetadata(new HashSet<MapLocationMetadataJPA>());
+		jpa.setMap(mapJpa);
+		mapJpa.getLocations().add(jpa);
 		em.persist(jpa);
 		
 		return toImpl(em, jpa);

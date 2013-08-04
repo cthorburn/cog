@@ -44,7 +44,7 @@ public class ConfigServlet extends HttpServlet {
 		case "fetch": {
 			response.setContentType("application/json");
 			try {
-				engine.getConfig();
+				ts.getStatus().setJsonResult(engine.getConfig());
 				response.getWriter().print(ts.getStatus().toJSONAddOK());
 			} catch (Exception e) {
 				status.deferMessages((DeferredMessages) request.getSession().getAttribute("deferredMessages"));

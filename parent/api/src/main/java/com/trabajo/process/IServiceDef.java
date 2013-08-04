@@ -4,24 +4,16 @@ import javax.persistence.EntityManager;
 
 import com.trabajo.DefinitionVersion;
 
-public interface IProcDef extends IEntity {
+public interface IServiceDef extends IEntity {
 
 	DefinitionVersion getDefinitionVersion();
 
 	void setCategory(String value);
 
-	void setMainClass(String className);
-
 	void setDescription(String value);
 
-
-	void obliterate();
-
 	void deprecate(boolean deprecate);
-
-	void suspend(boolean suspend);
+	boolean isDeprecated();
 
 	void purge(EntityManager em);
-
-	boolean isDeprecated();
 }

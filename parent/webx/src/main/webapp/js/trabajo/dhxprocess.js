@@ -6,6 +6,7 @@ function FormAdPrEdPrEd(dhxForm, dhxAccord, tree) {
     this.acdn = dhxAccord;
     this.tree=tree;
     this.dhx.setSkin("dhx_skyblue");
+    this.dv=null;
     
     this.spec = [ { type : "settings",  position : "label-left", labelWidth : 100, inputWidth : 800},
                   { type : "fieldset",  label : "Service Propeties", width : 1000, list : [ 
@@ -19,7 +20,9 @@ function FormAdPrEdPrEd(dhxForm, dhxAccord, tree) {
     this.dhx.attachEvent("onButtonClick", function(name) {
     	switch(name) {
 	    	case 	"purge": {
-	    		server.asyncServlet({servlet: 'process', action: 'purge', context: this, data: { dv: FormAdPrEdPrEd.obj.dv }});
+	    		if(FormAdPrEdPrEd.obj.dv!=null) {
+	    			server.asyncServlet({servlet: 'process', action: 'purge', context: this, data: { dv: FormAdPrEdPrEd.obj.dv }});
+	    		}
 				break;
 			}
     	}
@@ -101,7 +104,7 @@ function FormAdPrEdPrEd(dhxForm, dhxAccord, tree) {
     };
     
     this.tree.attachEvent("onClick", function(id) {
-    	debugger;
+    	
         if(this.hasChildren(id)==0 && id!='ignoretoo') {
         	FormAdPrEdPrEd.obj.loadForm(id);
         }
@@ -383,11 +386,9 @@ function FormAdPrEdSvNwFn(dhxForm, tabbar) {
 	});
 
 	this.defineSessionSv = function() {
-		var data = { dv : this.FormAdPrEdSvNwFn.uploadSpec.sn + "-" + this.FormAdPrEdSvNwFn.uploadSpec.v
-		};
+		var data = { dv : this.FormAdPrEdSvNwFn.uploadSpec.sn + "-" + this.FormAdPrEdSvNwFn.uploadSpec.v };
 
 		server.asyncServlet({ servlet : 'process', action : 'define_session_sv', data : data, context : { dv : data.dv,
-
     		define_session_sv_OK : function(response) {
     			tbjEvents.fireEvent({ name : 'service_registered', data : this.dv});
     		}
@@ -402,7 +403,7 @@ function FormAdPrEdSvNwFn(dhxForm, tabbar) {
 
 function FormAdPrEdSvNwJo(dhxForm, tabbar) {
 	this.dhx = dhxForm;
-	this.dhx.FormAdPrEdSvNwJo = this;
+	this.tabbar = tabbar;
 	FormAdPrEdSvNwJo.obj = this;
 	this.dhx.setSkin('dhx_skyblue');
 	this.spec = 
@@ -413,7 +414,6 @@ function FormAdPrEdSvNwJo(dhxForm, tabbar) {
 	     ]
 	   }];
 	
-	this.tabbar = tabbar;
 
 	this.dhx.loadStruct(this.spec, "json", function() {});
 	this.grid = new dhtmlXGridObject(this.dhx.getContainer("grid"));
@@ -443,7 +443,7 @@ function FormAdPrEdSvNwJo(dhxForm, tabbar) {
     };
     
 	this.dhx.attachEvent("onButtonClick", function(name) {
-		this.FormAdPrEdSvNwJo.tabbar.setTabActive("finish");
+		FormAdPrEdSvNwJo.obj.tabbar.setTabActive("finish");
 	});
     
 	tbjEvents.addListener({ name : 'service_jar_order_change|service_jar_uploaded2', context : this, func : function(evt) {
@@ -457,7 +457,7 @@ function FormAdPrEdSvNwJo(dhxForm, tabbar) {
     
     tbjEvents.addListener({ name : 'service_registered', context : this, func : function(evt) {
         this.grid.clearAll();
-        this.FormAdPrEdSvNwJo.tabbar.setTabActive("name");
+        FormAdPrEdSvNwJo.obj.tabbar.setTabActive("name");
     }});
 };
 
@@ -579,8 +579,9 @@ function FormAdPrEdSvNwJf(dhxForm, tabbar) {
 
 function FormAdPrEdSvDt(dhxForm) {
 	this.dhx = dhxForm;
-	this.dhx.FormAdPrEdSvDt = this;
-
+	FormAdPrEdSvDt.obj = this;
+	this.dv=null;
+	
 	this.dhx.setSkin('dhx_skyblue');
 	this.spec = [ { type : "settings", position : "label-left", inputWidth : 200, labelWidth : 100
 	}, { type : "fieldset", label : "Set JAR Order", width : 500, list : [ { type : "input", disabled : true, name : "version", label : "Version"
@@ -588,8 +589,30 @@ function FormAdPrEdSvDt(dhxForm) {
 	}, { type : "input", disabled : true, name : "cat", label : "Category"
 	}, { type : "container", name : "grid1", inputHeight : 120, inputWidth : 600, label : "JAR Files"
 	}, { type : "container", name : "grid2", inputHeight : 120, inputWidth : 600, label : "Properties"
+	}, { type : "checkbox", name : "deprecated", label : "Deprecate"
+	}, { type : "button", name : "purge", value : "Remove Service"
 	} ]
 	} ];
+
+    this.dhx.attachEvent("onButtonClick", function(name) {
+    	switch(name) {
+	    	case 	"purge": {
+	    		if(FormAdPrEdSvDt.obj.dv!=null) {
+	    			server.asyncServlet({servlet: 'process', action: 'purgeService', context: this, data: { dv: FormAdPrEdSvDt.obj.dv }});
+	    		}
+				break;
+			}
+    	}
+    });
+
+    this.dhx.attachEvent("onChange", function(name) {
+    	switch(name) {
+    	case 	"deprecated": {
+    		server.asyncServlet({servlet: 'process', action: 'deprecateService', context: this, data: { dv: FormAdPrEdSvDt.obj.dv, deprecate: this.getItemValue('deprecated')===1 ? true:false }});
+			break;
+		}
+    	}
+    });
 
 	this.dhx.loadStruct(this.spec, "json", function() {
 	});
@@ -616,42 +639,99 @@ function FormAdPrEdSvDt(dhxForm) {
 	g.init();
 	g.setSkin("dhx_black");
 
-	tbjEvents.addListener({
-		name : 'service_select',
-		context : this,
-		func : function(evt) {
-			$.ajax({ //TODO use asyncServlet
-				url : "json?feed=AdPrEdSvDt&dv=" + evt.data,
-				type : 'POST',
-				dataType : 'json',
-				success : function(clos) {
-					return function(cld) {
-						if (cld.xerror) {
-							tbjEvents.fireEvent({ name : 'xerror', data : cld
-							});
-							return;
-						}
-
-						clos.dhx.setItemValue("version", cld.version.shortName + '-' + cld.version.version.majorVersion + '.' + cld.version.version.minorVersion + '.' + cld.version.version.fixVersion);
-						clos.dhx.setItemValue("cat", cld.category.value);
-						clos.dhx.setItemValue("desc", cld.description.value);
-                        clos.grid1.clearAll();
-						
-						for ( var i = 0; i < cld.urls.length; i++) {
-							clos.grid1.addRow(i, "" + i + "," + cld.urls[i] + "," + cld.originalJarNames[i]);
-						}
-						clos.grid2.clearAll();
-						for (key in cld.properties) {
-							clos.grid2.addRow(key, key + "," + cld.properties[key]);
-						}
-
-					};
-				}(this), error : function(err) {
-					tbjEvents.fireEvent({ name : 'syserror', data : err
-					});
-				}
-			});
+	
+	this.AdPrEdSvDt_OK=function(cld) {
+		
+		this.dv=cld.version.shortName + '-' + cld.version.version.majorVersion + '.' + cld.version.version.minorVersion + '.' + cld.version.version.fixVersion;
+		this.dhx.setItemValue("version", FormAdPrEdSvDt.obj.dv);
+		this.dhx.setItemValue("cat", cld.category.value);
+		this.dhx.setItemValue("desc", cld.description.value);
+		this.dhx.setItemValue("deprecated", cld.deprecated ? 1:0);
+		this.grid1.clearAll();
+		
+		for ( var i = 0; i < cld.urls.length; i++) {
+			this.grid1.addRow(i, "" + i + "," + cld.urls[i] + "," + cld.originalJarNames[i]);
 		}
-	});
+		this.grid2.clearAll();
+		for (key in cld.properties) {
+			this.grid2.addRow(key, key + "," + cld.properties[key]);
+		}
+	};
+	
+	tbjEvents.addListener({ name : 'service_select', func : function(evt) {
+		server.asyncServlet({servlet: 'json', feed: 'AdPrEdSvDt', data: { dv: evt.data }, context: FormAdPrEdSvDt.obj });
+	}});
 };
 
+//-------------- ClassLoader details --------------------
+
+function FormAdPrEdClDt(dhxForm) {
+	this.dhx = dhxForm;
+	FormAdPrEdClDt.obj = this;
+	this.dv=null;
+	
+	this.dhx.setSkin('dhx_skyblue');
+	this.spec = [ { type : "settings", position : "label-left", inputWidth : 200, labelWidth : 100
+	}, { type : "fieldset", label : "ClassLoader Details", width : 500, list : [ { type : "input", disabled : true, name : "version", label : "Version"
+	}, { type : "input", disabled : true, name : "desc", label : "Description"
+	}, { type : "input", disabled : true, name : "cat", label : "Category"
+	}, { type : "container", name : "grid1", inputHeight : 120, inputWidth : 600, label : "JAR Files"
+	}, { type : "checkbox", name : "deprecated", label : "Deprecate"
+	}, { type : "button", name : "purge", value : "Remove ClassLoader"
+	} ]
+	} ];
+
+    this.dhx.attachEvent("onButtonClick", function(name) {
+    	switch(name) {
+	    	case 	"purge": {
+	    		if(FormAdPrEdClDt.obj.dv!=null) {
+	    			server.asyncServlet({servlet: 'process', action: 'purgeClassLoader', context: this, data: { dv: FormAdPrEdClDt.obj.dv }});
+	    		}
+				break;
+			}
+    	}
+    });
+
+    this.dhx.attachEvent("onChange", function(name) {
+    	switch(name) {
+    	case 	"deprecated": {
+    		server.asyncServlet({servlet: 'process', action: 'deprecateClassLoader', context: this, data: { dv: FormAdPrEdClDt.obj.dv, deprecate: this.getItemValue('deprecated')===1 ? true:false }});
+			break;
+		}
+    	}
+    });
+
+	this.dhx.loadStruct(this.spec, "json", function() {
+	});
+
+	this.grid1 = new dhtmlXGridObject(this.dhx.getContainer("grid1"));
+	var g = this.grid1;
+	g.setImagePath("js/dhtmlxGrid/codebase/imgs/");
+	g.setHeader("Seq,Jar,Original Name");
+	g.setInitWidths("50,500,200");
+	g.setColAlign("left,left,left");
+	g.setColTypes("ro,ro,ro");
+	g.setColSorting("na,na,na");
+	g.init();
+	g.setSkin("dhx_black");
+	
+
+	this.AdPrEdClDt_OK=function(cld) {
+		
+		this.dv=cld.version.shortName + '-' + cld.version.version.majorVersion + '.' + cld.version.version.minorVersion + '.' + cld.version.version.fixVersion;
+		this.dhx.setItemValue("version", FormAdPrEdClDt.obj.dv);
+		this.dhx.setItemValue("cat", cld.category.value);
+		this.dhx.setItemValue("desc", cld.description.value);
+		this.dhx.setItemValue("deprecated", cld.deprecated ? 1:0);
+		this.grid1.clearAll();
+		
+		for ( var i = 0; i < cld.urls.length; i++) {
+			this.grid1.addRow(i, "" + i + "," + cld.urls[i] + "," + cld.originalJarNames[i]);
+		}
+	};
+	
+	tbjEvents.addListener({ name : 'classloader_select', func : function(evt) {
+		server.asyncServlet({servlet: 'json', feed: 'AdPrEdClDt', data: { dv: evt.data }, context: FormAdPrEdClDt.obj });
+	}});
+	
+};

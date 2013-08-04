@@ -1,14 +1,21 @@
 package com.trabajo.vcl;
 
+import java.io.Closeable;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.WeakHashMap;
+import java.util.jar.JarFile;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
@@ -36,14 +43,27 @@ public final class ExtURLClassloader<T extends CLMKey<T>> extends URLClassLoader
 
 	@Override
 	public void close() throws IOException {
-		for (ExtURLClassloader<T> orcl : overrideClassLoaders.values()) {
-			orcl.close();
+		if(overrideClassLoaders!=null) {
+			for (ExtURLClassloader<T> orcl : overrideClassLoaders.values()) {
+				orcl.close();
+			}
 		}
 		clm = null;
 		overrideClassLoaders = null;
 		fixUpList = null;
 		key = null;
 		super.close();
+
+        // now close any remaining streams.
+
+        synchronized (closeables2) {
+            Set<Closeable> keys = closeables2.keySet();
+            for (Closeable c : keys) {
+                   c.close();
+            }
+            closeables2.clear();
+        }
+
 	}
 
 	@Override
@@ -182,7 +202,7 @@ public final class ExtURLClassloader<T extends CLMKey<T>> extends URLClassLoader
 	@Override
 	protected void finalize() throws Throwable {
 		super.finalize();
-		// TODO
+		System.out.println("ExtURLClassLoader finalised");
 	}
 
 	ExtURLClassloader<T> getKeySpecificClassLoader(T key) {
@@ -206,4 +226,38 @@ public final class ExtURLClassloader<T extends CLMKey<T>> extends URLClassLoader
 	public T key() {
 		return key;
 	}
+	
+	
+	
+    private WeakHashMap<Closeable,Void>
+    closeables2 = new WeakHashMap<>();
+	
+	@SuppressWarnings("restriction")
+	@Override
+	public InputStream getResourceAsStream(String name) {
+	        URL url = getResource(name);
+	        try {
+	            if (url == null) {
+	                return null;
+	            }
+	            URLConnection urlc = url.openConnection();
+	            InputStream is = urlc.getInputStream();
+	            if (urlc instanceof JarURLConnection) {
+	                JarURLConnection juc = (JarURLConnection)urlc;
+	                JarFile jar = juc.getJarFile();
+	                synchronized (closeables2) {
+	                    if (!closeables2.containsKey(jar)) {
+	                        closeables2.put(jar, null);
+	                    }
+	                }
+	            } else if (urlc instanceof sun.net.www.protocol.file.FileURLConnection) {
+	                synchronized (closeables2) {
+	                    closeables2.put(is, null);
+	                }
+	            }
+	            return is;
+	        } catch (IOException e) {
+	            return null;
+	        }
+	    }
 }

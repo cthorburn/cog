@@ -13,6 +13,6 @@ public class MapMetadataImpl extends CogEntity<MapMetadataJPA> implements IMapMe
 
 	@Override
 	public void setValue(String value) {
-		entity().value=value;
+		entity().setValue(value);
 	}
 }
