@@ -12,8 +12,7 @@ function FormPlEdIn(dhxForm, dhxAccord) {
             {type: "fieldset",  label: "Process Info", width: 400, list:[
                {type: "input", name: "desc", label: "Process Description", required: true}]
             }
-    ];
-    
+    ];    
     
     tbjEvents.addListener({ name : 'start_it', context : this, func : function(evt) {
         debugger;
