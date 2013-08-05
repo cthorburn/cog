@@ -64,17 +64,13 @@ $(document).ready(
 
 function buildLayout() {		
 	
-	layout=new TrabajoLayout("Procs", "3U", 
-			["Process Components "+processHeader(),"pt", 
-			 "Edit","ed", 
-			 "Status", "status"]);
-	
+	layout=new TrabajoLayout("Procs", "3U",  ["Process Components","pt", "Edit","ed", "Status", "status"]);
 	
 	buildCellStatus(layout.cell("status"));
 	buildCellTrees(layout.cell("pt"));
 	buildCellEd();
 	
-	layout.cell("pt").setText(new CellToolbar("Process Components", { refresh: 'javascript:refresh();'}).toString());	
+	layout.cell("pt").setText(new CellToolbar("Process Components", { filter: 'javascript:toggleFilter();', refresh: 'javascript:refresh();'}).toString());	
 	trees["process"].loadXML('xml?feed=AdPrPt');
 	trees["process"].openAllItems('ignore');
 	acc.acc.cells("service_acc").hide();
@@ -88,9 +84,8 @@ function refresh() {
 	tbjEvents.fireEvent({name: 'refresh_tree'});
 }
 
-
-function processHeader() {
-	return ""; //"<a href=\"javascript:alert('he hey!')\"><img style=\"width: 20px; height:20px; \" src=\"js/dhtmlxForm/codebase/imgs/dhxform_dhx_skyblue/dhxform_upload_uploading.gif\"/></a>"
+function refresh() {
+	tbjEvents.fireEvent({name: 'toggle_tree_filter'});
 }
 
 function buildCellTrees(treeCell) {
@@ -154,15 +149,20 @@ function showContextMenu(nodeId) {
 	if(nodeUserData==null) {
 		return;
 	}
-	
-	
-	
 } 
 
 function buildProcessTree(tc) {
-	var tree = tc.attachTree();
-	tree.setImagePath("js/dhtmlxTree/codebase/imgs/");
+	var tcl=tc.attachLayout("2E");
+	var ca=tcl.cells("a");
+	var cb=tcl.cells("b");
+	ca.hideHeader();
+	cb.hideHeader();
+	ca.attachObject(document.getElementById('process_filter'));
+	ca.collapse();
+	ca.tbj_collapsed=true;
 	
+	var tree = cb.attachTree();
+	tree.setImagePath("js/dhtmlxTree/codebase/imgs/");
 	trees["process"]=tree;
 	tree.feed='xml?feed=AdPrPt';
 	tree.showContextMenu=showContextMenu;
@@ -173,6 +173,7 @@ function buildProcessTree(tc) {
 	}
 	
 	tree.attachEvent('onClick', function(id) {
+		debugger;
 		if(this.hasChildren(id)==0) {
 			tbjEvents.fireEvent( { name: 'process_select', data: id } ); 
 		}
@@ -184,7 +185,6 @@ function buildProcessTree(tc) {
 	});
 	
 	tree.attachEvent('onRightClick', function(nid, obj) {
-		
 		this.showContextMenu(nid, obj);
 	});
 	
@@ -193,6 +193,17 @@ function buildProcessTree(tc) {
 			this.reload();
 		}
 	} );
+	
+	tbjEvents.addListener({ name: 'toggle_tree_filter', context: ca, func: function() {
+		if(this.tbj_collapsed) {
+			this.expand();
+			this.tbj_collapsed=false;
+		}
+		else {
+			this.collapse();
+			this.tbj_collapsed=true;
+		}
+    }});
 }
 
 
@@ -227,13 +238,14 @@ function buildClassTree(tabbarCell) {
 }
 
 function buildServiceTree(tabbarCell) {
+	
+	
 	var tree = tabbarCell.attachTree();
 	tree.setImagePath("js/dhtmlxTree/codebase/imgs/");
 	trees["service"]=tree;
 	tree.feed='xml?feed=AdPrSt';
 	
 	tree.attachEvent('onClick', function(nid) {
-		
 		tbjEvents.fireEvent( { name: 'service_select', data: nid } );
 	});
 	tree.attachEvent('onXLE', function(nid) {
@@ -276,8 +288,6 @@ function buildCellStatus(cell) {
 
 function buildClassAccordian(dhxAccord) {
 	dhxAccord.addItem("new", "New ClassLoader");
-    dhxAccord.addItem("delete", "Delete");
-    dhxAccord.addItem("search", "Search");
     dhxAccord.addItem("details", "Details");
 
     var nwTabs=dhxAccord.cells("new").attachTabbar();
@@ -363,13 +373,14 @@ fieldset {margin: 25px;}
 		<div>
 			<div style="float: left; padding-top: 40px;"><h3>Process Start Form</h3></div>
 			<div>
-			<button onclick="tbjEvents.fireEvent({ name: 'start_it', data: {}})" type="submit" id="_cog_start" name="_cog_start" style="margin-left: 60px; margin-top: 20px; border: 0; background: transparent">
+			<button onclick="tbjEvents.fireEvent('start_it')" type="submit" id="_cog_start" name="_cog_start" style="margin-left: 60px; margin-top: 20px; border: 0; background: transparent">
 			    <img src="img/start.jpg" style="width:85px; height: 85px" alt="start"/>
 			</button>
 			</div>
 		</div>
 	</div>
 	<div id="form_container"></div><br clear="all"/>
+	<div id="process_filter" style="height: 85px">Cell Header</div>
 </div>
 </body>
 </html>

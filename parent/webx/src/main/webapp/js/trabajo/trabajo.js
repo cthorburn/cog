@@ -142,6 +142,10 @@ function Events() {
 	
 	this.fireEvent=function(event) {
 		
+		if(typeof(event)==='string') {
+			event={ name: event};
+		}
+		
 		if(this.startOfChain === null) {
 			this.startOfChain=event;
 			this.endOfChain=event;
@@ -448,17 +452,19 @@ function CellToolbar(name, config) {
     this.config=config;
     
     this.toString=function() {
-        var s='';
+        var s='<table style="table-layout: fixed; width: 90%;"><tr>';
+        s+='<td style="padding: none; margin-right: 30px; vertical-align: top">';
+        s+=name;
+        s+='</td>';
         
         for(var i in this.config) {
-            s+='<table style="table-layout: fixed; width: 90%;"><tr><td style="padding: none; margin-right: 30px; vertical-align: top">';
-            s+=name;
-            s+='</td><td style="text-align: right;width: 90%; vertical-align: top"><a href="';
+            s+='<td style="text-align: right; width: 10%; vertical-align: top"><a href="';
             s+=config[i];    
             s+='"><img style="position: relative; top: -10px; border:none; float:right; width: 32px; height: 32px;" src="';
             s+='img/tbr_'+i+'.png';
-            s+='"/></a></td></tr></table>';
+            s+='"/></a></td>';
         }
+        s+='</tr></table>';
         return s;
     };
 }

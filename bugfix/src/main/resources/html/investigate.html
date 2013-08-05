@@ -2,14 +2,14 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCODJGNJx_SroyRYTPLlmc-GXz7CVagJmI&sensor=true"></script>
 
-$magic.dhxSupport()
+
+$magic.dhxSupport() <!-- velocity, ignore IDE warnings -->
 
 <script>
 var layout;	
-
+var form;
 
 $(document).ready(
 	function() {
@@ -31,8 +31,9 @@ function buildLayout() {
 	layout.cells('b').hideHeader();
 }
 
+
 function buildCellLeft(layoutCell) {
-    var form=layoutCell.attachForm("explain_task");
+    form=layoutCell.attachForm("explain_task");
 	form.setSkin('dhx_skyblue');
 	var spec=[
 	   	    {type: "settings", position: "label-left", inputWidth: 300, labelWidth: 200},
@@ -83,6 +84,12 @@ function buildCellRight(layoutCell) {
 	grid.init();
 	grid.setSkin("dhx_black");
 	grid.loadXML("$magic.data('grid')");
+	
+	
+	grid.attachEvent('onRowDblClicked', function(rid, cid) {
+		form.setItemValue('existingId', rid);
+		form.updateValues();
+	});
 }
 
 
