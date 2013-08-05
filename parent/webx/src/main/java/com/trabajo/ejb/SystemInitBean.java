@@ -80,6 +80,9 @@ public class SystemInitBean {
 		if (admin == null) {
 			CreateUserSpec spec = new CreateUserSpec("", "Cog Administrator", "admin", "password", "admin@myorg.com", "EN", "EN");
 			admin = Users.createUser(em, spec);
+		}
+		
+		if (!admin.getRoles().contains(adminRole)) {
 			admin.addRole(adminRole);
 		}
 

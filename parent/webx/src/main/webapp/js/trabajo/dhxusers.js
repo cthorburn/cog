@@ -2,8 +2,7 @@ tbjEvents.addListener( { name: 'usermodel_changed', context: this, func: functio
 
 tbjEvents.addListener( { name: 'grid_dblclick', context: this, func: function(evt) {
         server.asyncServlet({servlet: 'json', feed: 'AdUsSu_user_detail', data: {userid: evt.data.userid  }, context: {
-
-            userid: evt.data.userid,
+        userid: evt.data.userid,
             
             AdUsSu_user_detail_OK: function(response) {
                 tbjEvents.fireEvent({name: 'usermodel_changed', data: response});
@@ -18,7 +17,7 @@ function FormAdUsEdNwId(dhxForm, dhxTbr, dhxAccord) {
 	this.tbbr=dhxTbr;
 	this.acdn=dhxAccord;
 	
-	this.dhx.FormAdUsEdNwId=this;
+	FormAdUsEdNwId.obj=this;
 	this.spec=[
 	   	    {type: "settings", position: "label-left", labelWidth: 100, inputWidth: 120 },
 	   		
@@ -34,11 +33,11 @@ function FormAdUsEdNwId(dhxForm, dhxTbr, dhxAccord) {
 	this.dhx.attachEvent("onButtonClick", function(name) {
 		if("create"==name) {
 			var data=this.getFormData();
-			server.asyncServlet({servlet: 'user', action: 'create', data: data,   context: this.FormAdUsEdNwId });
+			server.asyncServlet({servlet: 'user', action: 'create', data: data, context: FormAdUsEdNwId.obj });
 		}
 	});
 	
-	this.createOK=function(result) {
+	this.create_OK=function(result) {
 		this.dhx.clear();
 	};
 	
@@ -62,7 +61,7 @@ function FormAdUsEdEdId(dhxForm, dhxTbr, dhxAccord) {
 	this.dhx.setSkin("dhx_skyblue");
 	this.tbbr=dhxTbr;
 	this.acdn=dhxAccord;
-	this.dhx.FormAdUsEdNwId=this;
+	FormAdUsEdEdId.obj=this;
 	
 	this.spec=[
 	   	    {type: "settings", position: "label-left", labelWidth: 100, inputWidth: 120 },
@@ -97,7 +96,7 @@ function FormAdUsEdEdLoc(dhxForm, dhxTbr, dhxAccord) {
 	this.dhx.setSkin("dhx_skyblue");
 	this.tbbr=dhxTbr;
 	this.acdn=dhxAccord;
-	this.dhx.FormAdUsEdNwLoc=this;
+	FormAdUsEdNwLoc.obj=this;
 	
 	this.xmlFile='form/formAdUsEdEdLoc.xml';
 	this.dhx.loadStruct(this.xmlFile);
@@ -109,7 +108,7 @@ function FormAdUsEdEdLoc(dhxForm, dhxTbr, dhxAccord) {
 	this.dhx.setSkin("dhx_skyblue");
 	this.tbbr=dhxTbr;
 	this.acdn=dhxAccord;
-	this.dhx.FormAdUsEdEdLoc=this;
+	FormAdUsEdEdLoc.obj=this;
 	
 	this.dhx.attachEvent("onButtonClick", function(name) {
 		this.validate();

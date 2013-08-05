@@ -537,7 +537,8 @@ function MapManager(cell) {
                     servlet: 'map', 
                     action: 'updateLocMeta', 
                     context: this, 
-                    data: { location: locName, lat: lat, lng: lng, name: metaName, value: metaValue } 
+                    data: { location: locName, lat: lat, lng: lng, name: metaName, value: metaValue } ,
+                    func: function() {}
                 });
     };
     

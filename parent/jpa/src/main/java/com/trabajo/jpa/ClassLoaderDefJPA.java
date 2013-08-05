@@ -108,7 +108,6 @@ public class ClassLoaderDefJPA implements JPAProcessComponent<ClassLoaderDefJPA>
 
 	@Override
 	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
+		return getDefinitionVersion().toString();
 	}
 }
