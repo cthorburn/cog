@@ -353,10 +353,15 @@ function buildProcessAccordian(dhxAccord) {
 	dhxAccord.addItem("new", "New");
     dhxAccord.addItem("edit", "Edit");
     dhxAccord.addItem("run", "Run");
+    dhxAccord.addItem("overview", "Overview");
     forms['AdPrEdPrNw'] =newByName("FormAdPrEdPrNw", window, dhxAccord.cells("new").attachForm(), dhxAccord);
     forms['AdPrEdPrEd'] =newByName("FormAdPrEdPrEd", window, dhxAccord.cells("edit").attachForm(), dhxAccord, trees['process']);
-	//NB run is an attached div
 	
+    tbjEvents.addListener({ name: 'process_select', context: dhxAccord.cells("overview"), func:  function(evt) {
+        this.attachURL("process?a=overviewGraph&dv="+dvFromTreeId(evt.data));
+    }});
+    
+    dhxAccord.cells("edit")
     dhxAccord.openItem("new");
 }
 </script>

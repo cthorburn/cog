@@ -8,12 +8,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.trabajo.IProcessServiceProperties;
-import com.trabajo.jpa.WholeJarMetadataV1;
+import com.trabajo.jpa.ProcessJarAnalysis;
 import com.trabajo.process.INodeTimer;
 import com.trabajo.process.ITask;
 
 public interface Sandbox {
-	void setMetadata(ProcessClassMetadata pcm, WholeJarMetadataV1 wjm);
+	void setMetadata(ProcessClassMetadata pcm, ProcessJarAnalysis wjm);
 	void start(Map<String, String> hParms, String note);
 	void selectTask(ITask  node);
 	void viewTask(ITask node);

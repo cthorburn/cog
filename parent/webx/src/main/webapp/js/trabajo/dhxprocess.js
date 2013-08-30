@@ -119,11 +119,12 @@ function FormAdPrEdPrEd(dhxForm, dhxAccord, tree) {
     
 }
 
-function FormAdPrEdPrNw(dhxForm, acdn) {
+function FormAdPrEdPrNw(dhxForm, acdn, tree) {
 	this.dhx = dhxForm;
 	this.dhx.setSkin("dhx_skyblue");
-
 	this.acdn = acdn;
+	this.tree=tree;
+	
     this.runCell = this.acdn.cells("run");
     this.runCell.attachObject("sf");
     
@@ -144,6 +145,8 @@ function FormAdPrEdPrNw(dhxForm, acdn) {
 
 
 	this.dhx.attachEvent("onUploadComplete", function(name) {
+		debugger;
+		tree.reload();
 	    getDeferredMsgs();
 	});
 
@@ -176,8 +179,8 @@ function FormAdPrEdPrNw(dhxForm, acdn) {
         this.runCell.startupForm=new dhtmlXForm("form_container");
         this.runCell.startupForm.setSkin('dhx_skyblue');
         
-        this.runCell.startupForm.loadStruct("process?a=starter_form&dv=" + evt.data);
         this.runCell.open();
+        this.runCell.startupForm.loadStruct("process?a=starter_form&dv=" + evt.data);
 	}
 	});
 

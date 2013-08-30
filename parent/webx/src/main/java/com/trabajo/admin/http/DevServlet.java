@@ -130,16 +130,29 @@ public class DevServlet extends HttpServlet {
 
 		}
 
-		// ServletContext sc = request.getSession().getServletContext();
-
 		switch (action) {
 		case "deploy_process": {
 			doProcessUpload(ts, request, target, originalName, size);
 			break;
 		}
+		
+		case "deleteAllProcesses": {
+			response.setContentType("application/json");
+			dev.deleteAllProcesses(ts);
+			response.getWriter().print((String) status.toJSONAddOK());
+			break;
+		}
+			
 		case "wipeQuartzTables": {
 			response.setContentType("application/json");
 			dev.wipeQuartzTables(ts);
+			response.getWriter().print((String) status.toJSONAddOK());
+			break;
+		}
+		
+		default: {
+			response.setContentType("application/json");
+			status.error("No such action defined for DevServlet: "+action);
 			response.getWriter().print((String) status.toJSONAddOK());
 			break;
 		}

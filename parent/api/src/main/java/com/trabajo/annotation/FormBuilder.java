@@ -3,9 +3,13 @@ package com.trabajo.annotation;
 import com.trabajo.ValidationException;
 import com.trabajo.utils.XMLSBHelper;
 
+
+
+
 public class FormBuilder {
-	
-	//taskid=[nodeId]
+
+	public static final String NO_FORM="<items><item type=\"settings\" position=\"label-left\" labelAlign=\"right\" labelWidth=\"150\" inputWidth=\"400\"/><item type=\"input\" label=\"Start Note\" name=\"_cog_Note\" itemHeight=\"150\" value=\"Start Note\"/></items>";
+
 	private String taskCorrelator;
 	
 	public String buildStartForm(Form f) throws ValidationException {
@@ -19,7 +23,7 @@ public class FormBuilder {
 		for (FormItem item : f.dataItems()) {
 			buildItem(sb, item);
 		}
-		sb.append("<item type=\"input\" label=\"Start Note\" name=\"_cog_Note\" value=\"Start Note\"/>");
+		sb.append("<item type=\"input\" label=\"Start Note\" name=\"_cog_Note\" itemHeight=\"150\" value=\"Start Note\"/>");
 		sb.append("</item></items>");
 		return sb.toString();
 	}

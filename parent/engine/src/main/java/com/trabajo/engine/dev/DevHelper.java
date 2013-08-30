@@ -25,4 +25,19 @@ public class DevHelper {
 		
 	}		
 	
+	public static void deleteAllProcesses(Connection conn) throws SQLException {
+		
+		String sql="	delete FROM [trabajo].[dbo].[taskbarrier]; " + 
+				"		  delete FROM [trabajo].[dbo].[taskgroup]; " + 
+				"		  delete FROM [trabajo].[dbo].[nodetimer]; " + 
+				"		  delete FROM [trabajo].[dbo].[task_roles]; " + 
+				"		  delete FROM [trabajo].[dbo].[node]; " + 
+				"		  delete FROM [trabajo].[dbo].[instance]; " + 
+				"		  delete  FROM [trabajo].[dbo].[procdef]";
+		
+		try(PreparedStatement ps=conn.prepareStatement(sql);) {
+			ps.executeUpdate();
+		}
+		
+	}		
 }

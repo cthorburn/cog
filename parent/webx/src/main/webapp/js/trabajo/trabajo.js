@@ -175,9 +175,9 @@ function Events() {
 			
 			if(handlerList) {
 				for(var i=0; i < handlerList.length; i++) {
+					var listener=handlerList[i];
 					try {
 						
-						var listener=handlerList[i];
 						if(!listener || (listener === null)) {
 							continue;
 						}
@@ -187,6 +187,7 @@ function Events() {
 						listener.func.apply(listener.context, [evt]);
 
 					}catch(e) {
+						debugger;
 						alert(e);
 					}
 				}
@@ -508,7 +509,6 @@ function Graphs(dhx) {
 }
 
 function documentLoaded() {
-    
     $.ajax( 
             {
                 url: 'header.html',
@@ -704,3 +704,13 @@ function LocationPopup(mapManager, goolatlng, dhxWin) {
     });
 };
 
+function dvFromTreeId(categorisedDV) {
+	debugger;
+	var split=categorisedDV.split(/\./);
+	
+	var shortName=split[split.length-2];
+	var deHyphenatedVersion=split[split.length-1].replace(/-/g, ".");
+	
+	var result=shortName+"-"+deHyphenatedVersion;
+	return result;
+};

@@ -3,6 +3,7 @@ package com.trabajo.process;
 import javax.persistence.EntityManager;
 
 import com.trabajo.DefinitionVersion;
+import com.trabajo.IVisualizer;
 
 public interface IProcDef extends IEntity {
 
@@ -24,4 +25,8 @@ public interface IProcDef extends IEntity {
 	void purge(EntityManager em);
 
 	boolean isDeprecated();
+	
+	IVisualizer getVisualizer();
+	void setVisualizer(IVisualizer viz);
+
 }

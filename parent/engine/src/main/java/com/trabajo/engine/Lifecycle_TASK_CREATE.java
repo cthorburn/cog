@@ -17,7 +17,9 @@ import com.trabajo.annotation.StandardTaskLifecycle;
 import com.trabajo.annotation.Timeout;
 import com.trabajo.engine.annotation.ApplicationPoint;
 import com.trabajo.engine.bobj.TaskBarriers;
+import com.trabajo.engine.bobj.TaskGroups;
 import com.trabajo.process.ITask;
+import com.trabajo.process.ITaskGroup;
 import com.trabajo.utils.MethodVisitor;
 import com.trabajo.utils.Visitation;
 
@@ -110,5 +112,11 @@ public class Lifecycle_TASK_CREATE extends AbstractLifecycle {
 	@Override
 	public Object getTaskOrProcessObject() {
 		return taskObject;
-	}
+}
+
+	@Override
+  public ITaskGroup createGroup(String name) {
+	  return TaskGroups.create(em, name, getInstance());
+  }
+
 }

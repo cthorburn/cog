@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.trabajo.DefinitionVersion;
+import com.trabajo.IVisualizer;
 import com.trabajo.ValidationException;
 import com.trabajo.annotation.ClassLoaderHierarchy;
 import com.trabajo.annotation.Development;
@@ -44,7 +45,6 @@ public class ProcessClassMetadata {
 
 	public ProcessClassMetadata(Class<?> processClass) throws ValidationException {
 		className = processClass.getName();
-
 		activationSpec = ActivationSpec.forClass(processClass);
 
 		Process p = processClass.getAnnotation(Process.class);
@@ -60,20 +60,20 @@ public class ProcessClassMetadata {
 		}
 
 		category = new Category(p.category());
-
 		description = new Description(p.description(), 255);
 
 		clh.add(dv);
 
-		suForm = processClass.getAnnotation(StartupForm.class).value();
-
-		Forms fs = processClass.getAnnotation(Forms.class);
-		if (fs != null) {
-			for (Form f : fs.value()) {
-				forms.put(f.name(), new FormBuilder().buildStartForm(f));
+		if(processClass.getAnnotation(StartupForm.class)!=null) {
+			suForm = processClass.getAnnotation(StartupForm.class).value();
+	
+			Forms fs = processClass.getAnnotation(Forms.class);
+			if (fs != null) {
+				for (Form f : fs.value()) {
+					forms.put(f.name(), new FormBuilder().buildStartForm(f));
+				}
 			}
 		}
-
 		ClassLoaderHierarchy clhx = processClass.getAnnotation(ClassLoaderHierarchy.class);
 
 		if (clhx != null) {
@@ -93,7 +93,10 @@ public class ProcessClassMetadata {
 	}
 
 	public String getStartupForm() {
-		return forms.get(suForm);
+		if(suForm!=null)
+			return forms.get(suForm);
+		else
+			return FormBuilder.NO_FORM;
 	}
 
 	public static Method getStartMethod(Class<?> processClass) {

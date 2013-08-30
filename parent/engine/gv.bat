@@ -1,6 +1,6 @@
-
- cd C:\_GITHUB\giteval\cog\engine
- "C:\Program Files\Graphviz2.30\bin\dot" -v -Tsvg   -O < digraph.gv 
+ cd C:\_GITHUB3\maven.1375521594990\parent\engine
+ "C:\Program Files\Graphviz2.30\bin\fdp" -v -Tsvg   -O < digraphO.gv
+ pause 
 exit
 
 

@@ -1,7 +1,7 @@
 package com.trabajo.engine;
 
 import com.trabajo.DefinitionVersion;
-import com.trabajo.jpa.WholeJarMetadataV1;
+import com.trabajo.jpa.ProcessJarAnalysis;
 import com.trabajo.vcl.ClassLoaderManager;
 import com.trabajo.vcl.ExtURLClassloader;
 
@@ -11,14 +11,14 @@ public class LifecycleContext {
 	private ExtURLClassloader<DefinitionVersion> classLoader;
 	private ClassLoaderManager<DefinitionVersion, DVFactory> clm;
 	private ProcessClassMetadata pcm; 
-	private WholeJarMetadataV1 wjm;
+	private ProcessJarAnalysis wjm;
 	
 	public LifecycleContext(
 			TSession ts, 
 			ExtURLClassloader<DefinitionVersion> firstClassLoader, 
 			ClassLoaderManager<DefinitionVersion, DVFactory> clm,
 			ProcessClassMetadata pcm, 
-			WholeJarMetadataV1 wjm) {
+			ProcessJarAnalysis wjm) {
 		super();
 		this.ts = ts;
 		this.classLoader = firstClassLoader;
@@ -39,7 +39,7 @@ public class LifecycleContext {
 		return classLoader;
 	}
 
-	public WholeJarMetadataV1 getWjm() {
+	public ProcessJarAnalysis getWjm() {
 		return wjm;
 	}
 

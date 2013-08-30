@@ -2,6 +2,7 @@ package com.trabajo.engine;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.Map;
 
@@ -29,7 +30,7 @@ import com.trabajo.engine.bobj.Tasks;
 import com.trabajo.engine.bobj.Users;
 import com.trabajo.jpa.ProcDefJPA;
 import com.trabajo.jpa.VersionJPA;
-import com.trabajo.jpa.WholeJarMetadataV1;
+import com.trabajo.jpa.ProcessJarAnalysis;
 import com.trabajo.process.IClassLoaderDef;
 import com.trabajo.process.IGroup;
 import com.trabajo.process.IInstance;
@@ -78,9 +79,9 @@ public class EngineImpl implements Engine, EngineImplMBean {
 			}
 
 			ProcessClassMetadata pcm = pj.getClassMetadata();
-			WholeJarMetadataV1 wjm;
+			ProcessJarAnalysis wjm;
 			try {
-				wjm = new WholeJarMetadataV1(f);
+				wjm = new ProcessJarAnalysis(f);
 			} catch (ValidationException e) {
 				status.error(e.getMessage(), logger, e);
 				return;
@@ -214,7 +215,7 @@ public class EngineImpl implements Engine, EngineImplMBean {
 		}
 	}
 
-	private WholeJarMetadataV1 getJarMetadata(TSession ts, DefinitionVersion dv) {
+	private ProcessJarAnalysis getJarMetadata(TSession ts, DefinitionVersion dv) {
 		return ((ProcDefJPA)ProcDefs.findByVersion(ts.getEntityManager(), dv).entity()).getJarMetadata();
 	}
 
@@ -527,21 +528,6 @@ public class EngineImpl implements Engine, EngineImplMBean {
 		}
 	}
 
-	@Override
-	public void writeProcessGraph(TSession ts, String gvLocation, Writer w,  int taskId) {
-		
-		EntityManager em=ts.getEntityManager();
-		ITask task=Tasks.findById(em, taskId);
-		IInstance instance=task.getInstance();
-		IVisualizer viz=instance.getVisualizer();
-		try {
-			
-			GraphViz.generate(gvLocation, w, viz.generate(new GraphEntityFinderImpl(ts.getEntityManager())));
-		} catch (IOException | TransformerException e) {
-			ts.getStatus().error(e.getMessage(), logger, e);
-		}
-		
-	}
 
 	@Override
 	public void deprecateProcess(TSession ts, DefinitionVersion dv, boolean deprecate) {
@@ -623,4 +609,32 @@ public class EngineImpl implements Engine, EngineImplMBean {
 		}
 	
 	}
+	@Override
+	public void writeProcessGraph(TSession ts, String gvLocation, Writer w,  int taskId) {
+		
+		EntityManager em=ts.getEntityManager();
+		ITask task=Tasks.findById(em, taskId);
+		IInstance instance=task.getInstance();
+		IVisualizer viz=instance.getProcDef().getVisualizer();
+		try {
+			GraphViz.generate(gvLocation, w, viz.status(new GraphEntityFinderImpl(ts.getEntityManager())));
+		} catch (IOException | TransformerException e) {
+			ts.getStatus().error(e.getMessage(), logger, e);
+		}
+		
+	}
+
+	@Override
+  public void writeOverviewGraph(TSession ts, String gvLocation, PrintWriter writer, DefinitionVersion dv) {
+		EntityManager em=ts.getEntityManager();
+		IProcDef pd =ProcDefs.findByVersion(em, dv);
+		IVisualizer viz=pd.getVisualizer();
+		
+		
+		try {
+			GraphViz.overview(gvLocation, writer, viz.overview());
+		} catch (IOException | TransformerException e) {
+			ts.getStatus().error(e.getMessage(), logger, e);
+		}
+  }
 }

@@ -1,0 +1,49 @@
+<persistence 
+	xmlns="http://java.sun.com/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+	version="2.0">
+
+	<persistence-unit name="trabajo">
+		
+		<provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider>
+
+		<jta-data-source>trabajo</jta-data-source>
+		<non-jta-data-source>trabajoNonJta</non-jta-data-source>
+		
+	<!-- <class>com.trabajo.jpa.BeetleJPA</class>
+		<class>com.trabajo.jpa.GrubJPA</class> -->
+		
+
+		<class>com.trabajo.jpa.UserPrefsJPA</class>
+		<class>com.trabajo.jpa.NodeTimerJPA</class>
+		<class>com.trabajo.jpa.ConfigJPA</class>
+		<class>com.trabajo.jpa.TaskBarrierJPA</class>
+		<class>com.trabajo.jpa.TaskUploadJPA</class>
+		<class>com.trabajo.jpa.UserJPA</class>
+		<class>com.trabajo.jpa.GroupJPA</class>
+		<class>com.trabajo.jpa.PermissionJPA</class>
+		<class>com.trabajo.jpa.RolePermissionJPA</class>
+		<class>com.trabajo.jpa.UserLocalizationJPA</class>
+		<class>com.trabajo.jpa.InstanceJPA</class>
+		<class>com.trabajo.jpa.NodeJPA</class>
+		<class>com.trabajo.jpa.RoleJPA</class>
+		<class>com.trabajo.jpa.VersionJPA</class>
+		<class>com.trabajo.jpa.ReportDefJPA</class>
+		<class>com.trabajo.jpa.ProcDefJPA</class>
+		<class>com.trabajo.jpa.ServiceDefJPA</class>
+		<class>com.trabajo.jpa.ClassLoaderDefJPA</class>
+		<class>com.trabajo.jpa.ProcessComponentTagJPA</class>
+		<class>com.trabajo.jpa.MapJPA</class>
+		<class>com.trabajo.jpa.MapMetadataJPA</class>
+		<class>com.trabajo.jpa.MapLocationJPA</class>
+		<class>com.trabajo.jpa.MapLocationMetadataJPA</class>
+
+		<properties>
+			<property name="openejb.validation.output.level" value="VERBOSE" />
+			<property name="openjpa.jdbc.DBDictionary" value="sqlserver" />
+			<property name="openjpa.jdbc.MappingDefaults" value="ForeignKeyDeleteAction=restrict, JoinForeignKeyDeleteAction=restrict" /> 			
+			<property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)" />
+		</properties>
+	</persistence-unit>
+</persistence>

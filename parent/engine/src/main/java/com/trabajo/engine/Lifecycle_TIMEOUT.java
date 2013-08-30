@@ -6,8 +6,10 @@ import org.slf4j.LoggerFactory;
 import com.trabajo.ProcessException;
 import com.trabajo.TaskCompletion;
 import com.trabajo.engine.annotation.ApplicationPoint;
+import com.trabajo.engine.bobj.TaskGroups;
 import com.trabajo.process.INodeTimer;
 import com.trabajo.process.ITask;
+import com.trabajo.process.ITaskGroup;
 
 public class Lifecycle_TIMEOUT extends AbstractLifecycle {
 	
@@ -62,4 +64,9 @@ public class Lifecycle_TIMEOUT extends AbstractLifecycle {
 	public Object getTaskOrProcessObject() {
 		return taskObject;
 	}
+	
+	@Override
+  public ITaskGroup createGroup(String name) {
+	  return TaskGroups.create(em, name, getInstance());
+  }
 }

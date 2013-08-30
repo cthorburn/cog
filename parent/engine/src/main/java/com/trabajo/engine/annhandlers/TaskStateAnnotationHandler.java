@@ -12,7 +12,6 @@ import com.trabajo.utils.FieldVisitor;
 import com.trabajo.utils.Visitation;
 
 @Component(applicationPoints = {
-		ApplicationPoint.BEFORE_INSTANCE_START,
 		ApplicationPoint.BEFORE_TASK_CREATE, 
 		ApplicationPoint.BEFORE_TASK_DATA, 
 		ApplicationPoint.BEFORE_TASK_TIMEOUT,

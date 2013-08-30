@@ -45,7 +45,7 @@ public class VisualizerAnnotationHandler implements AnnotationHandler {
                   	if(!it.isAccessible()) {
                   		it.setAccessible(true);
                   	}	
-										it.set(o, l.getInstance().getVisualizer());
+										it.set(o, l.getInstance().getProcDef().getVisualizer());
 									} catch (IllegalArgumentException | IllegalAccessException e) {
 										throw new RuntimeException(e);
 									}

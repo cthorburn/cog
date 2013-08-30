@@ -8,7 +8,7 @@
 	<modules>
 		<module>api</module>
 		<module>engine</module>
-		<module>jpa</module>
+	<!-- 	<module>jpa</module> -->
 		<module>schema</module>
 		<module>tomcat</module>
 		<module>vcl</module>

@@ -48,8 +48,9 @@ public class GraphViz {
 //			l=bre.readLine();
 //		}
 //		bre.close();
-				
-		xsl=Thread.currentThread().getContextClassLoader().getResourceAsStream("xsl/visualizer.xsl");
+//				
+//		xsl=Thread.currentThread().getContextClassLoader().getResourceAsStream("xsl/visualizer.xsl");
+		
 		Transformer t=transformerFactory.newTransformer(new StreamSource(xsl));
 		xsl.close();
 
@@ -69,6 +70,51 @@ public class GraphViz {
 //		bre.close();
 		
 		//t.transform(new StreamSource(proc.getInputStream()), new StreamResult(System.out));
+		
+	}
+	
+	public static void overview(String gvLocation, Writer w, String digraph) throws IOException, TransformerException {
+		
+		System.out.println(digraph);
+		ProcessBuilder pb=new ProcessBuilder(gvLocation+"/bin/dot", "-Tsvg");
+		
+		Process proc=pb.start();
+		BufferedOutputStream bos=new  BufferedOutputStream(proc.getOutputStream());
+		bos.write(digraph.getBytes());
+		bos.close();
+		
+		TransformerFactory transformerFactory=TransformerFactory.newInstance();
+		InputStream xsl=Thread.currentThread().getContextClassLoader().getResourceAsStream("xsl/overview.xsl");
+		
+//		BufferedReader bre=new BufferedReader(new InputStreamReader(proc.getErrorStream()));
+//		
+//		for(String l=bre.readLine(); l!=null; ) {
+//			System.out.println(l);
+//			l=bre.readLine();
+//		}
+//		bre.close();
+				
+//		xsl=Thread.currentThread().getContextClassLoader().getResourceAsStream("xsl/overview.xsl");
+		
+		Transformer t=transformerFactory.newTransformer(new StreamSource(xsl));
+		xsl.close();
+
+		t.transform(new StreamSource(proc.getInputStream()), new StreamResult(w));
+
+//		proc=pb.start();
+//		bos=new  BufferedOutputStream(proc.getOutputStream());
+//		bos.write(digraph.getBytes());
+//		bos.close();
+//		
+//		bre=new BufferedReader(new InputStreamReader(proc.getErrorStream()));
+//		
+//		for(String l=bre.readLine(); l!=null; ) {
+//			System.out.println(l);
+//			l=bre.readLine();
+//		}
+//		bre.close();
+//		
+//		t.transform(new StreamSource(proc.getInputStream()), new StreamResult(System.out));
 		
 	}
 }

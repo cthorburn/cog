@@ -61,7 +61,7 @@ public class TaskPhaseRunner {
 				}
 				task.setStateContainer((StateContainer)f.get(taskObj));
 			}
-			
+			/*
 			f=getVizualizerField(taskObj);
 			if(f!=null) {
 				if(!f.isAccessible()) {
@@ -69,6 +69,7 @@ public class TaskPhaseRunner {
 				}
 				task.getInstance().setVisualizer((IVisualizer)f.get(taskObj));
 			}
+			*/
 			
 		} catch (InvocationTargetException e) {
 			status.error(e.getTargetException().getMessage(), logger, (Exception) e.getTargetException());

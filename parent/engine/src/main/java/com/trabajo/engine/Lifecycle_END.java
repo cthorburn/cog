@@ -9,6 +9,7 @@ import com.trabajo.StateContainer;
 import com.trabajo.annotation.TaskState;
 import com.trabajo.engine.annotation.ApplicationPoint;
 import com.trabajo.process.IInstance;
+import com.trabajo.process.ITaskGroup;
 import com.trabajo.utils.AnnotationUtils;
 
 public class Lifecycle_END extends AbstractLifecycle {
@@ -62,7 +63,7 @@ public class Lifecycle_END extends AbstractLifecycle {
 
 	@Override
 	public Object getTaskObject() {
-		throw new UnsupportedOperationException();
+		throw new IllegalStateException("Action not permitted in this context");
 	}
 
 	@Override
@@ -74,4 +75,10 @@ public class Lifecycle_END extends AbstractLifecycle {
 	public Object getTaskOrProcessObject() {
 		return processObject;
 	}
-}
+
+	@Override
+  public ITaskGroup createGroup(String name) {
+		throw new IllegalStateException("Action not permitted in this context");
+	}
+
+	}

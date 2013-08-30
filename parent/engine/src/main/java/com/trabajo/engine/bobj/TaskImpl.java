@@ -177,14 +177,21 @@ public class TaskImpl extends CogEntity<NodeJPA> implements ITask {
 
 	@Override
 	public void linkWithVisualizer() {
+		/*
 		IInstance instance=getInstance();
 		IVisualizer v=instance.getVisualizer();
 		instance.setVisualizer(DAGVisualizer.DUMMY);
 		instance.save();
-		v.task(entity().getName()).setId(entity().getId());
+		
+		//TODO This value is used to generate a graph box hyper links
+		//in the new task/group scheme the drill down mechanism will be more sophisticated
+		//v.task(entity().getName(), entity().getTaskGroup().getName()).setId(entity().getId());
+		
+		
+		
 		instance.setVisualizer(v);
 		instance.save();
-		
+		*/
 	}
 
 	@Override

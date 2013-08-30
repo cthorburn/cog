@@ -22,11 +22,20 @@ public class InstallProcessMojo extends AbstractMojo {
 
 	@Parameter(required = true)
 	private String realName;
+	
+	@Parameter(required = false)
+	private String enable="true";
 
 	@Parameter(required = true)
 	private String file;
 
 	public void execute() throws MojoFailureException {
+		
+		if("false".equals(enable)) {
+			this.getLog().info("plugin config specifies DISABLE so no action will be taken");
+			return;
+		}	
+		
 		try {
 			File f=new File(file);
 			getLog().info("file: "+file+" exists: "+new File(file).exists());

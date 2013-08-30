@@ -1,7 +1,7 @@
 package com.trabajo.engine;
 
 import com.trabajo.ProcessCompletion;
-import com.trabajo.jpa.WholeJarMetadataV1;
+import com.trabajo.jpa.ProcessJarAnalysis;
 import com.trabajo.process.IInstance;
 
 public class InstanceEnding {
@@ -12,11 +12,11 @@ public class InstanceEnding {
 	@SuppressWarnings("unused")
 	private ProcessClassMetadata pcm;
 	@SuppressWarnings("unused")
-	private WholeJarMetadataV1 wjm;
+	private ProcessJarAnalysis wjm;
 	@SuppressWarnings("unused")
 	private ClassLoader cl;
 	
-	public InstanceEnding(IInstance instance, TSession ts, ProcessClassMetadata pcm, WholeJarMetadataV1 wjm, ClassLoader cl) {
+	public InstanceEnding(IInstance instance, TSession ts, ProcessClassMetadata pcm, ProcessJarAnalysis wjm, ClassLoader cl) {
 		super();
 		this.ts = ts;
 		this.pcm = pcm;

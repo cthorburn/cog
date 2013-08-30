@@ -22,7 +22,7 @@ import com.trabajo.DefinitionVersion;
 import com.trabajo.IProcessServiceProperties;
 import com.trabajo.ProcessException;
 import com.trabajo.annotation.Service;
-import com.trabajo.jpa.WholeJarMetadataV1;
+import com.trabajo.jpa.ProcessJarAnalysis;
 import com.trabajo.process.INodeTimer;
 import com.trabajo.process.ITask;
 import com.trabajo.utils.FieldVisitor;
@@ -49,7 +49,7 @@ public class SandBoxImpl extends Observable implements Sandbox {
 	}
 
 	@Override
-	public void setMetadata(ProcessClassMetadata pcm, WholeJarMetadataV1 wjm) {
+	public void setMetadata(ProcessClassMetadata pcm, ProcessJarAnalysis wjm) {
 		try {
 			tc = clm.setProcessContext(pcm.getVersion(), pcm.getDefaultClassLoaderHierarchy());
 		} catch (NoSuchResourceException | ResourceUnavailableException | RepositoryException e) {

@@ -1,6 +1,6 @@
 package com.trabajo;
 
-public class ProcessException extends TrabajoException {
+public class ProcessException extends TrabajoRuntimeException {
 
 	private static final long serialVersionUID = 1L;
 

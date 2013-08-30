@@ -23,37 +23,33 @@ import com.trabajo.utils.IOUtils;
 import com.trabajo.utils.Strings;
 import com.trabajo.values.Description;
 
-public class WholeJarMetadataV1 implements Serializable {
+public class ProcessJarAnalysis implements Serializable {
 
-	private static final long serialVersionUID = -6912541101020988457L;
-
+	private static final long serialVersionUID = 1L;
 	private static final String[] ESA=new String[0];
+	
+	private Map<String, TaskAnnotationModel> taskAnnotations = new HashMap<String, TaskAnnotationModel>();
 
-	private Map<String, TaskAnnotationModel> taskAnnotations = new HashMap<String, TaskAnnotationModel>() {
-		private static final long serialVersionUID = 4812759669363034174L;
-	};
-
-	public WholeJarMetadataV1() {
+	public ProcessJarAnalysis() {
 
 	}
 
-	public WholeJarMetadataV1(File f) throws ValidationException {
+	public ProcessJarAnalysis(File f) throws ValidationException {
 
 		try (AnnotationQueryClassLoader aql = new AnnotationQueryClassLoader(); JarFile jf = new JarFile(f)) {
 			Enumeration<JarEntry> enm = jf.entries();
 			while (enm.hasMoreElements()) {
 				JarEntry ze = enm.nextElement();
 				if (isClassEntry(ze)) {
-					processEntry(jf, ze, aql);
+					processJarEntry(jf, ze, aql);
 				}
 			}
 		} catch (IOException e) {
 			throw new ValidationException("not a jar file: " + f.getAbsolutePath());
 		}
-
 	}
 
-	private void processEntry(JarFile jf, JarEntry ze, AnnotationQueryClassLoader aql) throws ValidationException {
+	private void processJarEntry(JarFile jf, JarEntry ze, AnnotationQueryClassLoader aql) throws ValidationException {
 		String clazzName = classNameForEntry(ze);
 		Class<?> clazz = aql.define(clazzName, IOUtils.classBytesFromJar(clazzName, jf));
 
@@ -78,6 +74,78 @@ public class WholeJarMetadataV1 implements Serializable {
 	}
 
 	static class TaskAnnotationModel implements Serializable {
+		private static final long serialVersionUID = 1L;
+
+		private String className;
+		private String name;
+		private Description description;
+		private HashMap<String, String> forms;
+		private HashMap<String, String[]> javascript;
+		private HashMap<String, String[]> javascriptInclude;
+		
+		public static List<TaskAnnotationModel> analyze(final Class<?> clazz) throws ValidationException {
+			final List<TaskAnnotationModel> result = new ArrayList<>();
+
+			Task taskAnn = clazz.getAnnotation(Task.class);
+			if (taskAnn != null) {
+				result.add(new TaskAnnotationModel(clazz, taskAnn.name()));
+			}
+
+			for (Class<?> member : clazz.getClasses()) {
+				taskAnn = member.getAnnotation(Task.class);
+				if (taskAnn != null) {
+					result.add(new TaskAnnotationModel(member, taskAnn.name()));
+				}
+			}
+
+			return result;
+		}
+
+		public TaskAnnotationModel(Class<?> clazz, String name) throws ValidationException {
+			this.className = clazz.getName();
+			this.name = name;
+
+			TaskDescription descAnn = clazz.getAnnotation(TaskDescription.class);
+
+			this.description=(descAnn == null) ? new Description("No description for task", 255) : new Description(descAnn.value(), 255);
+
+			this.forms = new HashMap<String, String>();
+			this.javascript = new HashMap<String, String[]>();
+			this.javascriptInclude = new HashMap<String, String[]>();
+
+			Forms fs = clazz.getAnnotation(Forms.class);
+			if (fs != null) {
+				for (Form f : fs.value()) {
+					forms.put(f.name(), new FormBuilder().buildForm(f, name));
+					javascript.put(f.name(), (f.javascript() == null) ? ESA:f.javascript());
+					javascriptInclude.put(f.name(), (f.javascriptInclude() == null) ? ESA:f.javascriptInclude());
+				}
+			}
+		}
+		
+		public String getName() {
+			return name;
+		}
+
+		public String getClassName() {
+			return className;
+		}
+
+		public String getForm(String formName) {
+			return forms.get(formName);
+		}
+
+		public Description getDescription() {
+			return description;
+		}
+
+		public List<String> getJavascript(String formName) {
+			return Arrays.asList(javascript.get(formName));
+		}
+
+		public List<String> getJavascriptInclude(String formName) {
+			return Arrays.asList(javascriptInclude.get(formName));
+		}
 
 		@Override
 		public int hashCode() {
@@ -108,82 +176,6 @@ public class WholeJarMetadataV1 implements Serializable {
 			} else if (!name.equals(other.name))
 				return false;
 			return true;
-		}
-
-		private static final long serialVersionUID = -5856532800518454864L;
-		
-		public static List<TaskAnnotationModel> analyze(final Class<?> clazz) throws ValidationException {
-			final List<TaskAnnotationModel> result = new ArrayList<>();
-
-			Task taskAnn = clazz.getAnnotation(Task.class);
-			if (taskAnn != null) {
-				result.add(new TaskAnnotationModel(clazz, taskAnn.name()));
-			}
-
-			for (Class<?> member : clazz.getClasses()) {
-				taskAnn = member.getAnnotation(Task.class);
-				if (taskAnn != null) {
-					result.add(new TaskAnnotationModel(member, taskAnn.name()));
-				}
-			}
-
-			return result;
-		}
-
-		private String className;
-		private String name;
-		private Description description;
-		private HashMap<String, String> forms;
-		private HashMap<String, String[]> javascript;
-		private HashMap<String, String[]> javascriptInclude;
-
-		public TaskAnnotationModel(Class<?> clazz, String name) throws ValidationException {
-			this.className = clazz.getName();
-			this.name = name;
-
-			TaskDescription descAnn = clazz.getAnnotation(TaskDescription.class);
-
-			this.description=(descAnn == null) ? new Description("No description for task", 255) : new Description(descAnn.value(), 255);
-
-			this.forms = new HashMap<String, String>();
-			this.javascript = new HashMap<String, String[]>();
-			this.javascriptInclude = new HashMap<String, String[]>();
-
-			Forms fs = clazz.getAnnotation(Forms.class);
-			if (fs != null) {
-				for (Form f : fs.value()) {
-					forms.put(f.name(), new FormBuilder().buildForm(f, name));
-					javascript.put(f.name(), (f.javascript() == null) ? ESA:f.javascript());
-					javascriptInclude.put(f.name(), (f.javascriptInclude() == null) ? ESA:f.javascriptInclude());
-				}
-			}
-			
-		}
-		
-		public String getName() {
-			return name;
-		}
-
-		public String getClassName() {
-			return className;
-		}
-
-		
-
-		public String getForm(String formName) {
-			return forms.get(formName);
-		}
-
-		public Description getDescription() {
-			return description;
-		}
-
-		public List<String> getJavascript(String formName) {
-			return Arrays.asList(javascript.get(formName));
-		}
-
-		public List<String> getJavascriptInclude(String formName) {
-			return Arrays.asList(javascriptInclude.get(formName));
 		}
 	}
 

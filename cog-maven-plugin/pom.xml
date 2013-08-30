@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.cog</groupId>
 	<artifactId>cog-maven-plugin</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<packaging>maven-plugin</packaging>
 
 	<name>Cog Process Installer</name>
@@ -63,15 +63,24 @@
 							<goal>descriptor</goal>
 						</goals>
 					</execution>
-					<!-- if you want to generate help goal -->
-					<execution>
-						<id>help-goal</id>
-						<goals>
-							<goal>helpmojo</goal>
-						</goals>
-					</execution>
 				</executions>
 			</plugin>
 		</plugins>
 	</build>
+
+	<distributionManagement>
+		<!-- use the following if you're not using a snapshot version. -->
+		<repository>
+			<id>releases</id>
+			<name>Releases</name>
+			<url>http://192.168.1.72:8081/nexus/content/repositories/releases/</url>
+		</repository>
+		<!-- use the following if you ARE using a snapshot version. -->
+		<snapshotRepository>
+			<id>snapshots</id>
+			<name>Snapshots</name>
+			<url>http://192.168.1.72:8081/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
+
 </project>

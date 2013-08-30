@@ -2,8 +2,9 @@ package com.trabajo;
 
 public interface IVizInstance {
 
-	void creates(String ... taskNames);
+	void createsTasks(String ... names);
+	void createsGroups(String ... names);
 
-	IVizTask getTask(String taskName);
+	IVizTask getTask(String name);
 
 }

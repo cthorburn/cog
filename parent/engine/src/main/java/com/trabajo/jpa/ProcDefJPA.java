@@ -14,6 +14,7 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 import com.google.gson.annotations.Expose;
+import com.trabajo.DAGVisualizer;
 
 @Entity(name = "ProcDef")
 @Table(name = "PROCDEF")
@@ -139,16 +140,28 @@ public class ProcDefJPA implements JPAProcessComponent<ProcDefJPA> {
 
 	
 	@Expose(serialize=false, deserialize=false)
-	private WholeJarMetadataV1 jarMetadata;
+	private ProcessJarAnalysis jarMetadata;
 	@Lob
 	@Column(name = "JARMETADATA", nullable = false, columnDefinition = "VARBINARY(max)")
-	public WholeJarMetadataV1 getJarMetadata() {
+	public ProcessJarAnalysis getJarMetadata() {
 		return jarMetadata;
 	}
-	public void setJarMetadata(WholeJarMetadataV1  jarMetadata) {
+	public void setJarMetadata(ProcessJarAnalysis  jarMetadata) {
 		this.jarMetadata=jarMetadata;
 	}
 
+	@Expose(serialize = false, deserialize = false)
+	private 	DAGVisualizer visualizer;
+	@Lob
+	@Column(name = "VISUALIZER", nullable = true, columnDefinition = "VARBINARY(max)")
+	public DAGVisualizer getVisualizer() {
+		return visualizer;
+	}
+	public void setVisualizer(DAGVisualizer visualizer) {
+		this.visualizer=visualizer;
+	}
+	
+	
 	@PrePersist
 	@PreUpdate
 	public void prePersist() {
@@ -184,4 +197,7 @@ public class ProcDefJPA implements JPAProcessComponent<ProcDefJPA> {
 			return false;
 		return true;
 	}
+	
+	
+	
 }

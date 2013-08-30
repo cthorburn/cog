@@ -17,6 +17,7 @@ import com.trabajo.annotation.StandardTaskLifecycle;
 import com.trabajo.annotation.TaskLifecycle;
 import com.trabajo.engine.annotation.ApplicationPoint;
 import com.trabajo.process.ITask;
+import com.trabajo.process.ITaskGroup;
 
 public class Lifecycle_TASK_VIEW extends AbstractLifecycle {
 	
@@ -98,5 +99,9 @@ public class Lifecycle_TASK_VIEW extends AbstractLifecycle {
 	public Object getTaskOrProcessObject() {
 		return taskObject;
 	}
-
+	
+	@Override
+  public ITaskGroup createGroup(String name) {
+		throw new IllegalStateException("Action not permitted in this context");
+  }
 }

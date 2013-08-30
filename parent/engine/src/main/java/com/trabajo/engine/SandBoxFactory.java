@@ -1,7 +1,7 @@
 package com.trabajo.engine;
 
 import com.trabajo.DefinitionVersion;
-import com.trabajo.jpa.WholeJarMetadataV1;
+import com.trabajo.jpa.ProcessJarAnalysis;
 import com.trabajo.vcl.ClassLoaderManager;
 
 public class SandBoxFactory   {
@@ -17,7 +17,7 @@ public class SandBoxFactory   {
     this.clm = clm;
 	}
 
-  public Sandbox newSandbox(TSession ts, ProcessClassMetadata pcm, WholeJarMetadataV1 wjm) {
+  public Sandbox newSandbox(TSession ts, ProcessClassMetadata pcm, ProcessJarAnalysis wjm) {
 	    Sandbox sandbox = new SandBoxImpl(ts, clm);
 	    sandbox.setMetadata(pcm, wjm);
 	    return sandbox;

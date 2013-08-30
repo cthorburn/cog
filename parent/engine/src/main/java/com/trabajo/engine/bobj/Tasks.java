@@ -44,5 +44,5 @@ public class Tasks {
 		q.setParameter(1,  instance.entity());
 		return toImpl(em, q.getResultList());
 	}
-
+	
 }

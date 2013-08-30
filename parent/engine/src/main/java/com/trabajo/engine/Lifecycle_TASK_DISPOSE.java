@@ -22,7 +22,9 @@ import com.trabajo.annotation.ActionParameters;
 import com.trabajo.annotation.Data;
 import com.trabajo.annotation.StandardTaskLifecycle;
 import com.trabajo.engine.annotation.ApplicationPoint;
+import com.trabajo.engine.bobj.TaskGroups;
 import com.trabajo.process.ITask;
+import com.trabajo.process.ITaskGroup;
 import com.trabajo.utils.AnnotationUtils;
 
 public class Lifecycle_TASK_DISPOSE extends AbstractLifecycle {
@@ -173,4 +175,9 @@ public class Lifecycle_TASK_DISPOSE extends AbstractLifecycle {
 	public Object getTaskOrProcessObject() {
 		return taskObject;
 	}
+
+	@Override
+  public ITaskGroup createGroup(String name) {
+	  return TaskGroups.create(em, name, getInstance());
+  }
 }

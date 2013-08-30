@@ -1,0 +1,29 @@
+<html xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script type="text/javascript" src="js/trabajo/graph.js"></script>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" width="112pt" height="44pt" viewBox="0.00 0.00 112.00 44.00" preserveAspectRatio="xMidYMid meet" zoomAndPan="magnify" version="1.1" contentScriptType="application/ecmascript" contentStyleType="text/css">
+
+<g id="graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 40)">
+
+<title>G</title>
+
+<polygon fill="white" stroke="white" points="-4,5 -4,-40 109,-40 109,5 -4,5"></polygon>
+
+
+<g id="END_PROCESS" class="node">
+<title>END_PROCESS</title>
+
+<ellipse fill="black" stroke="black" cx="52" cy="-18" rx="52.4697" ry="18"></ellipse>
+
+<text text-anchor="middle" x="52" y="-15.5" font-family="Arial,sans serif" font-size="10" fill="white">END_PROCESS</text>
+
+</g>
+
+</g>
+
+</svg>
+</body>
+</html>

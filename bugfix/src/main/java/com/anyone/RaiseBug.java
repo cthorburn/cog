@@ -1,7 +1,6 @@
 package com.anyone;
 
-import static com.trabajo.annotation.StandardLifecycle.COMPLETE;
-import static com.trabajo.annotation.StandardLifecycle.START;
+import static com.trabajo.annotation.StandardLifecycle.*;
 
 import java.util.Map;
 
@@ -10,22 +9,8 @@ import com.trabajo.ILifecycle;
 import com.trabajo.IVisualizer;
 import com.trabajo.ProcessException;
 import com.trabajo.StateContainer;
-import com.trabajo.annotation.ACog;
-import com.trabajo.annotation.AInstance;
-import com.trabajo.annotation.Activation;
-import com.trabajo.annotation.ClassLoaderHierarchy;
-import com.trabajo.annotation.ControlType;
-import com.trabajo.annotation.Development;
-import com.trabajo.annotation.Form;
-import com.trabajo.annotation.FormItem;
-import com.trabajo.annotation.Forms;
-import com.trabajo.annotation.Lifecycle;
-import com.trabajo.annotation.OnCompletion;
+import com.trabajo.annotation.*;
 import com.trabajo.annotation.Process;
-import com.trabajo.annotation.ProcessState;
-import com.trabajo.annotation.Service;
-import com.trabajo.annotation.StartupForm;
-import com.trabajo.annotation.Visualizer;
 import com.trabajo.process.IInstance;
 import com.trabajo.process.ITask;
 
@@ -44,14 +29,7 @@ import com.trabajo.process.ITask;
 //Give it some initial categorisation so that we can place see it in the process tree view.
 //Give it a bit of description so that we know roughly what it does.
 //We can't change the name or version once deployed, but we can modify the category and description later if desired
-@Process(	name = "bugfix", version = "1.0.0", category = "software.development", description = "Manage a software issue")
-
-//(NOT MANDATORY) Do we really want to keep all the database records 
-//concerning delivery of tea and biscuits to meeting rooms? I think not.  
-//This is just the default action. It's specified here as a reminder only. 
-//Expunge all the process infomation once the proces is complete.
-//Metric information is not deleted so we can still monitor the performance of the tea ladies just as effectively.  
-@OnCompletion( erase=true )  
+@Process(	name = "bugfix", version = "4.0.0", category = "software.development", description = "Manage a software issue")
 
 //TODO need a system timer in order to process this
 //When deployed into production don't make available until 'at'.
@@ -106,18 +84,6 @@ public class RaiseBug {
 	@Lifecycle(phase = START)
 	public void start(Map<String, String> parms) throws ProcessException {
 
-		//It sets up the task list status graph exactly how it reads.
-		//This example currently uses every option available but that list will grow in the future.  
-		viz.instance().creates("investigate");
-		viz.task("investigate").creates("environment", "reproduce");
-		viz.task("investigate").canEndProcess();
-		viz.task("environment").dependsOn("investigate");
-		viz.task("environment").creates("escalate");
-		viz.task("reproduce").dependsOn("environment");
-		viz.task("reproduce").creates("fix");
-		viz.task("reproduce").canEndProcess();
-		viz.task("fix").dependsOn("reproduce");
-		viz.task("fix").canEndProcess();
 		
 		//Issue is an object defined by the issues service. we use it later.
 		Issue issue;
@@ -145,7 +111,10 @@ public class RaiseBug {
 			cog.abandon("bad parameters");
 			return;
 		}
-
+		
+		//declutter
+		initViz(viz);
+		
 		//All is well, keep reference to the issue we just created   
 		state.put("issueId", issue.getId());
 		
@@ -172,5 +141,22 @@ public class RaiseBug {
 	@Lifecycle(phase = COMPLETE)
 	public void end() throws ProcessException {
 	
+	}
+	
+	
+	private void initViz(IVisualizer viz) {
+		//It sets up the task list status graph exactly how it reads.
+		//This example currently uses every option available but that list will grow in the future.  
+		viz.groupTasks("_default", "investigate", "environment", "reproduce", "escalate", "fix");
+		
+		viz.task("investigate").createsTasks("environment", "reproduce");
+		viz.task("investigate").canEndProcess();
+		viz.task("environment").dependsOn("investigate");
+		viz.task("environment").createsTasks("escalate");
+		viz.task("reproduce").dependsOn("environment");
+		viz.task("reproduce").createsTasks("fix");
+		viz.task("reproduce").canEndProcess();
+		viz.task("fix").dependsOn("reproduce");
+		viz.task("fix").canEndProcess();
 	}
 }

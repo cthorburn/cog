@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -87,8 +88,8 @@ public class InstanceJPA implements JPAEntity<InstanceJPA> {
 
 	private UserJPA initiator;
 
-	@ManyToOne
-	@Column(name = "INITIATOR", nullable = false)
+	@ManyToOne(optional=false)
+	@JoinColumn(name = "INITIATOR", nullable = false)
 	public UserJPA getInitiator() {
 		return initiator;
 	}
@@ -99,7 +100,7 @@ public class InstanceJPA implements JPAEntity<InstanceJPA> {
 
 	private ProcDefJPA procDef;
 
-	@ManyToOne
+	@ManyToOne(optional=false)
 	@Column(name = "PROCDEF", nullable = false)
 	public ProcDefJPA getProcDef() {
 		return procDef;
@@ -131,17 +132,5 @@ public class InstanceJPA implements JPAEntity<InstanceJPA> {
 
 	public void setInstanceState(StateContainer instanceState) {
 		this.instanceState = instanceState;
-	}
-	
-	@Expose(serialize = false, deserialize = false)
-	private 	DAGVisualizer visualizer;
-
-	@Lob
-	@Column(name = "VISUALIZER", nullable = false, columnDefinition = "VARBINARY(max)")
-	public DAGVisualizer getVisualizer() {
-		return visualizer;
-	}
-	public void setVisualizer(DAGVisualizer visualizer) {
-		this.visualizer=visualizer;
 	}
 }

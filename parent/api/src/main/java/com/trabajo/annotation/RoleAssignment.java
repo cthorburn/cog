@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.METHOD, ElementType.TYPE } )
-public @interface RoleAssigment {
-    RoleAssignmentSpec[] value();
+@Target({ ElementType.TYPE } )
+public @interface RoleAssignment {
+	String[] roles();
 }

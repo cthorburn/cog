@@ -92,6 +92,12 @@ public class ProcessServlet extends HttpServlet {
 				response.getWriter().print(status.toJSONAddOK());
 				break;
 			}
+			
+			case "overviewGraph": {
+				response.setContentType("text/html");
+				engine.getOverviewGraph(ts, DefinitionVersion.parse(request.getParameter("dv")), response);
+				break;
+			}
 			case "processGraph": {
 				response.setContentType("text/html");
 				engine.getProcessGraph(ts, Integer.parseInt(request.getParameter("taskId")), response);

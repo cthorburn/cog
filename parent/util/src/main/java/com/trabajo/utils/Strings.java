@@ -83,6 +83,12 @@ public class Strings {
    	 }
    	 sb.setLength(sb.length()-1);
    	 return sb.toString();
+    }
+
+		public static String upperFirst(String name) {
+	    char[] chars=name.toCharArray();
+	    chars[0]=Character.toUpperCase(chars[0]);
+	    return new String(chars);
     }   
  
  

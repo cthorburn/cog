@@ -561,4 +561,18 @@ public class EngineBean {
 		}
 
 	}
+
+	public void getOverviewGraph(TSession ts, DefinitionVersion dv, HttpServletResponse response) {
+		SysConfig sc = getConfig();
+		String gvLocation = sc.getGraphVizDir();
+
+		try {
+			ts.setEntityManager(em);
+			getEngine().writeOverviewGraph(ts, gvLocation, response.getWriter(), dv);
+		} catch (IOException e) {
+			ts.getStatus().error(e.getMessage(), logger, e);
+		} finally {
+			ts.setEntityManager(null);
+		}
+  }
 }

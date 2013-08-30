@@ -8,18 +8,19 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.trabajo.DAGVisualizer;
 import com.trabajo.ProcessException;
 import com.trabajo.StateContainer;
 import com.trabajo.annotation.ProcessState;
 import com.trabajo.engine.annotation.ApplicationPoint;
 import com.trabajo.engine.bobj.InstanceImpl;
 import com.trabajo.engine.bobj.ProcDefs;
+import com.trabajo.engine.bobj.TaskGroups;
 import com.trabajo.engine.bobj.UserImpl;
 import com.trabajo.engine.bobj.Users;
 import com.trabajo.jpa.InstanceJPA;
 import com.trabajo.jpa.ProcDefJPA;
 import com.trabajo.process.IInstance;
+import com.trabajo.process.ITaskGroup;
 import com.trabajo.process.IUser;
 import com.trabajo.utils.AnnotationUtils;
 
@@ -37,8 +38,10 @@ public class Lifecycle_START extends AbstractLifecycle  {
 	}
 
 	public void execute(Map<String, String> hParms, String note) throws ProcessException {
-		setInstance(persistInstance(note));
-
+		IInstance instance=persistInstance(note);
+		setInstance(instance);
+		TaskGroups.create(em, "_default", instance);
+		
 		Method m = getLifeCycleMethodByPhase(processObject.getClass(), com.trabajo.annotation.StandardLifecycle.START);
 		if (m == null) {
 			status.error("Main process class is not annotated with @Process", logger);
@@ -51,10 +54,6 @@ public class Lifecycle_START extends AbstractLifecycle  {
 		
 		Exception procEx=invokeLifeCycleMethod(processObject, m, new Object[] { hParms });
 
-		AnnotationHandlerChain after=AnnotationHandlerFactory.forPoint(ApplicationPoint.AFTER_INSTANCE_START, this);
-		after.setContext(this);
-		after.start();
-		
 		if(procEx!=null) {
 			em.remove(getInstance().entity());
 			em.flush();
@@ -67,6 +66,10 @@ public class Lifecycle_START extends AbstractLifecycle  {
 			status.info("Process not started: veto reason: " + getVeto());
 		}
 		else {
+			AnnotationHandlerChain after=AnnotationHandlerFactory.forPoint(ApplicationPoint.AFTER_INSTANCE_START, this);
+			after.setContext(this);
+			after.start();
+
 			Field f=getStateContainerField(processObject);
 			if(!f.isAccessible()) {
 				f.setAccessible(true);
@@ -93,12 +96,7 @@ public class Lifecycle_START extends AbstractLifecycle  {
 		StateContainer sc=new StateContainer();
 		sc.put("test", "stuff");
 		j.setInstanceState(new StateContainer());
-		j.setVisualizer(DAGVisualizer.DUMMY);
 		j.setProcDef((ProcDefJPA)ProcDefs.findByVersion(em, getProcessClassMetadata().getVersion()).entity());
-		em.persist(j);
-		em.flush();
-		em.refresh(j);
-		j.setVisualizer(new DAGVisualizer(j.getId()));
 		em.persist(j);
 		em.flush();
 		return new InstanceImpl(em, j);
@@ -106,7 +104,7 @@ public class Lifecycle_START extends AbstractLifecycle  {
 
 	@Override
 	public Object getTaskObject() {
-		throw new UnsupportedOperationException();
+		throw new IllegalStateException("Action not permitted in this context");
 	}
 
 	@Override
@@ -119,4 +117,8 @@ public class Lifecycle_START extends AbstractLifecycle  {
 		return processObject;
 	}
 
+	@Override
+  public ITaskGroup createGroup(String name) {
+	  return TaskGroups.create(em, name, getInstance());
+  }
 }

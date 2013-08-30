@@ -25,23 +25,32 @@ import com.trabajo.engine.bobj.Instances;
 import com.trabajo.engine.bobj.NodeTimers;
 import com.trabajo.engine.bobj.Roles;
 import com.trabajo.engine.bobj.TaskBarriers;
+import com.trabajo.engine.bobj.TaskGroups;
 import com.trabajo.engine.bobj.Tasks;
 import com.trabajo.engine.bobj.Users;
 import com.trabajo.jpa.InstanceJPA;
 import com.trabajo.jpa.NodeJPA;
+import com.trabajo.jpa.ProcessJarAnalysis;
 import com.trabajo.jpa.RoleJPA;
+import com.trabajo.jpa.TaskGroupJPA;
 import com.trabajo.jpa.UserJPA;
-import com.trabajo.jpa.WholeJarMetadataV1;
 import com.trabajo.process.IInstance;
 import com.trabajo.process.INodeTimer;
 import com.trabajo.process.IRole;
 import com.trabajo.process.ITask;
+import com.trabajo.process.ITaskGroup;
 import com.trabajo.process.IUser;
 import com.trabajo.process.TaskCreator;
 import com.trabajo.values.CreateRoleSpec;
 import com.trabajo.vcl.ClassLoaderManager;
 
 public  abstract class AbstractLifecycle implements ILifecycle {
+
+	@Override
+  public void setProcessDisplayString(String string) {
+	  // TODO Auto-generated method stub
+	  
+  }
 
 	private final static Logger logger = LoggerFactory.getLogger(AbstractLifecycle.class);
 
@@ -72,7 +81,7 @@ public  abstract class AbstractLifecycle implements ILifecycle {
 		return context.getPcm();
 	}
 
-	protected WholeJarMetadataV1 getJarMetadata() {
+	protected ProcessJarAnalysis getJarMetadata() {
 		return context.getWjm();
 	}
 
@@ -124,7 +133,12 @@ public  abstract class AbstractLifecycle implements ILifecycle {
 		try {
 			m.invoke(obj, args);
 		} catch (InvocationTargetException e) {
-			status.error(e.getTargetException().getMessage(), logger, (Exception)e.getTargetException());
+			if(e.getTargetException() instanceof NoSuchMethodError) {
+				status.error("Required Method not present in process code: "+m, logger);
+			}
+			else {
+				status.error(e.getTargetException().getMessage(), logger, (Exception)e.getTargetException());
+			}	
 			result=e;
 		} catch (IllegalAccessException | IllegalArgumentException e) {
 			status.error("Failed to invoke lifecycle method: "+m.getName() + ": " + e.getMessage(), logger, e);
@@ -195,14 +209,52 @@ public  abstract class AbstractLifecycle implements ILifecycle {
 	}
 
 	@Override
-	public ITask createTask(String name, StateContainer parms) throws ProcessException {
-		return createTask(new TaskCreator(name), parms);
+	public ITask createTask(String taskName, StateContainer parms) throws ProcessException {
+		return createTask(new TaskCreator(taskName), parms, getInstanceGroup());
+	}
+	
+	@Override
+  public ITask createTask(String taskName, StateContainer state, ITaskGroup group) {
+	  return createTask2(new TaskCreator(taskName), state, group);
 	}
 
 	@Override
-	public ITask createTask(TaskCreator tc, StateContainer parms) throws ProcessException {
-		
-		
+  public ITask createTask(TaskCreator tc, StateContainer state, ITaskGroup group) throws ProcessException {
+	  return createTask2(tc, state, group);
+	}
+	
+	@Override
+	public ITask createTask(TaskCreator tc) {
+		return createTask(tc, new StateContainer(), getInstanceGroup());
+	}
+
+	@Override
+	public ITask createTask(String taskName) {
+		return createTask(new TaskCreator(taskName), new StateContainer());
+	}
+	
+	@Override
+  public ITask createTask(String taskName, ITaskGroup group) {
+	  return createTask(taskName, new StateContainer(), group);
+	}
+
+	@Override
+  public ITask createTask(TaskCreator tc, ITaskGroup group) {
+	  return createTask(tc, new StateContainer(), group);
+	}
+	
+	@Override
+	public ITask createTask(TaskCreator tc, StateContainer parms) {
+		return createTask(tc, parms, getInstanceGroup());
+	}
+
+	
+	private ITaskGroup getInstanceGroup() {
+	  return TaskGroups.getDefaultGroup(em, instance);
+  }
+
+	private ITask createTask2(TaskCreator tc, StateContainer parms, ITaskGroup group) throws ProcessException {
+
 		if(prohibitCreateTask) {
 			throw new IllegalStateException("create task not callable from this context");
 		}
@@ -232,6 +284,8 @@ public  abstract class AbstractLifecycle implements ILifecycle {
 		
 		NodeJPA node=new NodeJPA();
 		node.setInstance((InstanceJPA)getInstance().entity());
+	  node.setTaskGroup((TaskGroupJPA)group.entity());
+
 		node.setName(tc.getTaskName());
 		node.setDateAssigned(new GregorianCalendar());
 		node.setDateDue(new GregorianCalendar());
@@ -263,7 +317,8 @@ public  abstract class AbstractLifecycle implements ILifecycle {
 		TaskBarriers.createAll(em, node, tc.getDependencies());
 		
 		ITask newTask=Tasks.toImpl(em, node);
-		
+	  group.addTask(newTask);
+
 		new Lifecycle_TASK_CREATE(context, newTask).execute();
 		
 		return newTask;
@@ -283,6 +338,7 @@ public  abstract class AbstractLifecycle implements ILifecycle {
 		prohibitCreateTask=true;
 	}
 	
+	//TODO SRP violation
 	protected Object createProcessObject() {
 		String main = context.getPcm().getClassName();
 		Class<?> mainClass;
@@ -299,6 +355,7 @@ public  abstract class AbstractLifecycle implements ILifecycle {
 		}		
 	}
 	
+	//TODO SRP violation
 	protected Object createTaskObject(ITask node) {
 		String task = node.getNodeClassName();
 		try {
@@ -330,6 +387,13 @@ public  abstract class AbstractLifecycle implements ILifecycle {
 	public ClassLoaderManager<DefinitionVersion, DVFactory> getClassLoaderManager() {
 		return context.getClassLoaderManager();
 	}
+
+	
+	@Override
+  public IUser getProcessInitiator() {
+	  
+	  return instance.getInitiator();
+  }
 
 	public ProcessRegistry getProcessRegistry() {
 		return context.getProcessRegistry();

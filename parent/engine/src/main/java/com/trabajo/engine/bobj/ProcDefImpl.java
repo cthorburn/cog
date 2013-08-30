@@ -4,7 +4,9 @@ import java.util.Set;
 
 import javax.persistence.EntityManager;
 
+import com.trabajo.DAGVisualizer;
 import com.trabajo.DefinitionVersion;
+import com.trabajo.IVisualizer;
 import com.trabajo.jpa.ProcDefJPA;
 import com.trabajo.process.IInstance;
 import com.trabajo.process.IProcDef;
@@ -81,4 +83,29 @@ public class ProcDefImpl extends CogEntity<ProcDefJPA> implements IProcDef {
   public boolean isDeprecated() {
 	  return entity().isDeprecated();
   }
+	
+	@Override
+	public IVisualizer getVisualizer() {
+		return entity().getVisualizer();
+	}
+
+
+	@Override
+  public void setVisualizer(IVisualizer viz) {
+		entity().setVisualizer((DAGVisualizer)viz);
+		save();
+  }
+
+
+	@Override
+  public String toJson() {
+		//@Expose does not seem to be respected when JPA does its enhancement!
+		IVisualizer viz=getVisualizer();
+		setVisualizer(null);
+		String result=super.toJson();
+		setVisualizer(viz);
+		return result;
+  }
+	
+	
 }

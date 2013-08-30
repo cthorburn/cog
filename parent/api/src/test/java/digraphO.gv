@@ -1,0 +1,81 @@
+digraph G {
+rank=1;
+_default__coolingDownExpired [URL="javascript:overview(0)";style=filled;fillcolor=white;fontcolor=black;shape=box;fontname=Arial;fontsize=10.0;];
+edge [color=red];
+_default__coolingDownExpired -> _default__createOrder;
+edge [color=black];
+_default__arrangeDelivery [URL="javascript:overview(0)";style=filled;fillcolor=white;fontcolor=black;shape=box;fontname=Arial;fontsize=10.0;];
+_default__arrangeDelivery -> _default__onDeliveryDate;
+_default__onDeliveryDate [URL="javascript:overview(0)";style=filled;fillcolor=white;fontcolor=black;shape=box;fontname=Arial;fontsize=10.0;];
+_default__deliver [URL="javascript:overview(0)";style=filled;fillcolor=white;fontcolor=black;shape=box;fontname=Arial;fontsize=10.0;];
+edge [color=red];
+_default__deliver -> _default__onDeliveryDate;
+edge [color=black];
+_default__deliver -> _default__END_PROCESS;_default__Process [id=INSTANCE;label=INSTANCE;style=filled;fillcolor=black;fontcolor=white;fontname=Arial;fontsize=10.0;];
+_default__Process -> _default__coolingDownExpired;
+_default__Process -> _default__arrangeDelivery;
+_default__Process -> _default__onDeliveryDate;
+_default__Process -> _default__deliver;
+_default__Process -> _default__cancelOrder;
+_default__Process -> _default__assignProjectManager;
+_default__Process -> _default__createOrder;
+_default__cancelOrder [URL="javascript:overview(0)";style=filled;fillcolor=white;fontcolor=black;shape=box;fontname=Arial;fontsize=10.0;];
+_default__cancelOrder -> _default__END_PROCESS;_default__assignProjectManager [URL="javascript:overview(0)";style=filled;fillcolor=white;fontcolor=black;shape=box;fontname=Arial;fontsize=10.0;];
+_default__assignProjectManager -> _default__beginManufacture;
+_default__beginManufacture -> designWindow__dummy;
+_default__beginManufacture [URL="javascript:overview(0)";style=filled;fillcolor=white;fontcolor=black;shape=box;fontname=Arial;fontsize=10.0;];
+edge [color=red];
+_default__beginManufacture -> _default__coolingDownExpired;
+edge [color=black];
+_default__createOrder [URL="javascript:overview(0)";style=filled;fillcolor=white;fontcolor=black;shape=box;fontname=Arial;fontsize=10.0;];
+
+
+
+subgraph cluster_framing {
+rank=2;
+framing__dummy  -> framing__assembleFrame;
+framing__dummy  -> framing__horizontals;
+framing__dummy  -> framing__verticals;
+framing__assembleFrame [URL="javascript:overview(0)";style=filled;fillcolor=white;fontcolor=black;shape=box;fontname=Arial;fontsize=10.0;];
+edge [color=red];
+framing__assembleFrame -> framing__horizontals;
+framing__assembleFrame -> framing__verticals;
+edge [color=black];
+framing__horizontals [URL="javascript:overview(0)";style=filled;fillcolor=white;fontcolor=black;shape=box;fontname=Arial;fontsize=10.0;];
+framing__dummy [style=filled;fillcolor=orange];
+framing__verticals [URL="javascript:overview(0)";style=filled;fillcolor=white;fontcolor=black;shape=box;fontname=Arial;fontsize=10.0;];
+}
+
+
+
+subgraph cluster_manufactureWindow {
+rank=3;
+manufactureWindow__dummy  -> manufactureWindow__manufactureComplete;
+manufactureWindow__dummy  -> manufactureWindow__manufactureUPVCTask;
+manufactureWindow__dummy  -> manufactureWindow__manufactureFrameTask;
+manufactureWindow__dummy  -> manufactureWindow__manufactureGlassTask;
+manufactureWindow__manufactureComplete [URL="javascript:overview(0)";style=filled;fillcolor=white;fontcolor=black;shape=box;fontname=Arial;fontsize=10.0;];
+edge [color=red];
+manufactureWindow__manufactureComplete -> manufactureWindow__manufactureFrameTask;
+manufactureWindow__manufactureComplete -> manufactureWindow__manufactureGlassTask;
+manufactureWindow__manufactureComplete -> manufactureWindow__manufactureUPVCTask;
+edge [color=black];
+manufactureWindow__manufactureUPVCTask [URL="javascript:overview(0)";style=filled;fillcolor=white;fontcolor=black;shape=box;fontname=Arial;fontsize=10.0;];
+manufactureWindow__manufactureFrameTask [URL="javascript:overview(0)";style=filled;fillcolor=white;fontcolor=black;shape=box;fontname=Arial;fontsize=10.0;];
+manufactureWindow__dummy [style=filled;fillcolor=orange];
+manufactureWindow__manufactureGlassTask [URL="javascript:overview(0)";style=filled;fillcolor=white;fontcolor=black;shape=box;fontname=Arial;fontsize=10.0;];
+}
+
+
+
+subgraph cluster_designWindow {
+rank=4;
+designWindow__specifyUPVCTasks [URL="javascript:overview(0)";style=filled;fillcolor=white;fontcolor=black;shape=box;fontname=Arial;fontsize=10.0;];
+designWindow__specifyFrameTask [URL="javascript:overview(0)";style=filled;fillcolor=white;fontcolor=black;shape=box;fontname=Arial;fontsize=10.0;];
+designWindow__SpecifyGlassTasks [URL="javascript:overview(0)";style=filled;fillcolor=white;fontcolor=black;shape=box;fontname=Arial;fontsize=10.0;];
+designWindow__dummy [style=filled;fillcolor=orange];
+}
+designWindow__specifyFrameTask -> framing__dummy;
+_default__END_PROCESS [id=END_PROCESS;label=END_PROCESS;style=filled;fillcolor=black;fontcolor=white;fontname=Arial;fontsize=10.0;];
+}
+

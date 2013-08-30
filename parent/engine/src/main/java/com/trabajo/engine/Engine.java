@@ -1,6 +1,7 @@
 package com.trabajo.engine;
 
 import java.io.File;
+import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.Map;
 
@@ -49,5 +50,6 @@ public interface Engine {
 		IProcessServiceProperties getProcessServiceProperties(TSession ts, DefinitionVersion dv);
 		void setProcessServiceProperty(TSession ts, DefinitionVersion processDv, DefinitionVersion serviceDv, String key, String value);
 		void writeProcessGraph(TSession ts, String gvLocation, Writer w, int taskId);
+		void writeOverviewGraph(TSession ts, String gvLocation, PrintWriter writer, DefinitionVersion dv);
 		
 }

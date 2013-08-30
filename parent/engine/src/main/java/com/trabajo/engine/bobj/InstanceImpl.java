@@ -11,6 +11,7 @@ import com.trabajo.jpa.InstanceJPA;
 import com.trabajo.process.IInstance;
 import com.trabajo.process.IProcDef;
 import com.trabajo.process.ITask;
+import com.trabajo.process.IUser;
 
 public class InstanceImpl  extends CogEntity<InstanceJPA> implements IInstance {
 
@@ -46,16 +47,6 @@ public class InstanceImpl  extends CogEntity<InstanceJPA> implements IInstance {
 		return entity().getProcDef().getDefinitionVersion().toDefinitionVersion();
 	}
 
-	@Override
-	public IVisualizer getVisualizer() {
-		return entity().getVisualizer();
-	}
-
-	@Override
-	public void setVisualizer(IVisualizer visualizer) {
-		entity().setVisualizer((DAGVisualizer)visualizer);
-		
-	}
 
 	@Override
 	public void purge() {
@@ -64,4 +55,10 @@ public class InstanceImpl  extends CogEntity<InstanceJPA> implements IInstance {
 		}
 		em.remove(entity());
 	}
+
+	@Override
+  public IUser getInitiator() {
+	  return Users.toImpl(em, entity().getInitiator());
+  }
+
 }

@@ -50,6 +50,7 @@ public class DevBean {
 	public void wipeQuartzTables(TSession ts) {
 		try {
 			DevHelper.wipeQuartzTables(dataSource.getConnection());
+			ts.getStatus().info("Quartz, tables cleared");
 		} catch (SQLException e) {
 			ts.getStatus().error("Failed to wipe Quartz tables", logger, e);
 		}finally{
@@ -61,4 +62,19 @@ public class DevBean {
 		}
 		
 	}
+
+	public void deleteAllProcesses(TSession ts) {
+		try {
+			DevHelper.deleteAllProcesses(dataSource.getConnection());
+			ts.getStatus().info("Process tables cleared");
+		} catch (SQLException e) {
+			ts.getStatus().error("Failed to clear process tables", logger, e);
+		}finally{
+			try {
+				dataSource.getConnection().close();
+			} catch (SQLException e) {
+				ts.getStatus().error("Failed to close connection", logger, e);
+			}
+		}
+  }
 }
