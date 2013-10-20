@@ -1,0 +1,139 @@
+[Instance Management View]
+Show a process category tree on left (just unique shortname as leaf, no version)
+ 
+On selection of a process name (ie not a particular version) right-pane-tab-Versions is tabbar 
+
+tab(Versions)
+	grid of  
+
+	name
+	version 
+	count active - link drilldown to [Active Instance Management View]
+	count complete - link drilldown to [Complete Instance Management View]
+	count failed - link drilldown to [Failed Instance Management View]
+	deprecated - enable if permitted and not true 
+	suspended - enable if permitted 
+	description - read only 
+	 
+On selection of any row switch to right-pane-tab-Overview and show an overview DAG 
+
+tab(Dashboard) 
+	left-pane: pallette of widget
+	right-pane: dashboard(list of 2 cols x n rows of widgets
+	
+[Process Widget]
+ 
+TODO complete me
+
+[My Managed Tasks View]
+
+View of the created tasks I manage ordered by overdue, importance, assigned
+
+[My Managed Users View]
+
+List of Users I manage
+Act as proxy for selected user
+
+
+[My Availability View]
+
+Set Holiday Periods (start calendar, end calendar, unavailable periods grid)
+
+Process tree select processes you still want to know about even if you are on HOLIDAY 
+
+Set Absent for short period of X days - reassign tasks that will go overdue  
+Set Absent for forseeable future button - reassign all tasks
+
+
+[Task UI idiom builder]
+
+[Start Task on Message]
+
+[Start Process on Message]
+
+[System Agent Internal User]
+
+[Audit]
+
+Given Process type annotation
+
+like @Audit - record all standard auditing
+
+on process start
+AUDITPOINT
+APID	PRODEF INSTANCE 
+
+AUDITPOINT_WHO_WHAT_WHEN
+APID 
+USERID 
+WHEN 
+WHAT 							WITH
+STARTED_PROCESS					instanceId
+COMPLETED_PROCESS				instanceId
+CLAIMED_TASK 					taskId
+OPENED_TASK 					taskId
+DISPOSED_TASK					taskId|disposeFuncName
+ENDED_TASK						taskId|disposeFuncName
+CHANGED_CRITCAL_VALUE			taskId|disposeFuncName|oldValaue|newValue	
+
+[Points win Prizes]
+
+Weight processes, tasks and dispose actions with points 
+
+[Start process]
+Add drop down to select role context to start in - is intersection of process roles and user roles 
+
+[Claim task]
+Add drop down to select role context to start in 
+
+[Add to Task API]
+startProcess(String name, Map<String, String> args, IUser String initiatorRole]) start latest version of name
+task groups (if task A depends on task B then start the B of the same task group)
+
+ITask.waitForGroup(groupname)
+
+[Task Annotations]
+
+[Security & Permisions]
+Add support for SSO 
+
+[Messaging]
+(have to wait for TOMEE+ 1.6 or run separate TOMEE+ 1.5.2 and have this push messages)
+Upload listener JAR, add it to the message listener class loader URL list
+This is a filter chain member: 
+
+class ProcessXListener
+
+ProcessXListener(Context) {
+
+	void accept(Message) {
+	
+		//examine message
+		
+		Context.consume();
+		
+		or
+		
+		Context.startProcess(name, Map args, consume=true|false)
+		
+		or 
+		
+		Context.passToProcess(instance_id, message_handler_name)
+		
+		
+	
+	
+	}
+
+}
+
+
+
+which either consumes or ignores a message
+
+Processes define  
+
+
+
+
+

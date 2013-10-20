@@ -1,0 +1,67 @@
+Cog is a Human Activity Oriented Business Process Management Platform with a Focus on the 
+Coordination, Management and Seamless Evolution of Complex, Multiuser Processes with Highly 
+Dynamic Requirements.
+
+Four deployment types:
+	Processes	
+	Reports
+	Services
+	Classloaders
+	
+...but coming Soon:
+	Cases	-	A construct tying process invocations to specialised, highly specific data contexts for example 
+				a specific Customer, Project, Pension Plan, Medical Record... Effectively clumps all 
+				master record manipulation into one reusable object removing the need for different processes 
+				to duplicate that access.
+				
+
+
+	Model Complex Situations Intuitively - Easy to learn programming idiom. Processes are simply POJOs. 
+	Simple API supported by extensive annotations library - much less code to write.
+		
+	Easy integration with external System - wrap access to the service in a	Cog service interface, 
+	stick it in a jar and upload.Then available (subject to permissions) for any process to use. 
+	
+	Process or Service has dependencies? Define a logical class loader and upload the relevant jars.
+	Processes and services declare SPECIFIC VERSIONS(!!!) of dependencies. Dependencies are shared and 
+	versioned for maximum resource efficiency and capability   
+	
+	
+				    
+	
+	
+	
+		
+	
+	 
+
+
+
+
+However it goes much further than this since it is specifically designed to addresses the problem of how to
+deploy improved processes alongside already running legacy versions  
+
+
+
+
+
+
+
+The idea is to make deloying and process as simple s dragging and dropping a single file    
+
+ 
+
+
+
+
+
+
+
+
+
+We imagine Cog being used as a component alongside existing corporate enterprise systems 
+and interacting with these other systems in order to 
+
+Integration with external systems is intended to be realised by declarative injection of service proxies
+(eg SOA web service clients) into process objects at runtime but it also fully supports in-process coding 
+of access to extenal systems
