@@ -19,6 +19,20 @@
 			<version>4.2.2</version>
 		</dependency>
 	</dependencies>
+	<distributionManagement>
+		<!-- use the following if you're not using a snapshot version. -->
+		<repository>
+			<id>releases</id>
+			<name>Releases</name>
+			<url>http://192.168.1.71:8083/nexus/content/repositories/releases/</url>
+		</repository>
+		<!-- use the following if you ARE using a snapshot version. -->
+		<snapshotRepository>
+			<id>snapshots</id>
+			<name>Snapshots</name>
+			<url>http://192.168.1.71:8083/nexus/content/repositories/snapshots/</url>
+		</snapshotRepository>
+	</distributionManagement>
 
 	<build>
 		<pluginManagement>

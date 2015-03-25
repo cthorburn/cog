@@ -5,9 +5,9 @@
  
   
   	<parent>
-		<groupId>com.cog</groupId>
-		<artifactId>parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<groupId>com.colin</groupId>
+		<artifactId>simple-jar-parent</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
 	<name>Cog JPA</name>
