@@ -45,10 +45,10 @@ function TrabajoLayout(id, pattern, titles) {
 	
 	this.dhxLayout=new dhtmlXLayoutObject(document.body, pattern);
 	
-	this.dhxLayout.cont.obj._offsetTop = 50; // top margin
-	this.dhxLayout.cont.obj._offsetLeft = 2; // left margin
-	this.dhxLayout.cont.obj._offsetHeight = -4; // bottom margin
-	this.dhxLayout.cont.obj._offsetWidth = -4; // right margin
+//	this.dhxLayout.cont.obj._offsetTop = 50; // top margin
+//	this.dhxLayout.cont.obj._offsetLeft = 2; // left margin
+//	this.dhxLayout.cont.obj._offsetHeight = -4; // bottom margin
+//	this.dhxLayout.cont.obj._offsetWidth = -4; // right margin
 	
 	var index="a b c d e f g h i ";
 	
@@ -95,12 +95,17 @@ function TrabajoLayout(id, pattern, titles) {
 	};
 
 	this.buildMenu=function(menu) {
-		menu.setIconsPath("img/");
-		menu.loadXML('xml?feed=menu', function() {} );
+//		menu.setIconsPath("img/");
+//		menu.loadStruct('xml?feed=menu', function() {} );
 		menu.attachEvent('onclick', this.menuClicked);
 	};
 
-	this.menu=this.buildMenu(this.dhxLayout.attachMenu());
+	this.menu=this.buildMenu(this.dhxLayout.attachMenu(
+			{
+			    icons_path: "img/",
+			    json: "xml?feed=menu"
+			}
+	));
 };
 
 function Events() {

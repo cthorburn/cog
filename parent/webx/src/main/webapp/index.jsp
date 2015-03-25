@@ -18,30 +18,29 @@ response.setDateHeader ("Expires", -1);
 
 <link rel="stylesheet" href="css/main.css"/>
 
-<link rel="stylesheet" href="js/dhtmlxMenu/codebase/skins/dhtmlxmenu_dhx_skyblue.css"/>
-
-<link rel="stylesheet" href="js/dhtmlxGrid/codebase/skins/dhtmlxgrid_dhx_skyblue.css"/>
-<link rel="stylesheet" href="js/dhtmlxGrid/codebase/dhtmlxgrid_skins.css"/>
-<link rel="stylesheet" href="js/dhtmlxGrid/codebase/dhtmlxgrid.css"/>
-
-<script src="js/dhtmlxMenu/codebase/dhtmlxcommon.js"></script>
-<script src="js/dhtmlxMenu/codebase/dhtmlxmenu.js"></script>
-<script src="js/dhtmlxGrid/codebase/dhtmlxgrid.js"></script>
-<script src="js/dhtmlxGrid/codebase/dhtmlxgridcell.js"></script>
+<script src="js/codebase/dhtmlx.js" type="text/javascript"></script> 
+<link rel="stylesheet" type="text/css" href="js/codebase/dhtmlx.css"/> 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 
 <script src="js/trabajo/mainmenu.js"></script>
 
 <script>
-
-$(document).ready(function() {
-	debugger;
+debugger;
+dhtmlxEvent(window,"load",function(){ 
 	var menu = new dhtmlXMenuObject('menubar', 'dhx_skyblue');
 	menu.attachEvent('onclick', menuClicked);
 	menu.setIconsPath("img/");
 	menu.loadXML('menu.jsp', function() {} );
-});
+}); 
+
+//$(document).ready(function() {
+//	debugger;
+//	var menu = new dhtmlXMenuObject('menubar', 'dhx_skyblue');
+//	menu.attachEvent('onclick', menuClicked);
+//	menu.setIconsPath("img/");
+//	menu.loadXML('menu.jsp', function() {} );
+//});
 </script>
 	 
 </head>

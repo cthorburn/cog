@@ -170,21 +170,21 @@ public class MuParser extends Parser {
 
 	public static class StatContext extends ParserRuleContext {
 		public Token OTHER;
-		public TerminalNode OTHER() { return getToken(MuParser.OTHER, 0); }
-		public Exit_loopContext exit_loop() {
-			return getRuleContext(Exit_loopContext.class,0);
-		}
 		public AssignmentContext assignment() {
 			return getRuleContext(AssignmentContext.class,0);
 		}
-		public LogContext log() {
-			return getRuleContext(LogContext.class,0);
+		public While_statContext while_stat() {
+			return getRuleContext(While_statContext.class,0);
 		}
 		public If_statContext if_stat() {
 			return getRuleContext(If_statContext.class,0);
 		}
-		public While_statContext while_stat() {
-			return getRuleContext(While_statContext.class,0);
+		public TerminalNode OTHER() { return getToken(MuParser.OTHER, 0); }
+		public LogContext log() {
+			return getRuleContext(LogContext.class,0);
+		}
+		public Exit_loopContext exit_loop() {
+			return getRuleContext(Exit_loopContext.class,0);
 		}
 		public StatContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -264,9 +264,9 @@ public class MuParser extends Parser {
 	}
 
 	public static class AssignmentContext extends ParserRuleContext {
-		public TerminalNode ASSIGN() { return getToken(MuParser.ASSIGN, 0); }
-		public TerminalNode ID() { return getToken(MuParser.ID, 0); }
 		public TerminalNode SCOL() { return getToken(MuParser.SCOL, 0); }
+		public TerminalNode ID() { return getToken(MuParser.ID, 0); }
+		public TerminalNode ASSIGN() { return getToken(MuParser.ASSIGN, 0); }
 		public AtomContext atom() {
 			return getRuleContext(AtomContext.class,0);
 		}
@@ -313,22 +313,22 @@ public class MuParser extends Parser {
 	}
 
 	public static class If_statContext extends ParserRuleContext {
-		public TerminalNode ELSE(int i) {
-			return getToken(MuParser.ELSE, i);
-		}
+		public List<TerminalNode> ELSE() { return getTokens(MuParser.ELSE); }
 		public List<TerminalNode> IF() { return getTokens(MuParser.IF); }
+		public TerminalNode IF(int i) {
+			return getToken(MuParser.IF, i);
+		}
 		public Condition_blockContext condition_block(int i) {
 			return getRuleContext(Condition_blockContext.class,i);
 		}
 		public List<Condition_blockContext> condition_block() {
 			return getRuleContexts(Condition_blockContext.class);
 		}
-		public List<TerminalNode> ELSE() { return getTokens(MuParser.ELSE); }
-		public TerminalNode IF(int i) {
-			return getToken(MuParser.IF, i);
-		}
 		public Stat_blockContext stat_block() {
 			return getRuleContext(Stat_blockContext.class,0);
+		}
+		public TerminalNode ELSE(int i) {
+			return getToken(MuParser.ELSE, i);
 		}
 		public If_statContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -399,16 +399,16 @@ public class MuParser extends Parser {
 
 	public static class Condition_blockContext extends ParserRuleContext {
 		public TerminalNode CPAR() { return getToken(MuParser.CPAR, 0); }
-		public LogicalAtomContext logicalAtom() {
-			return getRuleContext(LogicalAtomContext.class,0);
-		}
 		public Stat_blockContext stat_block() {
 			return getRuleContext(Stat_blockContext.class,0);
 		}
-		public TerminalNode OPAR() { return getToken(MuParser.OPAR, 0); }
 		public Not14ExprContext not14Expr() {
 			return getRuleContext(Not14ExprContext.class,0);
 		}
+		public LogicalAtomContext logicalAtom() {
+			return getRuleContext(LogicalAtomContext.class,0);
+		}
+		public TerminalNode OPAR() { return getToken(MuParser.OPAR, 0); }
 		public Condition_blockContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -529,8 +529,8 @@ public class MuParser extends Parser {
 	}
 
 	public static class Stat_block_aContext extends ParserRuleContext {
-		public TerminalNode CBRACE() { return getToken(MuParser.CBRACE, 0); }
 		public TerminalNode OBRACE() { return getToken(MuParser.OBRACE, 0); }
+		public TerminalNode CBRACE() { return getToken(MuParser.CBRACE, 0); }
 		public BlockContext block() {
 			return getRuleContext(BlockContext.class,0);
 		}
@@ -576,18 +576,18 @@ public class MuParser extends Parser {
 	}
 
 	public static class While_statContext extends ParserRuleContext {
-		public TerminalNode WHILE() { return getToken(MuParser.WHILE, 0); }
 		public TerminalNode CPAR() { return getToken(MuParser.CPAR, 0); }
-		public LogicalAtomContext logicalAtom() {
-			return getRuleContext(LogicalAtomContext.class,0);
-		}
 		public Stat_blockContext stat_block() {
 			return getRuleContext(Stat_blockContext.class,0);
 		}
-		public TerminalNode OPAR() { return getToken(MuParser.OPAR, 0); }
 		public Not14ExprContext not14Expr() {
 			return getRuleContext(Not14ExprContext.class,0);
 		}
+		public LogicalAtomContext logicalAtom() {
+			return getRuleContext(LogicalAtomContext.class,0);
+		}
+		public TerminalNode WHILE() { return getToken(MuParser.WHILE, 0); }
+		public TerminalNode OPAR() { return getToken(MuParser.OPAR, 0); }
 		public While_statContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -645,11 +645,11 @@ public class MuParser extends Parser {
 	}
 
 	public static class LogContext extends ParserRuleContext {
+		public TerminalNode LOG() { return getToken(MuParser.LOG, 0); }
+		public TerminalNode SCOL() { return getToken(MuParser.SCOL, 0); }
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
-		public TerminalNode LOG() { return getToken(MuParser.LOG, 0); }
-		public TerminalNode SCOL() { return getToken(MuParser.SCOL, 0); }
 		public LogContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -735,14 +735,14 @@ public class MuParser extends Parser {
 	}
 
 	public static class ExprContext extends ParserRuleContext {
-		public Unary14ExprContext unary14Expr() {
-			return getRuleContext(Unary14ExprContext.class,0);
+		public Not14ExprContext not14Expr() {
+			return getRuleContext(Not14ExprContext.class,0);
 		}
 		public StringExprContext stringExpr() {
 			return getRuleContext(StringExprContext.class,0);
 		}
-		public Not14ExprContext not14Expr() {
-			return getRuleContext(Not14ExprContext.class,0);
+		public Unary14ExprContext unary14Expr() {
+			return getRuleContext(Unary14ExprContext.class,0);
 		}
 		public ExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -864,24 +864,24 @@ public class MuParser extends Parser {
 	}
 
 	public static class Mult13ExprContext extends ParserRuleContext {
-		public List<TerminalNode> DIV() { return getTokens(MuParser.DIV); }
-		public List<Add12ExprContext> add12Expr() {
-			return getRuleContexts(Add12ExprContext.class);
-		}
-		public List<TerminalNode> MULT() { return getTokens(MuParser.MULT); }
-		public TerminalNode DIV(int i) {
-			return getToken(MuParser.DIV, i);
-		}
 		public Add12ExprContext add12Expr(int i) {
 			return getRuleContext(Add12ExprContext.class,i);
-		}
-		public TerminalNode MOD(int i) {
-			return getToken(MuParser.MOD, i);
 		}
 		public TerminalNode MULT(int i) {
 			return getToken(MuParser.MULT, i);
 		}
+		public List<Add12ExprContext> add12Expr() {
+			return getRuleContexts(Add12ExprContext.class);
+		}
+		public List<TerminalNode> MULT() { return getTokens(MuParser.MULT); }
 		public List<TerminalNode> MOD() { return getTokens(MuParser.MOD); }
+		public List<TerminalNode> DIV() { return getTokens(MuParser.DIV); }
+		public TerminalNode DIV(int i) {
+			return getToken(MuParser.DIV, i);
+		}
+		public TerminalNode MOD(int i) {
+			return getToken(MuParser.MOD, i);
+		}
 		public Mult13ExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -952,20 +952,20 @@ public class MuParser extends Parser {
 	}
 
 	public static class Add12ExprContext extends ParserRuleContext {
-		public TerminalNode MINUS(int i) {
-			return getToken(MuParser.MINUS, i);
+		public Add12ExprContext add12Expr(int i) {
+			return getRuleContext(Add12ExprContext.class,i);
 		}
 		public List<Add12ExprContext> add12Expr() {
 			return getRuleContexts(Add12ExprContext.class);
 		}
-		public List<TerminalNode> MINUS() { return getTokens(MuParser.MINUS); }
-		public Add12ExprContext add12Expr(int i) {
-			return getRuleContext(Add12ExprContext.class,i);
+		public TerminalNode MINUS(int i) {
+			return getToken(MuParser.MINUS, i);
 		}
-		public List<TerminalNode> PLUS() { return getTokens(MuParser.PLUS); }
 		public NumericAtomContext numericAtom() {
 			return getRuleContext(NumericAtomContext.class,0);
 		}
+		public List<TerminalNode> PLUS() { return getTokens(MuParser.PLUS); }
+		public List<TerminalNode> MINUS() { return getTokens(MuParser.MINUS); }
 		public TerminalNode PLUS(int i) {
 			return getToken(MuParser.PLUS, i);
 		}
@@ -1039,18 +1039,18 @@ public class MuParser extends Parser {
 	}
 
 	public static class Not14ExprContext extends ParserRuleContext {
+		public TerminalNode NOT() { return getToken(MuParser.NOT, 0); }
 		public List<Eq9ExprContext> eq9Expr() {
 			return getRuleContexts(Eq9ExprContext.class);
 		}
 		public Gt10ExprContext gt10Expr(int i) {
 			return getRuleContext(Gt10ExprContext.class,i);
 		}
-		public TerminalNode NOT() { return getToken(MuParser.NOT, 0); }
-		public Eq9ExprContext eq9Expr(int i) {
-			return getRuleContext(Eq9ExprContext.class,i);
-		}
 		public List<Gt10ExprContext> gt10Expr() {
 			return getRuleContexts(Gt10ExprContext.class);
+		}
+		public Eq9ExprContext eq9Expr(int i) {
+			return getRuleContext(Eq9ExprContext.class,i);
 		}
 		public Not14ExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1124,16 +1124,16 @@ public class MuParser extends Parser {
 	}
 
 	public static class Gt10ExprContext extends ParserRuleContext {
-		public TerminalNode GTEQ() { return getToken(MuParser.GTEQ, 0); }
 		public List<Num_eq9ExprContext> num_eq9Expr() {
 			return getRuleContexts(Num_eq9ExprContext.class);
 		}
-		public TerminalNode LT() { return getToken(MuParser.LT, 0); }
 		public Num_eq9ExprContext num_eq9Expr(int i) {
 			return getRuleContext(Num_eq9ExprContext.class,i);
 		}
-		public TerminalNode GT() { return getToken(MuParser.GT, 0); }
 		public TerminalNode LTEQ() { return getToken(MuParser.LTEQ, 0); }
+		public TerminalNode LT() { return getToken(MuParser.LT, 0); }
+		public TerminalNode GT() { return getToken(MuParser.GT, 0); }
+		public TerminalNode GTEQ() { return getToken(MuParser.GTEQ, 0); }
 		public Gt10ExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1196,9 +1196,6 @@ public class MuParser extends Parser {
 	}
 
 	public static class Eq9ExprContext extends ParserRuleContext {
-		public List<Or6ExprContext> or6Expr() {
-			return getRuleContexts(Or6ExprContext.class);
-		}
 		public TerminalNode EQ(int i) {
 			return getToken(MuParser.EQ, i);
 		}
@@ -1206,6 +1203,9 @@ public class MuParser extends Parser {
 			return getRuleContext(Or6ExprContext.class,i);
 		}
 		public List<TerminalNode> EQ() { return getTokens(MuParser.EQ); }
+		public List<Or6ExprContext> or6Expr() {
+			return getRuleContexts(Or6ExprContext.class);
+		}
 		public Eq9ExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1261,16 +1261,16 @@ public class MuParser extends Parser {
 	}
 
 	public static class Num_eq9ExprContext extends ParserRuleContext {
-		public TerminalNode EQ(int i) {
-			return getToken(MuParser.EQ, i);
-		}
 		public List<Mult13ExprContext> mult13Expr() {
 			return getRuleContexts(Mult13ExprContext.class);
 		}
+		public TerminalNode EQ(int i) {
+			return getToken(MuParser.EQ, i);
+		}
+		public List<TerminalNode> EQ() { return getTokens(MuParser.EQ); }
 		public Mult13ExprContext mult13Expr(int i) {
 			return getRuleContext(Mult13ExprContext.class,i);
 		}
-		public List<TerminalNode> EQ() { return getTokens(MuParser.EQ); }
 		public Num_eq9ExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1330,11 +1330,11 @@ public class MuParser extends Parser {
 		public TerminalNode OR(int i) {
 			return getToken(MuParser.OR, i);
 		}
-		public And5ExprContext and5Expr(int i) {
-			return getRuleContext(And5ExprContext.class,i);
-		}
 		public List<And5ExprContext> and5Expr() {
 			return getRuleContexts(And5ExprContext.class);
+		}
+		public And5ExprContext and5Expr(int i) {
+			return getRuleContext(And5ExprContext.class,i);
 		}
 		public Or6ExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1391,18 +1391,18 @@ public class MuParser extends Parser {
 	}
 
 	public static class And5ExprContext extends ParserRuleContext {
-		public List<TerminalNode> AND() { return getTokens(MuParser.AND); }
-		public LogicalAtomContext logicalAtom() {
-			return getRuleContext(LogicalAtomContext.class,0);
-		}
 		public TerminalNode AND(int i) {
 			return getToken(MuParser.AND, i);
 		}
-		public And5ExprContext and5Expr(int i) {
-			return getRuleContext(And5ExprContext.class,i);
+		public LogicalAtomContext logicalAtom() {
+			return getRuleContext(LogicalAtomContext.class,0);
 		}
+		public List<TerminalNode> AND() { return getTokens(MuParser.AND); }
 		public List<And5ExprContext> and5Expr() {
 			return getRuleContexts(And5ExprContext.class);
+		}
+		public And5ExprContext and5Expr(int i) {
+			return getRuleContext(And5ExprContext.class,i);
 		}
 		public And5ExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1461,19 +1461,19 @@ public class MuParser extends Parser {
 	}
 
 	public static class FunctionCallContext extends ParserRuleContext {
-		public TerminalNode CPAR() { return getToken(MuParser.CPAR, 0); }
-		public List<TerminalNode> COMMA() { return getTokens(MuParser.COMMA); }
-		public TerminalNode ID() { return getToken(MuParser.ID, 0); }
-		public List<ArgContext> arg() {
-			return getRuleContexts(ArgContext.class);
-		}
-		public TerminalNode OPAR() { return getToken(MuParser.OPAR, 0); }
-		public TerminalNode COMMA(int i) {
-			return getToken(MuParser.COMMA, i);
-		}
 		public ArgContext arg(int i) {
 			return getRuleContext(ArgContext.class,i);
 		}
+		public TerminalNode ID() { return getToken(MuParser.ID, 0); }
+		public TerminalNode CPAR() { return getToken(MuParser.CPAR, 0); }
+		public List<TerminalNode> COMMA() { return getTokens(MuParser.COMMA); }
+		public List<ArgContext> arg() {
+			return getRuleContexts(ArgContext.class);
+		}
+		public TerminalNode COMMA(int i) {
+			return getToken(MuParser.COMMA, i);
+		}
+		public TerminalNode OPAR() { return getToken(MuParser.OPAR, 0); }
 		public FunctionCallContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1585,13 +1585,13 @@ public class MuParser extends Parser {
 		public AtomContext atom(int i) {
 			return getRuleContext(AtomContext.class,i);
 		}
-		public List<TerminalNode> PLUS() { return getTokens(MuParser.PLUS); }
 		public TerminalNode STRING() { return getToken(MuParser.STRING, 0); }
-		public List<AtomContext> atom() {
-			return getRuleContexts(AtomContext.class);
-		}
+		public List<TerminalNode> PLUS() { return getTokens(MuParser.PLUS); }
 		public TerminalNode PLUS(int i) {
 			return getToken(MuParser.PLUS, i);
+		}
+		public List<AtomContext> atom() {
+			return getRuleContexts(AtomContext.class);
 		}
 		public StringExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1648,16 +1648,16 @@ public class MuParser extends Parser {
 	}
 
 	public static class NumericAtomContext extends ParserRuleContext {
-		public TerminalNode CPAR() { return getToken(MuParser.CPAR, 0); }
-		public Unary14ExprContext unary14Expr() {
-			return getRuleContext(Unary14ExprContext.class,0);
-		}
+		public TerminalNode ID() { return getToken(MuParser.ID, 0); }
 		public FunctionCallContext functionCall() {
 			return getRuleContext(FunctionCallContext.class,0);
 		}
-		public TerminalNode FLOAT() { return getToken(MuParser.FLOAT, 0); }
+		public TerminalNode CPAR() { return getToken(MuParser.CPAR, 0); }
 		public TerminalNode INT() { return getToken(MuParser.INT, 0); }
-		public TerminalNode ID() { return getToken(MuParser.ID, 0); }
+		public Unary14ExprContext unary14Expr() {
+			return getRuleContext(Unary14ExprContext.class,0);
+		}
+		public TerminalNode FLOAT() { return getToken(MuParser.FLOAT, 0); }
 		public TerminalNode OPAR() { return getToken(MuParser.OPAR, 0); }
 		public NumericAtomContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -1733,14 +1733,14 @@ public class MuParser extends Parser {
 	}
 
 	public static class LogicalAtomContext extends ParserRuleContext {
-		public TerminalNode CPAR() { return getToken(MuParser.CPAR, 0); }
-		public TerminalNode TRUE() { return getToken(MuParser.TRUE, 0); }
 		public TerminalNode ID() { return getToken(MuParser.ID, 0); }
-		public TerminalNode OPAR() { return getToken(MuParser.OPAR, 0); }
+		public TerminalNode FALSE() { return getToken(MuParser.FALSE, 0); }
+		public TerminalNode TRUE() { return getToken(MuParser.TRUE, 0); }
+		public TerminalNode CPAR() { return getToken(MuParser.CPAR, 0); }
 		public Not14ExprContext not14Expr() {
 			return getRuleContext(Not14ExprContext.class,0);
 		}
-		public TerminalNode FALSE() { return getToken(MuParser.FALSE, 0); }
+		public TerminalNode OPAR() { return getToken(MuParser.OPAR, 0); }
 		public LogicalAtomContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -1809,14 +1809,14 @@ public class MuParser extends Parser {
 	}
 
 	public static class AtomContext extends ParserRuleContext {
-		public TerminalNode NIL() { return getToken(MuParser.NIL, 0); }
 		public LogicalAtomContext logicalAtom() {
 			return getRuleContext(LogicalAtomContext.class,0);
 		}
-		public TerminalNode STRING() { return getToken(MuParser.STRING, 0); }
 		public NumericAtomContext numericAtom() {
 			return getRuleContext(NumericAtomContext.class,0);
 		}
+		public TerminalNode STRING() { return getToken(MuParser.STRING, 0); }
+		public TerminalNode NIL() { return getToken(MuParser.NIL, 0); }
 		public AtomContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}

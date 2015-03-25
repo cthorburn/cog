@@ -15,7 +15,7 @@ public class DHXXMLFeed_menu implements Feed {
     public String construct(TSession tsession, Engine eng, EntityManager em, FeedParms fp) {
 
     	if(tsession.userHasRole("admin")) {
-    	
+    	//TODO String from resource	
     	return 
         		"<menu>"+
         		"	<item id=\"admin\" text=\"Admin\">"+ 
@@ -43,6 +43,7 @@ public class DHXXMLFeed_menu implements Feed {
     	}
     	else {
       	return 
+      	    	//TODO String from resource	
         		"<menu>"+
         		"	<item id=\"processes\" text=\"Processes\">"+ 
         		"		<item id=\"processes:proclist\" text=\"Process List\"/>"+ 

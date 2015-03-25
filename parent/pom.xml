@@ -18,7 +18,7 @@
 
 	<properties>
 		<slf4j.version>1.6.6</slf4j.version>
-		<tomee.version>1.5.2</tomee.version>
+		<tomee.version>1.7.1</tomee.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<developers>
@@ -35,13 +35,13 @@
 		<repository>
 			<id>releases</id>
 			<name>Releases</name>
-			<url>http://192.168.1.64:8081/nexus/content/repositories/releases/</url>
+			<url>http://192.168.1.71:8083/nexus/content/repositories/releases/</url>
 		</repository>
 		<!-- use the following if you ARE using a snapshot version. -->
 		<snapshotRepository>
 			<id>snapshots</id>
 			<name>Snapshots</name>
-			<url>http://192.168.1.64:8081/nexus/content/repositories/snapshots/</url>
+			<url>http://192.168.1.71:8083/nexus/content/repositories/snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 
@@ -49,7 +49,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.11</version>
+			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -81,8 +81,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.0</version>
 				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.8</source>
+					<target>1.8</target>
 					<compilerArgument>-Xlint:all</compilerArgument>
 					<showWarnings>true</showWarnings>
 					<showDeprecation>true</showDeprecation>

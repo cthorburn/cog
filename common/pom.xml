@@ -2,15 +2,15 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.trabajo.test</groupId>
   <artifactId>common</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+ 
   
   	<parent>
-		<groupId>com.trabajo.parent</groupId>
-		<artifactId>parent_1</artifactId>
-		<version>1.0.0</version>
+		<groupId>com.cog</groupId>
+		<artifactId>parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<name>Trabajo JPA</name>
+	<name>Cog JPA</name>
   
 
 </project>

@@ -34,7 +34,7 @@ function FormTkAcAl(dhxForm, accordion, grids) {
     this.formGrid = new dhtmlXGridObject(this.dhx.getContainer("summary"));
     var g=this.formGrid;
 
-    g.setImagePath("js/dhtmlxGrid/codebase/imgs/");
+    g.setImagePath("js/codebase/imgs/");
     g.setHeader("Property,Value");
     g.setInitWidths("300,300");
     g.setColAlign("left,left");
@@ -97,7 +97,7 @@ function FormTkAcAv(dhxForm, accordion, grids) {
 	this.formGrid = new dhtmlXGridObject(this.dhx.getContainer("summary"));
 	var g=this.formGrid;
 
-	g.setImagePath("js/dhtmlxGrid/codebase/imgs/");
+	g.setImagePath("js/codebase/imgs/");
 	g.setHeader("Property,Value");
 	g.setInitWidths("300,300");
 	g.setColAlign("left,left");
