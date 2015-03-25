@@ -8,7 +8,7 @@ import com.trabajo.process.TitleVV;
 
 public class CreateUserSpec {
 
-	private TitleVV 		title; 
+	private TitleVV 	title; 
 	private FullName 	fullName; 
 	private UserName 	userName;
 	private Password 	password; 
@@ -22,13 +22,13 @@ public class CreateUserSpec {
 			String userName,
 			String password, 
 			String email, 
-			String locale, 
+			String languageTag, 
 			String langPref) throws ValidationException {
 		
 		this.title=new TitleVV(title);
 		this.fullName=new FullName(fullName);
 		this.userName=new UserName(userName);
-		this.locale=Locale.ENGLISH;
+		this.locale=Locale.forLanguageTag(languageTag);
 		this.langPref=new LangCode(langPref);
 		this.email=new EmailAddr(email);
 		this.password=new Password(password);
