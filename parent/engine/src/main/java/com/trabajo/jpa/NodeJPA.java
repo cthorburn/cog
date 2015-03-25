@@ -15,6 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.google.gson.annotations.Expose;
@@ -65,9 +66,11 @@ public class NodeJPA implements JPAEntity<NodeJPA> {
 
 	private int	id;
 
+	@Override
 	@Id
+	@SequenceGenerator(name = "NODE_SEQUENCE_GENERATOR", sequenceName = "NODE_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "NODE_SEQUENCE_GENERATOR")
 	@Column(name = "ID")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getId() {
 		return id;
 	}
@@ -126,7 +129,7 @@ public class NodeJPA implements JPAEntity<NodeJPA> {
 	private StateContainer	nodeState;
 
 	@Lob()
-	@Column(name = "NODESTATE", nullable = false, columnDefinition = "VARBINARY(max)")
+	@Column(name = "NODESTATE", nullable = false)
 	public StateContainer getNodeState() {
 		return nodeState;
 	}
@@ -238,7 +241,7 @@ public class NodeJPA implements JPAEntity<NodeJPA> {
 	private TaskGroupJPA	taskGroup;
 
 	@ManyToOne(optional=false)
-	@Column(name = "TASKGROUP", nullable = true, length = 64)
+	@Column(name = "TASKGROUP", nullable = true)
 	public TaskGroupJPA getTaskGroup() {
 		return taskGroup;
 	}

@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity(name = "TaskUpload")
@@ -63,8 +64,11 @@ public class TaskUploadJPA implements JPAEntity<TaskUploadJPA> {
 
 	private int id;
 
+    @Override
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@SequenceGenerator(name = "TASK_UPLOAD_SEQUENCE_GENERATOR", sequenceName = "TASK_UPLOAD_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TASK_UPLOAD_SEQUENCE_GENERATOR")
+	@Column(name = "ID")
 	public int getId() {
 		return id;
 	}

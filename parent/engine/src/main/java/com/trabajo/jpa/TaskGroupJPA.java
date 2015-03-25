@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.trabajo.TaskCompletion;
@@ -59,9 +60,11 @@ public class TaskGroupJPA implements JPAEntity<TaskGroupJPA> {
 
 	private int	id;
 
+    @Override
 	@Id
+	@SequenceGenerator(name = "TASKGROUP_SEQUENCE_GENERATOR", sequenceName = "TASKGROUP_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TASKGROUP_SEQUENCE_GENERATOR")
 	@Column(name = "ID")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int getId() {
 		return id;
 	}

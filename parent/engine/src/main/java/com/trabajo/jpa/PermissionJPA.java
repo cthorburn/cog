@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 
@@ -43,8 +44,12 @@ public class PermissionJPA  implements JPACategorised<PermissionJPA> {
     }
 
     private  int id;
-    @Id 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	
+    @Override
+	@Id
+	@SequenceGenerator(name = "PERMISSION_SEQUENCE_GENERATOR", sequenceName = "PERMISSION_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PERMISSION_SEQUENCE_GENERATOR")
+	@Column(name = "ID")
     public int getId() {
         return id;
     }

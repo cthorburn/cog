@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.google.gson.annotations.Expose;
@@ -25,7 +26,12 @@ public class MapLocationJPA implements JPAEntity<MapLocationJPA> {
 	}
 
 	private int id;
-	@Id	@GeneratedValue(strategy = GenerationType.IDENTITY) 
+
+	@Override
+	@Id
+	@SequenceGenerator(name = "MAP_LOCATION_SEQUENCE_GENERATOR", sequenceName = "MAP_LOCATION_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MAP_LOCATION_SEQUENCE_GENERATOR")
+	@Column(name = "ID")
 	public int getId() {
 		return id;
 	}

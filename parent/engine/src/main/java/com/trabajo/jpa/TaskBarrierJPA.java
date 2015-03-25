@@ -9,6 +9,7 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.trabajo.StateContainer;
@@ -34,9 +35,11 @@ public class TaskBarrierJPA implements JPAEntity<TaskBarrierJPA> {
 
 	private int id;
 
+    @Override
 	@Id
-	@Column(name = "ID")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@SequenceGenerator(name = "TASKBARRIER_SEQUENCE_GENERATOR", sequenceName = "TASKBARRIER_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "TASKBARRIER_SEQUENCE_GENERATOR")
+	@Column(name = "TASKBARRIER_ID")
 	public int getId() {
 		return id;
 	}

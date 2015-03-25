@@ -37,10 +37,10 @@ public class Users {
 		user.setUsername(spec.getUserName().getValue());
 		user.setRoles(new HashSet<RoleJPA>());
 		user.setCreatedOn(new GregorianCalendar());
-		user.setTitle(spec.getTitle().getValue());
+		user.setTitle("Mr");
 		user.setLangPref(spec.getLangPref().getValue());
 		user.setLoginRole(((RoleImpl) dflt).entity());
-		user.setLocale(spec.getLocale().getCountry());
+		user.setLocale("EN");
 		user.setFullName(spec.getFullName().getValue());
 		user.setPassword(spec.getPassword().getValue());
 		user.setPrimaryEmail(spec.getEmail().getValue());

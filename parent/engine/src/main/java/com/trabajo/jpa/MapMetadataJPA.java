@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.google.gson.annotations.Expose;
@@ -22,7 +23,12 @@ public class MapMetadataJPA implements JPAEntity<MapMetadataJPA> {
 
 	
 	private int id;
-	@Id	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	
+	@Override
+	@Id
+	@SequenceGenerator(name = "MAPMETADATA_SEQUENCE_GENERATOR", sequenceName = "MAPMETADATA_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MAPMETADATA_SEQUENCE_GENERATOR")
+	@Column(name = "ID")
 	public int getId() {
 		return id;
 	}

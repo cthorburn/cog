@@ -8,11 +8,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity(name = "ClassLoaderDef")
 @Table(name = "CLASSLOADERDEF")
-public class ClassLoaderDefJPA implements JPAProcessComponent<ClassLoaderDefJPA> {
+public class ClassLoaderDefJPA implements
+		JPAProcessComponent<ClassLoaderDefJPA> {
 
 	private static final long serialVersionUID = 1L;
 
@@ -23,7 +25,9 @@ public class ClassLoaderDefJPA implements JPAProcessComponent<ClassLoaderDefJPA>
 	private int id;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@SequenceGenerator(name = "CLASSLOADERDEF_SEQUENCE_GENERATOR", sequenceName = "CLASSLOADERDEF_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CLASSLOADERDEF_SEQUENCE_GENERATOR")
+	@Column(name = "ID")
 	public int getId() {
 		return id;
 	}
@@ -42,9 +46,10 @@ public class ClassLoaderDefJPA implements JPAProcessComponent<ClassLoaderDefJPA>
 	public void setDefinitionVersion(VersionJPA definitionVersion) {
 		this.definitionVersion = definitionVersion;
 	}
-	
+
 	private boolean deprecated;
-	@Column(name = "DEPRECATED", columnDefinition="tinyint default 0")
+
+	@Column(name = "DEPRECATED", columnDefinition = "int default 0")
 	public boolean isDeprecated() {
 		return deprecated;
 	}
@@ -85,7 +90,10 @@ public class ClassLoaderDefJPA implements JPAProcessComponent<ClassLoaderDefJPA>
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((getDefinitionVersion() == null) ? 0 : getDefinitionVersion().hashCode());
+		result = prime
+				* result
+				+ ((getDefinitionVersion() == null) ? 0
+						: getDefinitionVersion().hashCode());
 		return result;
 	}
 

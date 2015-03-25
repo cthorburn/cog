@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity(name = "Map")
@@ -23,9 +24,12 @@ public class MapJPA implements JPAEntity<MapJPA> {
 	}
 
 	private int id;
+	
 	@Override
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@SequenceGenerator(name = "MAP_SEQUENCE_GENERATOR", sequenceName = "MAP_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MAP_SEQUENCE_GENERATOR")
+	@Column(name = "ID")
 	public int getId() {
 		return id;
 	}

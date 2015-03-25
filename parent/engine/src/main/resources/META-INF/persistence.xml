@@ -11,10 +11,7 @@
 		<jta-data-source>trabajo</jta-data-source>
 		<non-jta-data-source>trabajoNonJta</non-jta-data-source>
 		
-	<!-- <class>com.trabajo.jpa.BeetleJPA</class>
-		<class>com.trabajo.jpa.GrubJPA</class> -->
-		
-
+	
 		<class>com.trabajo.jpa.UserPrefsJPA</class>
 		<class>com.trabajo.jpa.NodeTimerJPA</class>
 		<class>com.trabajo.jpa.ConfigJPA</class>
@@ -41,7 +38,7 @@
 
 		<properties>
 			<property name="openejb.validation.output.level" value="VERBOSE" />
-			<property name="openjpa.jdbc.DBDictionary" value="sqlserver" />
+			<property name="openjpa.jdbc.DBDictionary" value="oracle" />
 			<property name="openjpa.jdbc.MappingDefaults" value="ForeignKeyDeleteAction=restrict, JoinForeignKeyDeleteAction=restrict" /> 			
 			<property name="openjpa.jdbc.SynchronizeMappings" value="buildSchema(ForeignKeys=true)" />
 		</properties>

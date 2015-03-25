@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.trabajo.TimerType;
@@ -28,8 +29,11 @@ public class NodeTimerJPA implements JPAEntity<NodeTimerJPA>{
 	
 	private int id;
 
+	@Override
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@SequenceGenerator(name = "NODETIMER_SEQUENCE_GENERATOR", sequenceName = "NODETIMER_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "NODETIMER_SEQUENCE_GENERATOR")
+	@Column(name = "ID")
 	public int getId() {
 		return id;
 	}

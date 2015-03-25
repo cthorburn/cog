@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.google.gson.annotations.Expose;
@@ -59,7 +60,9 @@ public class InstanceJPA implements JPAEntity<InstanceJPA> {
 	private int id;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@SequenceGenerator(name = "INSTANCE_SEQUENCE_GENERATOR", sequenceName = "INSTANCE_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "INSTANCE_SEQUENCE_GENERATOR")
+	@Column(name = "ID")
 	public int getId() {
 		return id;
 	}
@@ -125,7 +128,7 @@ public class InstanceJPA implements JPAEntity<InstanceJPA> {
 	private StateContainer instanceState;
 
 	@Lob
-	@Column(name = "INSTANCESTATE", nullable = false, columnDefinition = "VARBINARY(max)")
+	@Column(name = "INSTANCESTATE", nullable = false)
 	public StateContainer getInstanceState() {
 		return instanceState;
 	}

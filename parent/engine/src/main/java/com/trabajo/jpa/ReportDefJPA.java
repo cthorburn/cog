@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.google.gson.annotations.Expose;
@@ -25,8 +26,11 @@ public class ReportDefJPA implements JPAProcessComponent<ReportDefJPA> {
 
 	private int id;
 
+    @Override
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@SequenceGenerator(name = "REPORTDEF_SEQUENCE_GENERATOR", sequenceName = "REPORTDEF_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "REPORTDEF_SEQUENCE_GENERATOR")
+	@Column(name = "ID")
 	public int getId() {
 		return id;
 	}
@@ -82,7 +86,7 @@ public class ReportDefJPA implements JPAProcessComponent<ReportDefJPA> {
 	@Expose(serialize=false, deserialize=false)
 	private String reportText;
 	@Lob
-	@Column(name = "REPORTTEXT", nullable = false, columnDefinition = "VARCHAR(max)")
+	@Column(name = "REPORTTEXT", nullable = false)
 	public String getReportText() {
 		return reportText;
 	}

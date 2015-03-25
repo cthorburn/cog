@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.google.gson.annotations.Expose;
@@ -55,8 +56,11 @@ public class UserJPA implements JPAEntity<UserJPA> {
 
 	private int id;
 
+    @Override
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@SequenceGenerator(name = "USER_SEQUENCE_GENERATOR", sequenceName = "USER_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USER_SEQUENCE_GENERATOR")
+	@Column(name = "ID")
 	public int getId() {
 		return id;
 	}
@@ -67,7 +71,7 @@ public class UserJPA implements JPAEntity<UserJPA> {
 
 	private String username;
 
-	@Column(name = "USERNAME", nullable = false, unique = true, length = 32)
+	@Column(name = "USERNAME", nullable = false, unique = true, length = 64)
 	public String getUsername() {
 		return username;
 	}
@@ -101,7 +105,7 @@ public class UserJPA implements JPAEntity<UserJPA> {
 
 	private String password;
 
-	@Column(name = "PASSWORD", nullable = false, length = 32)
+	@Column(name = "PASSWORD", nullable = false, length = 64)
 	public String getPassword() {
 		return password;
 	}
@@ -177,7 +181,7 @@ public class UserJPA implements JPAEntity<UserJPA> {
 	}
 
 	private String systemRole;
-	@Column(name = "SYSTEM_ROLE", nullable = false, length = 32)
+	@Column(name = "SYSTEM_ROLE", nullable = false, length = 64)
 	public String getSystemRole() {
 		return systemRole;
 	}

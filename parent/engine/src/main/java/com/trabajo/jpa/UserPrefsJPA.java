@@ -6,6 +6,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.apache.openjpa.persistence.jdbc.Unique;
@@ -21,7 +22,9 @@ public class UserPrefsJPA implements JPAEntity<UserPrefsJPA> {
 	}
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@SequenceGenerator(name = "USERPREFS_SEQUENCE_GENERATOR", sequenceName = "USERPREFS_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USERPREFS_SEQUENCE_GENERATOR")
+	@Column(name = "ID")
 	private int id;
 
 	@Column(name = "skin", nullable = true, length = 32)

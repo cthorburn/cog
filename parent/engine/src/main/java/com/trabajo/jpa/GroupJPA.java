@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.apache.openjpa.persistence.jdbc.Unique;
@@ -54,7 +55,9 @@ public class GroupJPA implements JPACategorised<GroupJPA> {
 	private int id;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@SequenceGenerator(name = "GROUP_SEQUENCE_GENERATOR", sequenceName = "GROUP_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "GROUP_SEQUENCE_GENERATOR")
+	@Column(name = "ID")
 	public int getId() {
 		return id;
 	}

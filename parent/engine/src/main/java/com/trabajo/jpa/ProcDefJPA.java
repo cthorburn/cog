@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.google.gson.annotations.Expose;
@@ -28,8 +29,11 @@ public class ProcDefJPA implements JPAProcessComponent<ProcDefJPA> {
 
 	private int id;
 
+    @Override
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@SequenceGenerator(name = "PROCDEF_SEQUENCE_GENERATOR", sequenceName = "PROCDEF_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PROCDEF_SEQUENCE_GENERATOR")
+	@Column(name = "ID")
 	public int getId() {
 		return id;
 	}
@@ -96,7 +100,7 @@ public class ProcDefJPA implements JPAProcessComponent<ProcDefJPA> {
 	}
 
 	private boolean deprecated;
-	@Column(name = "DEPRECATED", columnDefinition="tinyint default 0")
+	@Column(name = "DEPRECATED", columnDefinition="int default 0")
 	public boolean isDeprecated() {
 		return deprecated;
 	}
@@ -107,7 +111,7 @@ public class ProcDefJPA implements JPAProcessComponent<ProcDefJPA> {
 	
 	
 	private boolean suspended;
-	@Column(name = "SUSPENDED", columnDefinition="tinyint default 0")
+	@Column(name = "SUSPENDED", columnDefinition="int default 0")
 	public boolean isSuspended() {
 		return suspended;
 	}
@@ -118,7 +122,7 @@ public class ProcDefJPA implements JPAProcessComponent<ProcDefJPA> {
 	
 	private boolean deprecatePreviousVersions;
 
-	@Column(name = "DEPRECATE_ON_ACTIVATION", columnDefinition="tinyint default 0")
+	@Column(name = "DEPRECATE_ON_ACTIVATION", columnDefinition="int default 0")
 	public boolean isDeprecatePreviousVersions() {
 		return deprecatePreviousVersions;
 	}
@@ -129,7 +133,7 @@ public class ProcDefJPA implements JPAProcessComponent<ProcDefJPA> {
 
 	
 	private boolean inDevelopment;
-	@Column(name = "INDEV", nullable = false, columnDefinition="tinyint default 0")
+	@Column(name = "INDEV", nullable = false, columnDefinition="int default 0")
 	public boolean isInDevelopment() {
 		return inDevelopment;
 	}
@@ -142,7 +146,7 @@ public class ProcDefJPA implements JPAProcessComponent<ProcDefJPA> {
 	@Expose(serialize=false, deserialize=false)
 	private ProcessJarAnalysis jarMetadata;
 	@Lob
-	@Column(name = "JARMETADATA", nullable = false, columnDefinition = "VARBINARY(max)")
+	@Column(name = "JARMETADATA", nullable = false)
 	public ProcessJarAnalysis getJarMetadata() {
 		return jarMetadata;
 	}
@@ -153,7 +157,7 @@ public class ProcDefJPA implements JPAProcessComponent<ProcDefJPA> {
 	@Expose(serialize = false, deserialize = false)
 	private 	DAGVisualizer visualizer;
 	@Lob
-	@Column(name = "VISUALIZER", nullable = true, columnDefinition = "VARBINARY(max)")
+	@Column(name = "VISUALIZER", nullable = true)
 	public DAGVisualizer getVisualizer() {
 		return visualizer;
 	}

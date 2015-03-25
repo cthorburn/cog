@@ -69,7 +69,7 @@ public class ServiceDefJPA implements JPAProcessComponent<ServiceDefJPA> {
 	}
 
 	private boolean deprecated;
-	@Column(name = "DEPRECATED", columnDefinition="tinyint default 0")
+	@Column(name = "DEPRECATED", columnDefinition="int default 0")
 	public boolean isDeprecated() {
 		return deprecated;
 	}

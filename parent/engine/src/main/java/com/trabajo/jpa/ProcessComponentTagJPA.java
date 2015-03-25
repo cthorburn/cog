@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity(name="ProcessComponentTag")
@@ -58,8 +59,11 @@ public class ProcessComponentTagJPA implements JPAEntity<ProcessComponentTagJPA>
 	} 
     
     private int id;
-    @Id 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Override
+	@Id
+	@SequenceGenerator(name = "PCTAG_SEQUENCE_GENERATOR", sequenceName = "PCTAG_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PCTAG_SEQUENCE_GENERATOR")
+	@Column(name = "ID")
     public int getId() {
         return id;
     }

@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.apache.openjpa.persistence.jdbc.Unique;
@@ -54,8 +55,11 @@ public class RoleJPA implements JPACategorised<RoleJPA> {
 
 	private int id;
 
+    @Override
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@SequenceGenerator(name = "ROLE_SEQUENCE_GENERATOR", sequenceName = "ROLE_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ROLE_SEQUENCE_GENERATOR")
+	@Column(name = "ID")
 	public int getId() {
 		return id;
 	}

@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity(name = "UserLocalization")
@@ -50,9 +51,11 @@ public class UserLocalizationJPA implements JPAEntity<UserLocalizationJPA> {
 
 	private int id;
 
+    @Override
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID", nullable = false)
+	@SequenceGenerator(name = "USER_LOCZ_SEQUENCE_GENERATOR", sequenceName = "USER_LOCZ_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USER_LOCZ_SEQUENCE_GENERATOR")
+	@Column(name = "ID")
 	public int getId() {
 		return id;
 	}
